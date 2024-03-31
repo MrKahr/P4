@@ -1,0 +1,4 @@
+# REMEMBER: Add sandbox folder after intial commit!
+out
+*.jar
+.antlr
