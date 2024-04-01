@@ -1,5 +1,5 @@
-// Define a grammar called myFirstGrammar
-grammar myFirstGrammar;            // Define a grammar called Hello
+// Define a grammar called test
+grammar test;            // Define a grammar called Hello
 r  : 'Hello,' enemy;         // match keyword hello followed by an identifier
 enemy: 'General' NAME;
 NAME : [A-Z][a-z]* ;             // match lower-case identifiers
