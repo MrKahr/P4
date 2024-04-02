@@ -1,0 +1,13 @@
+Tutorial on ANTLR and Java using maven
+    https://www.baeldung.com/java-antlr
+
+Associated Github repo  (basic example of using ANTLR in Java)
+    https://github.com/eugenp/tutorials/tree/master/text-processing-libraries-modules/antlr
+
+
+Ancient docs for ANTLR Maven API (2014)
+    https://www.antlr.org/api/maven-plugin/latest/usage.html
+
+
+Might be useful later on (troubleshooting mostly)
+    https://stackoverflow.com/questions/39315165/antlr4-with-maven-sample-project
