@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.proj4</groupId>
-    <artifactId>project</artifactId>
+    <artifactId>Project</artifactId>
     <version>1.0-SNAPSHOT</version>
     <name>LanguageNameGoesHere</name>
     <description>P4 Project</description>
