@@ -1,0 +1,190 @@
+/*** Current Gameplay Loop 
+- The game has 2 players, p1 is the "real" player, where p2 is a human controlled representation of the NPC. 
+- Each player starts with the same 10 card deck, containing minions like "1 mana 1/1, 2 mana 2/2" etc.
+***/
+
+// Board is a special, global Template, that the developer can overwrite the attributes of
+Template Board CONTAINS {
+    Player p1  // This the player
+    Player p2  
+    Integer maxDeckSize
+    Integer maxBoardSize
+    Player activePlayer
+    Deck cardUniverse 
+    Integer bucketCount
+    Integer bucketSize
+    LootBucket options
+}
+
+Template LootBucket {
+    Deck[] options 
+}
+
+
+Action NextState()
+Action ReadAction() RESULTS IN String
+Action ChangeActivePlayer(Player playerTarget, State startingState)
+Action ChangeState(State state) RESULTS IN State
+
+/*** User defined Actions ***/
+// HS actions
+
+Action GenerateMinions() RESULTS IN Deck {
+    String[] names IS ["Yeti", "Gnome McGnomington", "Slime", "Blackrock Orc", "Tirion Fordring", "John MinionMan", "Fish", "Void Sphere", "Wizard", "Madman"]
+    Deck generatedDeck CONTAINS, // CONTAINS with no body used to use default values, in this case an empty Deck
+    FOR(Integer i IS 1, i LESS EQUAL THAN names.size, i IS i + 1) {
+        Card minion CONTAINS {
+            name IS names[i - 1]
+            attack IS i
+            cost IS i
+        }
+        AddCard(minion, generatedDeck)
+    }
+    RESULT IN generatedDeck
+}
+
+
+Action PrintBoardState() {
+    String s IS Board.activePlayer.name + "'s turn.\n Hand: \n"
+    Integer i IS 0
+    FOR(Card card OF Board.activePlayer.hand) {
+        s IS s + "  card " + i + "[" + card.name + ", attack:" + card.attack + ", health:" + card.health + ", cost:" + card.cost "]\n"
+        i IS i + 1
+    },
+    s IS s + "\np1 health: " + Board.p1.currentHealth + "\np1 board:\n"
+    FOR Card card OF Board.p1.board {
+        s IS s + "  card " + i + "[" + card.name + ", attack:" + card.attack + ", health:" + card.health + ", cost:" + card.cost "]\n"
+        i IS i + 1
+    },
+    s IS s + "\np2 health: " + Board.p2.currentHealth + "\np2 board:\n"
+    FOR Card card OF Board.p2.board {
+        s IS s + "  card " + i + "[" + card.name + ", attack:" + card.attack + ", health:" + card.health + ", cost:" + card.cost "]\n"
+        i IS i + 1
+    },
+    s IS s + "Your current mana: " + Board.activePlayer.currentMana + "\n"
+    Print(s)
+}
+
+
+Action PrintMarket(LootBucket bucket) {
+    String s IS "Choose card bucket to add to your deck: \n"
+    Integer i IS 0
+    FOR Deck currentBucket OF bucket.options {
+        s IS s + "Option " + i + "\n"
+        FOR(Card card OF currentBucket) {
+            s IS s + "card " + "[" + card.name + ", attack:" + card.attack + ", health:" + card.health + ", cost:" + card.cost "]\n"
+        }
+        i IS i + 1
+    }
+}
+
+
+Action Attack() { 
+    // Prompt user based on printed board information, after they choose to attack
+    print("Pick an attacker by its number\n")
+    String attacker IS ReadInput()
+    print("Pick a target by its number or 'Player'")
+    String attacked IS ReadInput
+    Card attackingMinion IS Board.activePlayer.board[StringToInt(attacker)]
+
+    IF(attacked EQUALS "Player") {
+        IF(Board.activePlayer.name EQUALS p1) {
+            AttackPlayer(attackingMinion, Board.p2)
+        } ELSE {
+            AttackPlayer(attackingMinion, Board.p1)
+        }
+    } ELSE { // Currently does not handle invalid input
+        IF(Board.activePlayer.name EQUALS p1) {
+            Card attackedMinion IS Board.p2.board[StringToInt(attacked)]
+            AttackMinion(attackingMinion, attackedMinion)
+        } ELSE {
+            Card attackedMinion IS Board.p1.board[StringToInt(attacked)]
+            AttackMinion(attackingMinion, attackedMinion)
+        }
+    }
+    attackingMinion.canAttack IS FALSE
+}
+
+
+Rule cardPlayValid WHEN [PlayCard] IF [Board.activePlayer.currentMana GREATER EQUAL THAN PlayCard.RESULT.cost AND Board.activePlayer.board.size LESS THAN Board.activePlayer.maxBoardSize] THEN [
+    AddCard(PlayCard.RESULT, Board.activePlayer.board)
+    RemoveCard(PlayCard.RESULT, Board.activePlayer.hand)
+    Board.activePlayer.currentMana IS Board.activePlayer.currentMana - PlayCard.RESULT.cost
+] ELSE [
+    Print("Play invalid. Pick another card")
+]
+
+
+Rule minionDies WHEN [AttackMinion] IF [AttackMinion.RESULT.health LESS THAN 1] THEN [RemoveCard(attacked)]
+
+  
+Rule playerDies WHEN [AttackPlayer] IF [AttackPlayer.RESULT.currentHealth LESS THAN 1 AND AttackPlayer.RESULT EQUALS Board.p1] THEN [
+    print("You lose!")
+    changeState(GameHalt)
+] ELSE IF[attacked.currentHealth LESS THAN 1 AND attacked EQUALS Board.p2] THEN [
+    print("You win!")
+    changeState(GameWon) // Market here
+]
+
+
+Rule InitializeNextMatch WHEN [ChangeState] IF [ChangeState.RESULT EQUALS StartNextMatch] THEN [
+    EmptyDeck(Board.p1.hand)
+    EmptyDeck(Board.p2.hand)
+    EmptyDeck(Board.p1.board)
+    EmptyDeck(Board.p2.board)
+
+    Board.p1.currentHealth IS Board.p1.maxHealth
+    Board.p1.currentMana IS 0
+    Board.p2.currentHealth IS Board.p2.maxHealth
+    Board.p2.currentMana IS 0
+
+    Board.p1.playDeck IS Shuffle(Board.p1.deck)
+    Board.p2.playDeck IS Shuffle(Board.p2.deck)
+
+    Board.activePlayer IS p1
+    ChangeState(TurnStart)
+]
+
+
+State TurnStart ALLOWS [PlayCard, EndTurn, Attack]
+State GameHalt
+
+
+/*** Initialization ***/
+Board CONTAINS {
+    p1 CONTAINS {
+        name IS "p1"
+        hand CONTAINS
+        playDeck CONTAINS
+        deck CONTAINS
+        board CONTAINS
+        currentHealth IS 30
+        maxHealth IS 30
+        currentMana IS 0
+        fatigueCard CONTAINS {name IS "FatigueCard", health IS 1, attack IS 1, cost IS 0}
+    }
+    p2 CONTAINS {
+        name IS "p2"
+        hand CONTAINS
+        playDeck CONTAINS
+        deck CONTAINS
+        board CONTAINS
+        currentHealth IS 30
+        maxHealth IS 30
+        currentMana IS 0
+        maxMana IS 10
+        fatigueCard CONTAINS {name IS "FatigueCard", health IS 1, attack IS 1, cost IS 0}
+    }
+    activePlayer IS p1
+    maxDeckSize IS 30
+    maxBoardSize IS 5
+    cardUniverse IS GenerateMinions()
+    Integer bucketSize IS 5
+    buckets CONTAINS GenerateMarket
+}
+
+Board.p1.deck IS GeneratePlayerDeck()
+Board.p1.playDeck IS Shuffle((Board.p1.deck)) // Players start with the same 10 cards in a random order
+Board.p2.deck IS GeneratePlayerDeck()
+Board.p2.playDeck IS Shuffle((Board.p2.deck))
+GameStart(TurnStart)

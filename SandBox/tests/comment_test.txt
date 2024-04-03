@@ -1,0 +1,4 @@
+/*** Current Gameplay Loop 
+- The game has 2 players, p1 is the "real" player, where p2 is a human controlled representation of the NPC. 
+- Each player starts with the same 10 card deck, containing minions like "1 mana 1/1, 2 mana 2/2" etc.
+***/

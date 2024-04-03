@@ -1,0 +1,11 @@
+Template Board CONTAINS {
+    Player p1;  // This the player
+    Player p2;  
+    Integer maxDeckSize IS 4 +6;
+    Integer maxBoardSize IS 5;
+    Player activePlayer;
+    Deck cardUniverse;
+    Integer bucketCount IS 3+4*7;
+    Integer bucketSize;
+    LootBucket options;
+}
