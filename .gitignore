@@ -1,6 +1,6 @@
 # ANTLR
 SandBox/*.txt
-SandBox/*.g4
+#SandBox/*.g4
 SandBox/*.jar
 SandBox/out
 .antlr

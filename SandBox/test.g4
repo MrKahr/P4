@@ -58,12 +58,15 @@ stmt_list
     :   (stmt)* 
     ;
 
+// This is very much left-recursive - FIND WAY TO REMOVE IN CFG!
 expr
-    :   expr simple_op expr 
+    :   expr mult_op expr
+    |   expr add_op expr
     |   DIGIT
     |   IDENTIFIER
     ;
 
+// This is very much left-recursive - FIND WAY TO REMOVE IN CFG!
 boolExpr
     :   expr GT expr
     |   expr GTOE expr
@@ -76,7 +79,7 @@ boolExpr
     |   BOOLEAN
     ;
 
-// This is very much left-recursive - FIND WAY TO REMOVE IN CFG!
+
 assignment
     :   IDENTIFIER ASSIGN expr
     |   IDENTIFIER ASSIGN boolExpr
@@ -85,10 +88,6 @@ assignment
 type_primitive
     :   TYPEDEF_PRIMITIVE
     ;
-
-// type_complex
-//     :   TYPEDEF_USER
-//     ;
 
 typedef_user
     :   IDENTIFIER
@@ -124,21 +123,22 @@ template_decl
     ;
 
 rule_decl
-    :   RULE typedef_user WHEN SQB_START identifiers SQB_END IF SQB_START boolExpr SQB_END THEN SQB_START action_call* SQB_END
-    |   RULE typedef_user WHEN SQB_START identifiers SQB_END IF SQB_START boolExpr SQB_END THEN SQB_START action_call* SQB_END (ELSE IF SQB_START boolExpr SQB_END THEN SQB_START action_call* SQB_END)*
+    :   RULE typedef_user WHEN SQB_START identifier_list SQB_END IF SQB_START boolExpr SQB_END THEN SQB_START action_call* SQB_END
+    |   RULE typedef_user WHEN SQB_START identifier_list SQB_END IF SQB_START boolExpr SQB_END THEN SQB_START action_call* SQB_END (ELSE IF SQB_START boolExpr SQB_END THEN SQB_START action_call* SQB_END)*
     ;
 
 action_decl
-    :   ACTION typedef_user 
+    :   ACTION typedef_user BRAC_START identifier_list BRAC_END (RESULTS_IN (typedef_user | type_primitive))?
+    |   ACTION typedef_user BRAC_START identifier_list BRAC_END RESULTS_IN (typedef_user | type_primitive) BODY_START body BODY_END
     ;
 
 action_call
-    :   typedef_user BODY_START identifiers BODY_END
+    :   typedef_user BODY_START identifier_list BODY_END
     ;
 
 state_decl
-    :   STATE IDENTIFIER ALLOWS SQB_START identifiers SQB_END DO SQB_START action_call+ SQB_END
-    |   STATE IDENTIFIER ALLOWS SQB_START identifiers SQB_END
+    :   STATE IDENTIFIER ALLOWS SQB_START identifier_list SQB_END DO SQB_START action_call+ SQB_END
+    |   STATE IDENTIFIER ALLOWS SQB_START identifier_list SQB_END
     |   STATE IDENTIFIER
     ; 
 
@@ -151,14 +151,19 @@ parameters
     ;
 
 // ANTLR4 handles left-recursive grammars by rule precedence. See ANTLR book p.247
-simple_op
+mult_op
     :   MULT  // Precedence 6 
     |   DIV   // Precedence 5 
-    |   ADD   // Precedence 4 
+    ;
+
+
+add_op
+    :   ADD   // Precedence 4 
     |   SUB   // Precedence 3 
     ;
 
-identifiers
+
+identifier_list
     :   (IDENTIFIER (COMMA IDENTIFIER)*)?
     ;
 
@@ -183,6 +188,7 @@ RULE     : 'Rule';
 FOR      : 'FOR';
 OF       : 'OF';
 RESULT   : 'RESULTS';
+RESULTS_IN: 'RESULTS IN'
 TEMPLATE : 'Template';
 ALLOWS   : 'ALLOWS';
 WITH     : 'WITH';
@@ -200,10 +206,10 @@ EQUALS      : 'EQUALS';
 OR          : 'OR';
 AND         : 'AND';
 NOT         : 'NOT';
-ADD         : '+';
-SUB         : '-';
 MULT        : '*';
 DIV         : '/';
+ADD         : '+';
+SUB         : '-';
 
 /***  Types ***/ 
 TYPEDEF_PRIMITIVE
