@@ -1,10 +1,10 @@
 FOR(Card card OF Shuffle(cardUniverse)) {
     IF(i LESS THAN bucketCount) {
-        NEW Deck market {},
+        NEW Deck market {}
         FOR(Integer j IS 0; j LESS THAN bucketSize; j IS j + 1) {
             AddCard(card, market)
         }
-        options IS market
+        options IS market;
     }
-    i IS i + 1
+    i IS i + 1;
 }

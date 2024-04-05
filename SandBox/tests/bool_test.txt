@@ -1,0 +1,21 @@
+IF(attacked GREATER THAN 3) {
+    IF(activePlayer GREATER OR EQUALS p1) {
+        
+    } ELSE {
+        
+    }
+} ELSE { 
+    IF(nacctivePlayer LESS THAN p1) {
+        IF(123 LESS OR EQUALS 3) {
+            IF(2 EQUALS 1) {
+                IF(NOT TRUE OR 3 EQUALS 9 AND FALSE OR NOT FALSE) {
+                    Say(hellothere)
+                }
+            }
+        }
+        Card attackedMinion IS TRUE;
+        Boolean no IS FALSE OR NOT TRUE;
+    } ELSE {
+        no IS TRUE AND NOT FALSE OR FALSE;
+    }
+}

@@ -12,7 +12,7 @@ ANTLR defines a grammar with the grammar keyword and an identifier.
 This is the name of the file that you can use in the [Run ANTLR.bat]-file.grammar
 You can optionally add a [SOMENAME.txt] file as a test file that you can try the lexer and parser on. 
 
-ANTLR grammars use Extended Backus-Naur form to define its grammar; it therefore closely resembles a CFG (p. 264-265). 
+ANTLR grammars use Extended Backus-Naur form (EBNF) to define its grammar; it therefore closely resembles a CFG (p. 264-265). 
 ANTLR handles left recursion and operator precedence by applying the rule that is defined first (ANTLR book, p. 71). 
 This means that rules defined first are applied first. This solves problems such as: "Integer Integer" (ANTLR Book, p. 74). 
 However, we still have to eliminate left recursion in our CFG. 
@@ -31,13 +31,12 @@ Lowercase = Parser rule (ANTLR book p. 80)
 
 grammar test;
 
-// TODO: Consider whether statements should be ended by '\n' 
+// TODO: Consider whether statements should be ended by '\n' <--- They will not, as that's too much of a hassle
 // TODO: Check om vi skal have statement/declarations/ruleDeclartions etc. i en bestemt rækkefølge. 
 // TODO: Fjern left-recursion til CFG i den endelige rapport
 // TODO: Sæt en repræsentativ testStreng op (kig på programmerne, vi har skrevet til f.eks. muno)
-// TODO: Implement dot notation 
+// TODO: Implement dot notation
 // TODO: Implement array
-// TODO: Implement RESULT IN keyword
 // TODO: Strings in expressions --> var EQUALS "string"?
 
 ////////////
@@ -190,23 +189,23 @@ WHITESPACE: [ \t]+ -> skip ;             // ANTLR book p. 79 - note that newline
 NEWLINE: [\r\n] -> skip;
 
 /*** Keywords ***/
-IF       : 'IF';
-THEN     : 'THEN';
-ELSE     : 'ELSE';
-WHEN     : 'WHEN';
-ACTION   : 'Action';
-STATE    : 'State';
-RULE     : 'Rule';
-FOR      : 'FOR';
-OF       : 'OF';
-RESULT   : 'RESULTS';
-RESULTS_IN: 'RESULTS IN';
-TEMPLATE : 'Template';
-ALLOWS   : 'ALLOWS';
-WITH     : 'WITH';
-DO       : 'DO';
-DOT      : '.';
-NEW      : 'NEW';
+IF          : 'IF';
+THEN        : 'THEN';
+ELSE        : 'ELSE';
+WHEN        : 'WHEN';
+ACTION      : 'Action';
+STATE       : 'State';
+RULE        : 'Rule';
+FOR         : 'FOR';
+OF          : 'OF';
+RESULT      : 'RESULTS';
+RESULTS_IN  : 'RESULTS IN';
+TEMPLATE    : 'Template';
+ALLOWS      : 'ALLOWS';
+WITH        : 'WITH';
+DO          : 'DO';
+DOT         : '.';
+NEW         : 'NEW';
 
 /*** Operators ***/ 
 ASSIGN      : 'IS';
@@ -230,16 +229,6 @@ TYPEDEF_PRIMITIVE
     |   'Boolean'
     |   'String'
     ;
-
-// TYPEDEF_COMPLEX
-//     :   'Deck'
-//     |   'Card'
-//     |   'Board'
-//     ;
-
-// TYPEDEF_USER
-//     :   IDENTIFIER
-//     ; 
 
 STRING
     :   '"'.*?'"'
