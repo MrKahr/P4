@@ -1,6 +1,8 @@
 # ANTLR
 SandBox/*.txt
 #SandBox/*.g4
+SandBox/*.png
+SandBox/*.svg
 SandBox/*.jar
 SandBox/out
 .antlr
