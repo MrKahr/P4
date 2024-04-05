@@ -1,0 +1,4 @@
+State StartNextMatch
+State GameWon ALLOWS [PlayCard, Attack]
+State TurnStart ALLOWS [PlayCard, EndTurn, Attack] DO [DrawCard()]
+

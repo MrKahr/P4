@@ -38,20 +38,22 @@ grammar test;
 // TODO: Implement dot notation 
 // TODO: Implement array
 // TODO: Implement RESULT IN keyword
+// TODO: Strings in expressions --> var EQUALS "string"?
 
 ////////////
 // PARSER //
 ////////////
 program 
-    :   (template_decl)* (action_decl)* (rule_decl)*  (state_decl)* stmt_list EOF
+    :   (template_decl)* (action_decl)* (rule_decl)* (state_decl)* stmt_list EOF
     ;
 
 stmt
     :   if_block
     |   for_loop
-    |   declaration SEMICOLON
+    |   declaration
     |   assignment SEMICOLON
     |   action_call
+    |   template_init
     ;
 
 stmt_list
@@ -62,6 +64,7 @@ stmt_list
 expr
     :   expr mult_op expr
     |   expr add_op expr
+    |   action_call
     |   DIGIT
     |   IDENTIFIER
     ;
@@ -77,12 +80,19 @@ boolExpr
     |   boolExpr AND boolExpr
     |   boolExpr OR  boolExpr
     |   BOOLEAN
+    |   IDENTIFIER
     ;
 
 
 assignment
     :   IDENTIFIER ASSIGN expr
     |   IDENTIFIER ASSIGN boolExpr
+    |   IDENTIFIER ASSIGN string
+    |   IDENTIFIER ASSIGN IDENTIFIER
+    ;
+
+assignment_list
+    :   (assignment (COMMA assignment)*)
     ;
 
 type_primitive
@@ -96,8 +106,8 @@ typedef_user
 declaration
     :   type_primitive IDENTIFIER SEMICOLON
     |   type_primitive assignment SEMICOLON
-    |   IDENTIFIER IDENTIFIER SEMICOLON
-    |   IDENTIFIER assignment SEMICOLON
+    |   typedef_user IDENTIFIER SEMICOLON
+    |   typedef_user assignment SEMICOLON
     ;
 
 declaration_list
@@ -109,12 +119,12 @@ body
     ;
 
 for_loop
-    :   FOR declaration OF IDENTIFIER BODY_START body BODY_END
-    |   FOR declaration COMMA boolExpr COMMA expr BODY_START body BODY_END
+    :   FOR BRAC_START typedef_user IDENTIFIER OF (action_call | IDENTIFIER) BRAC_END BODY_START body BODY_END
+    |   FOR BRAC_START declaration boolExpr SEMICOLON (expr | assignment) BRAC_END BODY_START body BODY_END
     ;
 
 if_block
-    :   IF BRAC_START boolExpr BRAC_END BODY_START body BODY_END (ELSE IF BRAC_START boolExpr BRAC_END BODY_START body BODY_END)* ELSE BODY_START body BODY_END
+    :   IF BRAC_START boolExpr BRAC_END BODY_START body BODY_END ((ELSE IF BRAC_START boolExpr BRAC_END BODY_START body BODY_END)* ELSE BODY_START body BODY_END)?
     ;
 
 // Make sure stmtList only contains valid statements for TEMPLATE declarations
@@ -122,18 +132,21 @@ template_decl
     :   TEMPLATE typedef_user CONTAINS BODY_START declaration_list BODY_END
     ;
 
+template_init
+    :   NEW typedef_user IDENTIFIER BODY_START (template_init | assignment_list)* BODY_END
+    ; 
+
 rule_decl
-    :   RULE typedef_user WHEN SQB_START identifier_list SQB_END IF SQB_START boolExpr SQB_END THEN SQB_START action_call* SQB_END
-    |   RULE typedef_user WHEN SQB_START identifier_list SQB_END IF SQB_START boolExpr SQB_END THEN SQB_START action_call* SQB_END (ELSE IF SQB_START boolExpr SQB_END THEN SQB_START action_call* SQB_END)*
+    :   RULE typedef_user WHEN SQB_START identifier_list SQB_END if_block
     ;
 
 action_decl
-    :   ACTION typedef_user BRAC_START identifier_list BRAC_END (RESULTS_IN (typedef_user | type_primitive))?
-    |   ACTION typedef_user BRAC_START identifier_list BRAC_END RESULTS_IN (typedef_user | type_primitive) BODY_START body BODY_END
+    :   ACTION typedef_user BRAC_START parameter_list BRAC_END (RESULTS_IN (typedef_user | type_primitive))?
+    |   ACTION typedef_user BRAC_START parameter_list BRAC_END RESULTS_IN (typedef_user | type_primitive) BODY_START body BODY_END
     ;
 
 action_call
-    :   typedef_user BODY_START identifier_list BODY_END
+    :   typedef_user BRAC_START identifier_list BRAC_END
     ;
 
 state_decl
@@ -142,11 +155,7 @@ state_decl
     |   STATE IDENTIFIER
     ; 
 
-// arguments
-//     :   (IDENTIFIER (',' IDENTIFIER)*)?
-//     ;
-
-parameters
+parameter_list
     :   ((typedef_user | type_primitive) IDENTIFIER (COMMA (typedef_user | type_primitive) IDENTIFIER)*)?
     ;
 
@@ -162,6 +171,9 @@ add_op
     |   SUB   // Precedence 3 
     ;
 
+string
+    :   STRING
+    ;
 
 identifier_list
     :   (IDENTIFIER (COMMA IDENTIFIER)*)?
@@ -175,7 +187,7 @@ identifier_list
 LINE_COMMENT : '//' .*? '\r'? '\n' -> skip ; // ANTLR book p. 77
 COMMENT : '/*' .*? '*/' -> skip ;            // ANTLR book p. 77
 WHITESPACE: [ \t]+ -> skip ;             // ANTLR book p. 79 - note that newline is not included
-LINEBREAK: [\r\n] -> skip;
+NEWLINE: [\r\n] -> skip;
 
 /*** Keywords ***/
 IF       : 'IF';
@@ -188,12 +200,13 @@ RULE     : 'Rule';
 FOR      : 'FOR';
 OF       : 'OF';
 RESULT   : 'RESULTS';
-RESULTS_IN: 'RESULTS IN'
+RESULTS_IN: 'RESULTS IN';
 TEMPLATE : 'Template';
 ALLOWS   : 'ALLOWS';
 WITH     : 'WITH';
 DO       : 'DO';
 DOT      : '.';
+NEW      : 'NEW';
 
 /*** Operators ***/ 
 ASSIGN      : 'IS';

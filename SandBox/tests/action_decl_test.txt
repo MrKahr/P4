@@ -1,0 +1,5 @@
+Action AttackPlayer(Card attacking, Player attacked) RESULTS IN Player {
+    Integer i IS 3 + 4 / 2;
+}
+Action StringToInt(String s) RESULTS IN Integer
+Action ProduceError()
