@@ -35,9 +35,7 @@ grammar test;
 // TODO: Check om vi skal have statement/declarations/ruleDeclartions etc. i en bestemt rækkefølge. 
 // TODO: Fjern left-recursion til CFG i den endelige rapport
 // TODO: Sæt en repræsentativ testStreng op (kig på programmerne, vi har skrevet til f.eks. muno)
-// TODO: Implement dot notation
-// TODO: Implement array
-// TODO: Strings in expressions --> var EQUALS "string"?
+// TODO: Check wether we allow e.g.: Action ReadAction() RESULTS IN String 
 
 ////////////
 // PARSER //
@@ -63,7 +61,9 @@ stmt_list
 expr
     :   expr mult_op expr
     |   expr add_op expr
-    |   action_call
+    |   template_access
+    |   action_result
+    |   action_call     // Ensure action calls are the last of parser definitions
     |   DIGIT
     |   IDENTIFIER
     ;
@@ -74,7 +74,8 @@ boolExpr
     |   expr GTOE expr
     |   expr LT expr
     |   expr LTOE expr
-    |   expr EQUALS expr
+    |   expr NOT? EQUALS expr
+    |   stringExpr NOT? EQUALS stringExpr
     |   NOT boolExpr
     |   boolExpr AND boolExpr
     |   boolExpr OR  boolExpr
@@ -82,16 +83,17 @@ boolExpr
     |   IDENTIFIER
     ;
 
-
-assignment
-    :   IDENTIFIER ASSIGN expr
-    |   IDENTIFIER ASSIGN boolExpr
-    |   IDENTIFIER ASSIGN string
-    |   IDENTIFIER ASSIGN IDENTIFIER
+stringExpr
+    :   (string | expr) (ADD (string | expr))+      // Doing it this way means implicit type conversion from int to string!. Also, ensure types are correct! (int, str)
+    |   string
+    |   IDENTIFIER
     ;
 
-assignment_list
-    :   (assignment (COMMA assignment)*)
+assignment // Remember to add semicolon if relevant
+    :   (template_access | IDENTIFIER) ASSIGN (expr | boolExpr | stringExpr)
+    |   (template_access | IDENTIFIER) ASSIGN (array_access | array_init)
+    |   (template_access | IDENTIFIER) ASSIGN (template_access | action_call)
+    |   (template_access | IDENTIFIER) ASSIGN IDENTIFIER
     ;
 
 type_primitive
@@ -107,6 +109,7 @@ declaration
     |   type_primitive assignment SEMICOLON
     |   typedef_user IDENTIFIER SEMICOLON
     |   typedef_user assignment SEMICOLON
+    |   array_decl SEMICOLON
     ;
 
 declaration_list
@@ -118,44 +121,71 @@ body
     ;
 
 for_loop
-    :   FOR BRAC_START typedef_user IDENTIFIER OF (action_call | IDENTIFIER) BRAC_END BODY_START body BODY_END
+    :   FOR BRAC_START typedef_user IDENTIFIER OF (template_access | action_call | IDENTIFIER) BRAC_END BODY_START body BODY_END
     |   FOR BRAC_START declaration boolExpr SEMICOLON (expr | assignment) BRAC_END BODY_START body BODY_END
     ;
 
 if_block
-    :   IF BRAC_START boolExpr BRAC_END BODY_START body BODY_END ((ELSE IF BRAC_START boolExpr BRAC_END BODY_START body BODY_END)* ELSE BODY_START body BODY_END)?
+    :   IF BRAC_START boolExpr BRAC_END BODY_START body BODY_END (ELSE IF BRAC_START boolExpr BRAC_END BODY_START body BODY_END)* (ELSE BODY_START body BODY_END)?
     ;
 
-// Make sure stmtList only contains valid statements for TEMPLATE declarations
 template_decl
     :   TEMPLATE typedef_user CONTAINS BODY_START declaration_list BODY_END
     ;
 
 template_init
-    :   NEW typedef_user IDENTIFIER BODY_START (template_init | assignment_list)* BODY_END
+    :   NEW typedef_user IDENTIFIER BODY_START (template_init | (assignment SEMICOLON))* BODY_END
     ; 
+
+template_access
+    :   typedef_user (DOT IDENTIFIER)+
+    ;
 
 rule_decl
     :   RULE typedef_user WHEN SQB_START identifier_list SQB_END if_block
     ;
 
-action_decl
-    :   ACTION typedef_user BRAC_START parameter_list BRAC_END (RESULTS_IN (typedef_user | type_primitive))?
-    |   ACTION typedef_user BRAC_START parameter_list BRAC_END RESULTS_IN (typedef_user | type_primitive) BODY_START body BODY_END
+action_decl // Right now return is optional. Should it be like that?
+    :   ACTION typedef_user BRAC_START parameter_list BRAC_END (RESULTS_IN (typedef_user | type_primitive | STATE) (BODY_START body return BODY_END)?)?
+    |   ACTION typedef_user BRAC_START parameter_list BRAC_END BODY_START body BODY_END // Without RESULTS IN, return is not needed. Meaning this action does not return anything
     ;
 
 action_call
-    :   typedef_user BRAC_START identifier_list BRAC_END
+    :   typedef_user BRAC_START argument_list BRAC_END
+    ;
+
+action_result   // NOTICE: currently action_result is an expr, which means it's allowed almost everywhere! The only valid use of it is in the "IF()" of an if_block in Rule. Semantic Analysis should handle this
+    :   typedef_user DOT RESULT (DOT IDENTIFIER)*
     ;
 
 state_decl
-    :   STATE IDENTIFIER ALLOWS SQB_START identifier_list SQB_END DO SQB_START action_call+ SQB_END
-    |   STATE IDENTIFIER ALLOWS SQB_START identifier_list SQB_END
-    |   STATE IDENTIFIER
+    :   STATE typedef_user ALLOWS SQB_START identifier_list SQB_END DO SQB_START action_call+ SQB_END
+    |   STATE typedef_user ALLOWS SQB_START identifier_list SQB_END
+    |   STATE typedef_user
     ; 
 
 parameter_list
-    :   ((typedef_user | type_primitive) IDENTIFIER (COMMA (typedef_user | type_primitive) IDENTIFIER)*)?
+    :   ((typedef_user | type_primitive | STATE) IDENTIFIER (COMMA (typedef_user | type_primitive | STATE) IDENTIFIER)*)?
+    ;
+
+argument_list
+    :   ((expr | boolExpr | stringExpr) (COMMA (expr | boolExpr | stringExpr))*)?
+    ;
+
+array_decl
+    :   (typedef_user | type_primitive) SQB_START SQB_END IDENTIFIER (ASSIGN array_init)?
+    ;
+
+array_init
+    :   SQB_START ((stringExpr | expr) (COMMA (stringExpr | expr))*)? SQB_END
+    ;
+
+array_access
+    :   (template_access | IDENTIFIER) SQB_START expr SQB_END
+    ;
+
+return
+    :   RESULT_IN (expr | boolExpr | stringExpr) SEMICOLON
     ;
 
 // ANTLR4 handles left-recursive grammars by rule precedence. See ANTLR book p.247
@@ -198,8 +228,9 @@ STATE       : 'State';
 RULE        : 'Rule';
 FOR         : 'FOR';
 OF          : 'OF';
-RESULT      : 'RESULTS';
-RESULTS_IN  : 'RESULTS IN';
+RESULT      : 'RESULT';     // Get result of a specific action call. Used in Rule
+RESULT_IN   : 'RESULT IN';  // Return from action
+RESULTS_IN  : 'RESULTS IN'; // Declare return type for action
 TEMPLATE    : 'Template';
 ALLOWS      : 'ALLOWS';
 WITH        : 'WITH';

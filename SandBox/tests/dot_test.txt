@@ -1,0 +1,11 @@
+EmptyDeck(Board.p1.hand)
+
+Board.p1.currentHealth IS Board.p1.maxHealth;
+
+Board.p1.currentMana IS 0;
+
+Board.p2.playDeck IS Shuffle(Board.p2.deck);
+
+attackingMinion.canAttack IS FALSE;
+
+Card attackingMinion IS Board.activePlayer.board[StringToInt(attacker)];
