@@ -25,3 +25,8 @@ replay_pid*
 
 ### VS Code ###
 .vscode/
+### IntelliJ ###
+.idea/
+
+# Maven output files
+Project/target/

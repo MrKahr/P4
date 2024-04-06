@@ -7,7 +7,7 @@
     <groupId>com.proj4</groupId>
     <artifactId>Project</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>LanguageNameGoesHere</name>
+    <name>DBL</name>
     <description>P4 Project</description>
 
     <properties>
@@ -32,6 +32,14 @@
                 <groupId>org.antlr</groupId>
                 <artifactId>antlr4-maven-plugin</artifactId>
                 <version>${antlr.version}</version> <!-- Variable pointing to <properties> -->
+                <configuration>
+                    <sourceDirectory>src/main/antlr</sourceDirectory>
+                    <outputDirectory>${project.build.directory}/generated-sources/antlr</outputDirectory>
+                    <arguments>
+                        <argument>-visitor</argument>
+                        <argument>-listener</argument>
+                    </arguments>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
