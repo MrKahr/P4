@@ -20,8 +20,9 @@ To be written... (when we have a product to use)
 STILL WORK IN PROGRESS!!
 
 1. Clone this repository.
-2. Open a terminal in the project directory (`<root-folder>/P4`) on your PC and type `cd project`
-3. Type `./mvnw antlr4:antlr4` to build the project
+2. Open a terminal in the project directory (`<root-folder>/P4`) on your PC and type `cd Project`
+3. Type `./mvnw antlr4:antlr4` to generate Java files for grammars in `src/main/antlr` (optional)
+4. Type `mvn clean install` to generate Java files and compile the entire project
 
 ## Troubleshooting
 
