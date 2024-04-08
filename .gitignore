@@ -1,7 +1,10 @@
 # ANTLR
-.out/*
-./SandBox/*.txt
-./SandBox/*.g4
+SandBox/*.txt
+#SandBox/*.g4
+SandBox/*.png
+SandBox/*.svg
+SandBox/*.jar
+SandBox/out
 .antlr
 
 # Compiled class file
