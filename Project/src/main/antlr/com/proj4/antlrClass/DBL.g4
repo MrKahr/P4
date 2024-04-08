@@ -4,7 +4,8 @@ This docstring describes important assumptions about our current grammar and des
 
 
 *** OUR GRAMMAR *** 
-1) We assume that (...)
+1) We disallow program statements that are not given in a set order
+2) We do not eliminate direct left recursion 
 
 
 *** IMPORTANT ANTLR-FEATURES *** 
@@ -31,11 +32,9 @@ Lowercase = Parser rule (ANTLR book p. 80)
 
 grammar DBL;
 
-
 // TODO: Consider whether statements should be ended by '\n' <--- They will not, as that's too much of a hassle
 // TODO: Check om vi skal have statement/declarations/ruleDeclartions etc. i en bestemt rækkefølge. 
 // TODO: Fjern left-recursion til CFG i den endelige rapport
-// TODO: Sæt en repræsentativ testStreng op (kig på programmerne, vi har skrevet til f.eks. muno)
 // TODO: Check wether we allow e.g.: Action ReadAction() RESULTS IN String 
 
 ////////////
@@ -160,7 +159,7 @@ action_result   // NOTICE: currently action_result is an expr, which means it's 
     ;
 
 state_decl
-    :   STATE typedef_user ALLOWS SQB_START identifier_list SQB_END DO SQB_START action_call+ SQB_END
+    :   STATE typedef_user ALLOWS SQB_START identifier_list SQB_END WITH_LOOP SQB_START action_call+ SQB_END
     |   STATE typedef_user ALLOWS SQB_START identifier_list SQB_END
     |   STATE typedef_user
     ; 
@@ -235,7 +234,7 @@ RESULTS_IN  : 'RESULTS IN'; // Declare return type for action
 TEMPLATE    : 'Template';
 ALLOWS      : 'ALLOWS';
 WITH        : 'WITH';
-DO          : 'DO';
+WITH_LOOP   : 'WITH LOOP';
 DOT         : '.';
 NEW         : 'NEW';
 
