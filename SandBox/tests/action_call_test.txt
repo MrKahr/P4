@@ -1,0 +1,1 @@
+ActivateMinions(fisk, fisk2, fisk3)

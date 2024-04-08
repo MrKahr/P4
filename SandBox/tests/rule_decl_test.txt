@@ -1,0 +1,18 @@
+Rule minionDies WHEN [AttackMinion] IF (AttackMinion LESS THAN 1) {RemoveCard(attacked)}
+
+Rule cardPlayValid WHEN [PlayCard] IF(currentMana GREATER THAN cost AND currentMinions LESS THAN maxBoardSize) {
+    AddCard(Fisk)
+    currentMana IS currentMana - cost;
+} ELSE {
+    Print(fisk)
+}
+
+Rule ReadPlayerAction WHEN [ReadAction] IF (GetState() EQUALS TurnStart AND fis EQUALS 7) {
+    String minionToSummon IS john + 3;
+ } ELSE IF(GetState() EQUALS TurnStart AND fisk2 EQUALS go) {
+    Attack()
+    Kenobi()
+ }
+ ELSE {
+    Grieveous()
+ }

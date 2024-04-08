@@ -1,0 +1,14 @@
+String fisk IS "Fisk";
+
+String s IS activePlayername + "'s turn.\n Hand: \n";
+
+s IS s + "  card " + i + "[" + name + ", attack:" + attack + ", health:" + health + ", cost:" + cost + "]\n";
+
+Boolean meme IS "John" EQUALS "Userman";
+
+Boolean bool IS s NOT EQUALS "card";
+
+/* Note: these are treated as syntax errors right now.
+"fisk" EQUALS "fisk";
+fisk EQUALS "fish";
+*/

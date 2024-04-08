@@ -30,7 +30,7 @@ Uppercase = Lexer rule (ANTLR book, p. 80)
 Lowercase = Parser rule (ANTLR book p. 80)
 */
 
-grammar test;
+grammar DBL;
 
 // TODO: Consider whether statements should be ended by '\n' <--- They will not, as that's too much of a hassle
 // TODO: Check om vi skal have statement/declarations/ruleDeclartions etc. i en bestemt rækkefølge. 
