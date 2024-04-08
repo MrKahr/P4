@@ -1,10 +1,10 @@
 <h1 align="center">
-    P4: Project Title goes here
+    P4: DBL (Deck builder language) 
 </h1>
 
 ## Introduction
 
-A student project for designing a language that solves a unique problem.
+A student project that describes a language for creating high-fidelity deck builder protoypes.  
 
 ## Installation
 
