@@ -26,7 +26,7 @@ public class DeclarationVisitor extends DBLBaseVisitor<Type> {
     @Override
     public Type visitTemplate_decl(DBLParser.Template_declContext ctx) {
         String templateName = ctx.typedef_user().getText();
-        TemplateType templateType = new TemplateType(templateName);
+        ComplexType templateType = new ComplexType(templateName);
 
         // Iterate over attributes of Template
         for (DBLParser.DeclarationContext declCtx : ctx.declaration_list().declaration()) {

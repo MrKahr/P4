@@ -13,13 +13,13 @@ import com.proj4.antlrClass.DBLParser;
  * Run and debug with ctrl+shift+D
  * example:
  * {
-            "type": "java",
-            "name": "Current File Args: test.txt",
-            "request": "launch",
-            "mainClass": "${file}",
-            "projectName": "Project",
-            "args": "C:\\...\\P4\\Project\\inputFiles\\array_test.txt"
-        }
+    "type": "java",
+    "name": "Current File Args: test.txt",
+    "request": "launch",
+    "mainClass": "${file}",
+    "projectName": "Project",
+    "args": "Project\\inputFiles\\array_test.txt"
+* }
  */
 public class PrintParseTree {
     public static void main(String[] args) throws Exception {
