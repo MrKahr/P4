@@ -10,9 +10,6 @@ public class ASTVisitor extends DBLBaseVisitor<Data>  {
     @Override
     public Data visitProgram(DBLParser.ProgramContext ctx) {
         // Here, we should define global scope
-
-
-
         // We want to visit program's children 
         return visitChildren(ctx);
     }
