@@ -12,7 +12,7 @@ public class Main {
     public static void main(String[] args) {
 
         if (args.length == 0) {
-            args = new String[]{"Integer fisk IS 4;"};
+            args = new String[]{"Integer fisk;"};   // <----- INPUT
         }
 
         System.out.println("Parsing: " + args[0]);
@@ -32,5 +32,6 @@ public class Main {
         
         // We need to implement this:
         visitor.visit(tree);
+        // visitor.getAST(); - use this pattern to get tree
     }
 }

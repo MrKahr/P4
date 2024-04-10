@@ -1,6 +1,6 @@
 package com.proj4.symbolTable;
 
-abstract class Type {
+public abstract class Type {
     private String name;
 
     public Type(String name) {

@@ -1,16 +1,22 @@
 package com.proj4.AST;
 import com.proj4.antlrClass.DBLBaseVisitor;
 import com.proj4.antlrClass.DBLParser;
+import com.proj4.AST.nodes.AST;
+import com.proj4.AST.nodes.DeclNode;
 
 // TODO: First example should be a eclaration 
+// TODO: For ANTLR annotations, check p39 - can make it easier to traverse tree
 
-public class ASTVisitor extends DBLBaseVisitor<Data>  {
-    
+public class ASTVisitor extends DBLBaseVisitor<Object>  {
+    private AST ast;
+
+
 
     @Override
-    public Data visitProgram(DBLParser.ProgramContext ctx) {
+    public Object visitProgram(DBLParser.ProgramContext ctx) {
         // Here, we should define global scope
         // We want to visit program's children 
+        ast = new AST();
         return visitChildren(ctx);
     }
 
@@ -24,16 +30,27 @@ public class ASTVisitor extends DBLBaseVisitor<Data>  {
 
 
 @Override 
-    public Data visitDeclaration(DBLParser.DeclarationContext ctx){
-        String full = ctx.getText();
-        ctx.SEMICOLON().getText();
-        String assign = ctx.assignment().IDENTIFIER().get(0).getText();
+    public Object visitDeclaration(DBLParser.DeclarationContext ctx){
+        DeclNode curNode = null;
+        visit(ctx.assignment()); // Possible way to check whether element is null
 
-        System.out.println("FOUND Identifier: " + assign);
+        if(ctx.assignment() != null){
+            curNode = new DeclNode(ctx.IDENTIFIER().getText(), ctx.type_primitive().TYPEDEF_PRIMITIVE().getText()); //look in the antlr book to improve "ctx.type_primitive().TYPEDEF_PRIMITIVE().getText()"          System.out.println("Type: " + ctx.type_primitive().getText());
+            ast.addChild(curNode);
+        }
+
+
         
-        Object d = new Data(full);
+        if(ctx.type_primitive() != null){
+            curNode = new DeclNode(ctx.IDENTIFIER().getText(), ctx.type_primitive().TYPEDEF_PRIMITIVE().getText()); //look in the antlr book to improve "ctx.type_primitive().TYPEDEF_PRIMITIVE().getText()"          System.out.println("Type: " + ctx.type_primitive().getText());
+            ast.addChild(curNode);
+        } else if(ctx.typedef_user() != null) {
+            // Implement me
+        }
         
-        return (Data)d;
+        System.out.println("Found declnode. Identifier = " + curNode.getID() + " Type = " + curNode.getType());
+        return curNode;
     }
+
 
 }
