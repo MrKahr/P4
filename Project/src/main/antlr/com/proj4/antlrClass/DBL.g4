@@ -59,7 +59,8 @@ stmt_list
 
 // This is very much left-recursive - FIND WAY TO REMOVE IN CFG!
 expr
-    :   expr mult_op expr
+    :   BRAC_START expr BRAC_END
+    |   expr mult_op expr
     |   expr add_op expr
     |   template_access
     |   action_result
@@ -70,7 +71,8 @@ expr
 
 // This is very much left-recursive - FIND WAY TO REMOVE IN CFG!
 boolExpr
-    :   expr GT expr
+    :   BRAC_START boolExpr BRAC_END
+    |   expr GT expr
     |   expr GTOE expr
     |   expr LT expr
     |   expr LTOE expr
