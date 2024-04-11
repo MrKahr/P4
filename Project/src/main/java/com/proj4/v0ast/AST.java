@@ -1,4 +1,4 @@
-package com.proj4.AST;
+package com.proj4.v0ast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,7 @@ import org.antlr.v4.runtime.CommonToken;    // Implements the Token interface
 
 // Homogeneous AST node type ---- Language Implementation Patterns, p. 109
 public class AST { 
-    CommonToken token; // From which token did we create node?
+    CommonToken token;
     List<AST> children; // normalized list of children
     
     public AST() { ; } // for making nil-rooted nodes

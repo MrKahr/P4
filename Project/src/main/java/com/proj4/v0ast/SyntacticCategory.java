@@ -1,4 +1,4 @@
-package com.proj4.AST;
+package com.proj4.v0ast;
 
 public enum SyntacticCategory{
     DECLARATION, 

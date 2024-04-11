@@ -1,41 +1,33 @@
 package com.proj4.AST.nodes;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import org.antlr.v4.runtime.CommonToken;    // Implements the Token interface
+public class AST {
+    //Field
+    private ArrayList<AST> children;
 
 
+    //Constructor
+    public AST(){}  // Used at root of parse tree
 
-// Homogeneous AST node type ---- Language Implementation Patterns, p. 109
-public class AST { 
-    CommonToken token; // From which token did we create node?
-    List<AST> children; // normalized list of children
-    
-    public AST() { ; } // for making nil-rooted nodes
-    
-    public AST(CommonToken token) { 
-        this.token = token; 
+    public AST(AST node){
+        if (children == null) {
+            children = new ArrayList<AST>();
+        }
+        children.add(node);
     }
 
-    /** Create node from token type; used mainly for imaginary tokens */
-    public AST(int tokenType) { 
-        this.token = new CommonToken(tokenType);
+    //Method
+    public ArrayList<AST> getChildren() {
+        return children;
     }
 
-
-    /** External visitors execute the same action for all nodes
-    * with same node type while walking. */
-    public int getNodeType() { 
-        return token.getType(); 
-    }
-    
-    public void addChild(AST t) {
-        if ( children==null ) children = new ArrayList<AST>();
-            children.add(t);
+    //put a new child on the list of children
+    public void addChild(AST newChild){
+        children.add(newChild);
     }
 
-    public boolean isNil() { 
-        return token==null;
-    }
+    // public static void walk(AbstractSyntaxTree AST){
+    //     AST.getChildren().forEach((child) -> {AbstractSyntaxTree.walk(child);});
+    // }
 }

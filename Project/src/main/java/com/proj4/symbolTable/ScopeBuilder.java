@@ -72,17 +72,17 @@ public class ScopeBuilder extends DBLBaseListener {
         System.out.println("Program Entered. I should build a global scope here: " + ctx.getText() + "\n");
     }*/
 
-    @Override public void enterDeclaration(DBLParser.DeclarationContext ctx) {  //see DBLBaseListener for allowed functions
-        System.out.println("Declaration entered: " + ctx.getText() + "\n");      //code that executes when entering a node in the tree
+    // @Override public void enterDeclaration(DBLParser.DeclarationContext ctx) {  //see DBLBaseListener for allowed functions
+    //     System.out.println("Declaration entered: " + ctx.getText() + "\n");      //code that executes when entering a node in the tree
 
-        Scope localScope = new Scope();
-        //TODO: get information from this node and place it in the scope
+    //     Scope localScope = new Scope();
+    //     //TODO: get information from this node and place it in the scope
 
 
 
-        localScope = mergeScopes(localScope, scopeStack.peek());
-        scopeStack.push(localScope);    //combine the local scope with the outer scope and push to the stack
-    }
+    //     localScope = mergeScopes(localScope, scopeStack.peek());
+    //     scopeStack.push(localScope);    //combine the local scope with the outer scope and push to the stack
+    // }
 
     @Override public void exitEveryRule(ParserRuleContext ctx) {
         System.out.println("Rule exited: " + ctx.getText() + "\n");      //code that executes when exiting a node in the tree
