@@ -44,7 +44,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
 
     @Override
     public PrimDeclNode visitIdDeclPrim(DBLParser.IdDeclPrimContext ctx) {
-        PrimDeclNode node = new PrimDeclNode(ctx.type_primitive().getText(), ctx.IDENTIFIER().getText());
+        PrimDeclNode node = new PrimDeclNode(ctx.typePrimitive().getText(), ctx.IDENTIFIER().getText());
 
         System.out.println("Found IDENTIFIER: " + node.getID() + " | TYPE: " + node.getType());
         return node;
