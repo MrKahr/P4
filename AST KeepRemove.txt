@@ -1,0 +1,129 @@
+********
+> Keep <
+********
+
+TemplateDecl (helps us add the template to symbol tables since we know it's a template)
+    Values: Identifier (basically the type) 
+    Child Nodes: template fields, formatted as declaration nodes 
+
+    template t{ <- t is the value
+        card c      <- child node
+        int a IS 0  <- child node
+    }
+
+ArrayDecl (It's a complex declaration and needs special attention when interpreting)
+    Values: Type, Identifier    <- no need for size, since decks should be resizable
+    Child Nodes: Expressions in the order they appear in the array
+
+ActionDecl (This is basically a function definition and also very important)
+    Values: Return type, Identifier
+    Child Nodes: Parameters and a statement-node that corresponds to the code in the action.
+    The parameter-nodes should always be first in the list of child nodes for easier type checking and interpreting
+    (techinally declarations are also statements, I think, so the child nodes are all statements)
+
+PrimitiveDecl (your basic declaration for primitive variables. Subclass of Statement)
+    Values: Identifier, Initial assignment (optional)   <- type inferred from the type of declaration i.e. intDecl or boolDecl or something
+
+    Integer x = 0 creates a node like intDecl(x,0)
+    Boolean y creates a node like boolDecl(y,null)
+
+StateDecl   <- this one is not a statement because we've decided that rules are declared separately from the program, like templates and states
+    Value: Identifier   <- used to store the state in a symbol table
+
+RuleDecl    (Note: the triggering action must have its result be part of a rule's scope. When type checking, we must verify that all triggering actions have the same return type if the result is used!)
+    Values: Actions   <- The identifiers of the actions that trigger this rule
+    Child Nodes: IfElse-node
+
+Assignment (a variable changes its value but keeps its type. Not important for type checking, essential for interpreting)
+    Values: Identifier
+    Child Node: Expression. The variable will assume the value of this expression or cause an error if the types are mismatched
+
+MathExp
+    Values: Operator, Identifier, Constant  <- no type value is needed because we can infer it from the node type
+    Child Nodes: Operands   <- max 2 of these per expression. We consider them expressions as well
+
+BoolExp
+    Values: Operator, Identifier, Constant  <- writing this in java, we can let enumerations act as operators instead of using strings
+    Child Nodes: Operands
+
+StringExp
+    Values: Operator, Identifier, Constant  <- operators could be an enumeration since the user can't define them
+    Child Nodes: Operands
+
+IfElse
+    Value: Nothing <- no types or identifiers to be found here, so we don't need anything
+    Child Nodes: 
+        BoolExp     <- the BoolExp is the condition
+        Statement   <- the first statement executes if the condition is true
+        Statement   <- the second statement executes if the condition false
+
+ForLoop
+    Value: Nothing <- no types or identifiers to be found here, so we don't need anything
+    Child Nodes:
+        PrimitiveDecl   <- the iterator of the loop
+        BoolExp         <- the condition that must hold for the loop to run
+        Statement       <- what to do with the iterator after every loop
+        Statement       <- the loop body
+
+ForOf
+    Value: Identifier  <- the array to iterate over
+    Child Node: Statement   <-the statement to execute every iteration
+
+
+ActionCall
+    Value: Identifier
+    Child Nodes: Arguments, formatted as expressions (these must match the types specified in the ActionDecl to not make type errors)
+
+Statement   <- keep this as an abstract class that is implemented by all the different statement types
+    Value: Statement type   <- this is an enumeration that expresses what kind of statement it is, so the interpreter or type checker knows how to handle it
+
+Declaration <- this should also be an abstract class and should work like Statement
+    Value: Declaration type
+
+Expression  <- another abstract class
+    Value: Expression type (Can be MathExp, BoolExp, or StringExp)
+
+ArrayAccess     <- this is techinally an expression, but the type could be anything
+    Value: Identifier
+    Child Node: MathExp <- finds the array index, which starts at 0. Runtime error if this is negative
+
+Return  
+    Value: Maybe type? Might not be needed
+    Child Node: Expression  <- must match the specified return type
+
+TemplateInstance
+    Value:
+        Identifier  <- the name of the instance to be stored in a symbol table 
+        Type   <- the type of template to instantiate
+    Child Nodes: Expressions with the values to put in the template's fields
+
+
+
+**********
+> Remove <
+**********
+
+declaration_list (we will circumvent the need for this by formatting the AST in a predetermined way)
+All types (instead of having these, we will create more types of declarations i.e. intDecl, boolDecl, etc.)
+CONTAINS-keyword (only needed for the parser. We can achieve the same effect by formatting the AST in a certain way)
+Semicolon
+brackets(scope inferred by parent node)
+TypeDef User (we don't care if the user or the syntax defines the type)
+TypePrimitive (depending on the syntactic category, we will always know if a type is present)
+IS-keyword (can be removed in favour of an "assignment"-node)
+Statement_list (the list is not needed if we let statements be child nodes of Statement_list's parent)
+String  (this should be turned into a StringExp that returns the string in question)
+
+> Missing <
+Instatiating templates  <- involves allocating memory for the data structure and maybe putting default values in some fields
+Assignment  <- missing from the abstract syntax only
+
+> Priority <
+Declarations, including StateDecl, among others
+Templates
+Expressions (focus on MathExp and BoolExp)
+Assignment
+Actions and return statements
+IfElse
+Rules
+At least one type of loop

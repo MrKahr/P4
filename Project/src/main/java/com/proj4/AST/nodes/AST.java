@@ -2,20 +2,12 @@ package com.proj4.AST.nodes;
 
 import java.util.ArrayList;
 
-public class AST {
+import com.proj4.AST.visitors.NodeVisitor;
+import com.proj4.AST.visitors.VisitorDecider;
+
+public abstract class AST {
     //Field
-    private ArrayList<AST> children;
-
-
-    //Constructor
-    public AST(){}  // Used at root of parse tree
-
-    public AST(AST node){
-        if (children == null) {
-            children = new ArrayList<AST>();
-        }
-        children.add(node);
-    }
+    private ArrayList<AST> children = new ArrayList<AST>();
 
     //Method
     public ArrayList<AST> getChildren() {
@@ -27,7 +19,20 @@ public class AST {
         children.add(newChild);
     }
 
-    // public static void walk(AbstractSyntaxTree AST){
-    //     AST.getChildren().forEach((child) -> {AbstractSyntaxTree.walk(child);});
-    // }
+    public void walk(AST node){
+        if(children.size() > 0){    //call recursively if there are children of this node
+        children.forEach((child) -> {walk(child);});
+        }
+    }
+    
+    public void acceptVisitor(NodeVisitor visitor){
+        visitor.visit(this);
+    }
+
+    public void visitChildren(){
+        children.forEach((child) -> {
+          VisitorDecider.decideVisitor(child);  
+        });
+    }
+
 }

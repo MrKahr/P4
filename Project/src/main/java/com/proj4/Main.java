@@ -4,15 +4,18 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
-import com.proj4.AST.ASTVisitor;
 import com.proj4.antlrClass.DBLLexer;
 import com.proj4.antlrClass.DBLParser;
+
+import com.proj4.AST.nodes.*;
+import com.proj4.AST.visitors.NodeVisitor;
+import com.proj4.AST.visitors.VisitorDecider;
 
 public class Main {
     public static void main(String[] args) {
 
         if (args.length == 0) {
-            args = new String[]{"Integer fisk;"};   // <----- INPUT
+            args = new String[]{"Integer fisk; String fisk2;"};   // <----- INPUT
         }
 
         System.out.println("Parsing: " + args[0]);
@@ -28,10 +31,15 @@ public class Main {
         ParseTree tree = parser.program();  // THROWS Recognition exception!!!!
         
         // Our custom visitor (does the actions as tree is traversed)
-        ASTVisitor visitor = new ASTVisitor();
+        ParseTreeVisitor parseVisitor = new ParseTreeVisitor();
         
         // We need to implement this:
-        visitor.visit(tree);
+        parseVisitor.visit(tree);
         // visitor.getAST(); - use this pattern to get tree
+
+        ProgramNode pn = new ProgramNode();
+        pn.addChild(new PrimDeclNode("Integer", "fisk1"));
+        pn.addChild(new PrimDeclNode("Booleoolean", "fisk2"));
+        VisitorDecider.decideVisitor(pn);
     }
 }

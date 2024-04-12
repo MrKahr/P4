@@ -1,18 +1,21 @@
-package com.proj4.AST.nodes;   
+package com.proj4.AST.nodes;
+import com.proj4.AST.visitors.NodeVisitor;;
 
-public class DeclNode extends AST {
+public class PrimDeclNode extends AST {
     private String ID;
     private String type;
     private Object value;
 
 
-    public DeclNode(String type, String ID, Object value){
+    public PrimDeclNode(){};
+
+    public PrimDeclNode(String type, String ID, Object value){
         this.ID = ID;
         this.type = type;
         this.value = value;
     }
 
-    public DeclNode(Object type, String ID){
+    public PrimDeclNode(String type, String ID){
         this.ID = ID;
         this.type = type;
     }
@@ -24,6 +27,4 @@ public class DeclNode extends AST {
     public String getID() {
         return this.ID;
     }
-
-    
 }
