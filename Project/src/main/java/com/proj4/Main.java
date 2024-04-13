@@ -37,9 +37,15 @@ public class Main {
         parseVisitor.visit(tree);
         // visitor.getAST(); - use this pattern to get tree
 
+
+        // Sketch test of visitors - REMOVE 
         ProgramNode pn = new ProgramNode();
         pn.addChild(new PrimDeclNode("Integer", "fisk1"));
         pn.addChild(new PrimDeclNode("Booleoolean", "fisk2"));
+        pn.getChildren().get(0).addChild(new PrimDeclNode("String", "fisk3"));
         VisitorDecider.decideVisitor(pn);
+
+        // Sketch test of print parse tree 
+        pn.printTree();
     }
 }
