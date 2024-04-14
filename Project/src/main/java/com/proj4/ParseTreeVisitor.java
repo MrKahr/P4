@@ -50,6 +50,34 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         return node;
     }
 
+    // TODO: Check for return statement
+    
+    @Override
+    public ActionDeclNode visitReturnActionDecl(DBLParser.ReturnActionDeclContext ctx) {
+        ActionDeclNode node = new ActionDeclNode();
+        var test = visitChildren(ctx);
+        System.out.println(test);
+        return node; 
+    }
+    @Override
+    public ActionDeclNode visitNoReturnActionDecl(DBLParser.NoReturnActionDeclContext ctx){
+        ActionDeclNode node = new ActionDeclNode();
+        var test = visitChildren(ctx);
+        System.out.println(test);
+        return node;
+    }
+	/**
+	 * Visit a parse tree produced by {@link DBLParser#actionCall}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+
     // @Override
     // public Object visitIdDeclUser(DBLParser.IdDeclUserContext ctx){
     // DeclNode node = new DeclNode(ctx.typedef_user().getText(),

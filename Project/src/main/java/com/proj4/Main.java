@@ -42,7 +42,8 @@ public class Main {
         ProgramNode pn = new ProgramNode();
         pn.addChild(new PrimDeclNode("Integer", "fisk1"));
         pn.addChild(new PrimDeclNode("Booleoolean", "fisk2"));
-        pn.getChildren().get(0).addChild(new PrimDeclNode("String", "fisk3"));
+        pn.addChild(new ActionDeclNode("Action", "fisk3"));
+        pn.getChildren().get(0).addChild(new PrimDeclNode("String", "fisk4"));
         VisitorDecider.decideVisitor(pn);
 
         // Sketch test of print parse tree 
