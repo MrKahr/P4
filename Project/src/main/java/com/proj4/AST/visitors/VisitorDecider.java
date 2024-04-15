@@ -16,7 +16,7 @@ public class VisitorDecider {
                 node.acceptVisitor(new ActionDeclNodeVisitor());
                 break;
             default:
-                System.err.println("UNRECOGNIZED NODE TYPE!\nGOT " + node.getClass().getName());
+                System.err.println("UNRECOGNIZED NODE TYPE!\nGOT " + node.getClass().getSimpleName());
                 break;
         }
     }

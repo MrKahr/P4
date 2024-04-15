@@ -24,12 +24,13 @@ ActionDecl      (This is basically a function definition and also very important
     Child Nodes: Parameters and a statement-node that corresponds to the code in the action.
     ----------------
     The parameter-nodes should always be first in the list of child nodes for easier type checking and interpreting
-    (technically declarations are also statements, I think, so the child nodes are all statements)
 
+    (technically declarations are also statements, I think, so the child nodes are all statements)
 
 ActionCall
     Value: Identifier
     Child Nodes: Arguments, formatted as expressions (these must match the types specified in the ActionDecl to not make type errors)
+
 
 
 Assignment      (a variable changes its value but keeps its type. Not important for type checking, essential for interpreting)
@@ -77,6 +78,9 @@ IfElse
 MathExp
     Values: Operator, Identifier, Constant  <--- no type value is needed because we can infer it from the node type
     Child Nodes: Operands   <--- max 2 of these per expression. We consider them expressions as well
+
+Expression  <- another abstract class
+    Value: Expression type (Can be MATH (MathExp), BOOL (BoolExp), or STRING (StringExp))
 
 
 PrimitiveDecl   (your basic declaration for primitive variables. Subclass of Statement)
