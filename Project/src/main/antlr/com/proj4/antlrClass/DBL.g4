@@ -107,11 +107,11 @@ typedef_user
     ;
 
 declaration
-    :   type_primitive IDENTIFIER SEMICOLON
-    |   type_primitive assignment SEMICOLON
-    |   typedef_user IDENTIFIER SEMICOLON
-    |   typedef_user assignment SEMICOLON
-    |   array_decl SEMICOLON
+    :   type_primitive IDENTIFIER SEMICOLON     # idDeclPrim
+    |   type_primitive assignment SEMICOLON     # assignDeclPrim
+    |   typedef_user IDENTIFIER SEMICOLON       # idDeclUser
+    |   typedef_user assignment SEMICOLON       # assignDeclUser
+    |   array_decl SEMICOLON                    # arrayDecl
     ;
 
 declaration_list
