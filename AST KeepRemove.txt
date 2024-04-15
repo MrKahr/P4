@@ -97,7 +97,13 @@ TemplateInstance
         Type   <- the type of template to instantiate
     Child Nodes: Expressions with the values to put in the template's fields
 
+ArrayAccess
+    Value: Identifier   <--- the identifier of the array we should access
+    Child Nodes: MathExp    <--- the index of the array
 
+TemplateAccess
+    Value: Identifier   <--- the identifier of the template we should access
+    Child Nodes: MathExp    <--- a bit less intuitive, but we can convert dot-notation (template.field) to accessing a linked list of template fields like we would an array: Say "field" is the template's second attribute. Then template.field becomes template[1].
 
 **********
 > Remove <
@@ -117,6 +123,8 @@ String  (this should be turned into a StringExp that returns the string in quest
 > Missing <
 Instantiating templates  <- involves allocating memory for the data structure and maybe putting default values in some fields
 Assignment  <- missing from the abstract syntax only
+Accessing arrays
+Accessing templates <- for this one and the one above, how about a new type of expression?
 
 > Priority <
 Declarations, including StateDecl, among others
