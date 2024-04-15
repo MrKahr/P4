@@ -45,7 +45,7 @@ public class Main {
         pn.addChild(new ActionDeclNode("Action", "fisk3"));
         pn.getChildren().get(0).addChild(new PrimDeclNode("String", "fisk4"));
         VisitorDecider.decideVisitor(pn);
-
+        pn.walk(pn);
         // Sketch test of print parse tree 
         pn.printTree();
     }

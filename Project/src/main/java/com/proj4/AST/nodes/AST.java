@@ -24,8 +24,16 @@ public abstract class AST {
     }
 
     public void walk(AST node){
-        if(children.size() > 0){    //call recursively if there are children of this node
-        children.forEach((child) -> {walk(child);});
+        if(true){    //call recursively if there are children of this node
+        System.out.println("Fisk");
+        for(AST child : node.getChildren()){
+            walk(child);
+            System.out.println(child.getClass().getSimpleName());
+        }
+        
+        //     children.forEach((child) -> {
+        // System.out.println(child.getClass().getSimpleName());
+        // walk(child);});
         }
     }
 
@@ -36,7 +44,7 @@ public abstract class AST {
         for (List<AST> list : result) {
             System.out.println("\nLevel " + currentLevel);
             for (AST ast : list) {
-                System.out.print(ast.getClass().getSimpleName() + " ");
+                System.out.print(ast.getClass().getSimpleName() + " | ");
             }
             currentLevel++;
         }

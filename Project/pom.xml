@@ -11,10 +11,10 @@
     <description>P4 Project</description>
 
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
 		<start-class>com.proj4.Main</start-class>
-		<java.version>17</java.version>
+		<java.version>21</java.version>
         <antlr.version>4.13.1</antlr.version>
     </properties>
 
