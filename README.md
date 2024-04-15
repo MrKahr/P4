@@ -14,7 +14,7 @@ To be written... (when we have a product to use)
 
 > **Prerequisites**
 >
-> - JDK 17
+> - JDK 21
 > - Maven version 3.9.5 or newer
 
 STILL WORK IN PROGRESS!!
