@@ -12,8 +12,20 @@ public class VisitorDecider {
             case "PrimDeclNode":
                 node.acceptVisitor(new PrimNodeVisitor());
                 break;
-            case "ActionDeclNode":
+            case "ActionDecl":
                 node.acceptVisitor(new ActionDeclNodeVisitor());
+                break;
+            case "ActionCall":
+                node.acceptVisitor(new ActionCallNodeVisitor());
+                break;
+            case "Assignment":
+                node.acceptVisitor(new AssignmentNodeVisitor());
+                break;
+            case "ArrayDecl":
+                node.acceptVisitor(new ArrayDeclNodeVisitor());
+                break;
+            case "ArrayAccess":
+                node.acceptVisitor(new ArrayAccessNodeVisitor());
                 break;
             default:
                 System.err.println("UNRECOGNIZED NODE TYPE!\nGOT " + node.getClass().getSimpleName());

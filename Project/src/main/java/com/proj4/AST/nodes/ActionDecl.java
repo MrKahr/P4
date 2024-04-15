@@ -5,6 +5,8 @@ public class ActionDecl extends Declaration{
     private String returnType;
     private String identifier;
 
+    public ActionDecl(){}
+
     //Constructor
     public ActionDecl(String identifier, String returnType){
         this.identifier = identifier;

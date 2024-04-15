@@ -42,7 +42,8 @@ public class Main {
         ProgramNode pn = new ProgramNode();
         pn.addChild(new PrimDeclNode("Integer", "fisk1"));
         pn.addChild(new PrimDeclNode("Booleoolean", "fisk2"));
-        pn.addChild(new ActionDeclNode("Action", "fisk3"));
+        pn.addChild(new MathExp(MathExpOperator.ADD, "fisk", 0));
+        //pn.addChild(new ActionDeclNode("Action", "fisk3"));
         pn.getChildren().get(0).addChild(new PrimDeclNode("String", "fisk4"));
         VisitorDecider.decideVisitor(pn);
         pn.walk(pn);

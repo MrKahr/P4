@@ -87,8 +87,8 @@ boolExpr
 
 stringExpr
     :   (string | expr) (ADD (string | expr))+  # addString      // Doing it this way means implicit type conversion from int to string! Also, ensure types are correct! (int, str)
-    |   string                                  # litteralString
-    |   IDENTIFIER                              # idString
+    |   string                     # litteralString
+    |   IDENTIFIER                 # idString
     ;
 
 assignment // Remember to add semicolon if relevant
@@ -158,7 +158,7 @@ actionDecl
     ;
 
 actionCall
-    :   typedefUser BRAC_START argumentList BRAC_END
+    :   typedefUser BRAC_START argumentList BRAC_END SEMICOLON
     ;
 
 actionResult   // NOTICE: currently action_result is an expr, which means it's allowed almost everywhere! The only valid use of it is in the "IF()" of an if_block in Rule. Semantic Analysis should handle this

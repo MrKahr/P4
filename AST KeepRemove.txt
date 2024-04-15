@@ -28,11 +28,9 @@ ActionDecl      (This is basically a function definition and also very important
     (technically declarations are also statements, I think, so the child nodes are all statements)
 
 
-
 ActionCall
     Value: Identifier
     Child Nodes: Arguments, formatted as expressions (these must match the types specified in the ActionDecl to not make type errors)
-
 
 
 Assignment      (a variable changes its value but keeps its type. Not important for type checking, essential for interpreting)
@@ -65,7 +63,7 @@ ForLoop
 
 
 ForOf
-    Value: Identifier  <--- the array to iterate over
+    Value: Identifier       <--- the array to iterate over
     Child Node: Statement   <---the statement to execute every iteration
 
 
@@ -79,7 +77,7 @@ IfElse
 
 MathExp
     Values: Operator, Identifier, Constant  <--- no type value is needed because we can infer it from the node type
-    Child Nodes: Operands   <--- max 2 of these per expression. We consider them expressions as well
+    Child Nodes: Operands                   <--- max 2 of these per expression. We consider them expressions as well
 
 
 PrimitiveDecl   (your basic declaration for primitive variables. Subclass of Statement)
@@ -90,7 +88,7 @@ PrimitiveDecl   (your basic declaration for primitive variables. Subclass of Sta
 
 
 Return
-    Value: Maybe type? Might not be needed
+    Value:                      <--- Maybe type? Might not be needed
     Child Node: Expression      <--- must match the specified return type
 
 
@@ -122,8 +120,12 @@ TemplateInstance
     Value:
         Identifier      <--- the name of the instance to be stored in a symbol table
         Type            <--- the type of template to instantiate
-    Child Nodes: Expressions with the values to put in the template's fields
+    Child Nodes:        <--- Expressions with the values to put in the template's fields
 
+
+TemplateAccess
+    Value: Identifier       <--- the identifier of the template we should access
+    Child Nodes: MathExp    <--- a bit less intuitive, but we can convert dot-notation (template.field) to accessing a linked list of template fields like we would an array: Say "field" is the template's second attribute. Then template.field becomes template[1]
 
 
 **********
@@ -144,11 +146,11 @@ String              (this should be turned into a StringExp that returns the str
 
 ***********
 > Missing <
-***********
 
-Instatiating templates  <--- involves allocating memory for the data structure and maybe putting default values in some fields
-Assignment              <--- missing from the abstract syntax only
-
+Instantiating templates   <--- involves allocating memory for the data structure and maybe putting default values in some fields
+Assignment                <--- missing from the abstract syntax only
+Accessing arrays
+Accessing templates       <--- for this one and the one above, how about a new type of expression?
 
 ************
 > Priority <

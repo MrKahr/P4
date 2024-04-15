@@ -4,10 +4,10 @@ public class MathExp extends Expression implements Identifiable{
     //Field
     private MathExpOperator operator;
     private String identifier;
-    private int constant;
+    private Integer constant;
 
     //Constructor
-    public MathExp(MathExpOperator operator, String identifier, int constant){
+    public MathExp(MathExpOperator operator, String identifier, Integer constant){
         this.operator = operator;
         this.identifier = identifier;
         this.constant = constant;
