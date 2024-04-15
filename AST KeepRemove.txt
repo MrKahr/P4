@@ -23,7 +23,7 @@ ActionDecl (This is basically a function definition and also very important)
 
 PrimitiveDecl (your basic declaration for primitive variables. Subclass of Statement)
     Values: Identifier, Initial assignment (optional)   <- type inferred from the type of declaration i.e. intDecl or boolDecl or something
-
+                        (the initial assignment should probably be an expression of some kind!)
     Integer x = 0 creates a node like intDecl(x,0)
     Boolean y creates a node like boolDecl(y,null)
 
@@ -34,7 +34,7 @@ RuleDecl    (Note: the triggering action must have its result be part of a rule'
     Values: Actions   <- The identifiers of the actions that trigger this rule
     Child Nodes: IfElse-node
 
-Assignment (a variable changes its value but keeps its type. Not important for type checking, essential for interpreting)
+Assignment (a variable changes its value but keeps its type. Important for type checking, essential for interpreting)
     Values: Identifier
     Child Node: Expression. The variable will assume the value of this expression or cause an error if the types are mismatched
 
@@ -81,7 +81,7 @@ Declaration <- this should also be an abstract class and should work like Statem
     Value: Declaration type
 
 Expression  <- another abstract class
-    Value: Expression type (Can be MathExp, BoolExp, or StringExp)
+    Value: Expression type (Can be MATH (MathExp), BOOL (BoolExp), or STRING (StringExp))
 
 ArrayAccess     <- this is techinally an expression, but the type could be anything
     Value: Identifier
@@ -115,7 +115,7 @@ Statement_list (the list is not needed if we let statements be child nodes of St
 String  (this should be turned into a StringExp that returns the string in question)
 
 > Missing <
-Instatiating templates  <- involves allocating memory for the data structure and maybe putting default values in some fields
+Instantiating templates  <- involves allocating memory for the data structure and maybe putting default values in some fields
 Assignment  <- missing from the abstract syntax only
 
 > Priority <

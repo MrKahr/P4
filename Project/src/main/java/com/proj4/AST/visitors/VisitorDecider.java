@@ -13,7 +13,7 @@ public class VisitorDecider {
                 node.acceptVisitor(new PrimNodeVisitor());
                 break;
             default:
-                System.err.println("UNRECOGNIZED NODE TYPE!\nGOT " + node.getClass().getName());
+                System.err.println("UNRECOGNIZED NODE TYPE!\nGOT " + node.getClass().getSimpleName());
                 break;
         }
     }
