@@ -9,6 +9,9 @@ public class VisitorDecider {
             case "ProgramNode":
                 node.acceptVisitor(new ProgramNodeVisitor());
                 break;
+            case "StmtListNode":
+                node.acceptVisitor(new PrimNodeVisitor());
+                break;
             case "PrimDeclNode":
                 node.acceptVisitor(new PrimNodeVisitor());
                 break;

@@ -18,7 +18,7 @@ public class Main {
             args = new String[]{"Integer fisk; String fisk2;"};   // <----- INPUT
         }
 
-        System.out.println("Parsing: " + args[0]);
+        System.out.println("Parsing: " + args[0] + "\n");
 
 
         // Set args[0] as the input to our lexer

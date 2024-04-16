@@ -54,20 +54,31 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         // We want to visit program's children
 
         this.root = new ProgramNode();
-        var test = visitChildren(ctx);
-        System.out.println(test);
 
-        int i = 0;
-        for (Object child : (ArrayList<Object>) test) {
-            System.out.println("["+ i+ "]" + child);
-            i++;
-            //root.addChild((AST) child);
+        for(int i = 0; i < ctx.getChildCount(); i++){
+            var childnode = visit(ctx.getChild(i));
+            this.root.addChild((AST)childnode);
         }
-
-        // this.root.addChild();
-        return test;
+        System.out.println("Program Children: " + root.getChildren());
+        return root;
     }
-
+    @Override 
+    public StmtList visitStmtList(DBLParser.StmtListContext ctx) {
+        StmtList node = new StmtList();
+        for(int i = 0; i < ctx.getChildCount(); i++){
+            var childnode = visit(ctx.getChild(i));
+            node.addChild((AST)childnode);
+        }
+        System.out.println("Stmtlist Children: " + node.getChildren());
+        return node;
+    }
+    @Override 
+    public AST visitStmt(DBLParser.StmtContext ctx) {
+        AST childnode = (AST) visit(ctx.getChild(0));
+        System.out.println("removed parse tree stmt node, handing child AST to parent");
+        return childnode;
+    }
+    
 /*
     ┌────────────────────────────────────────────────────────────┐
     │     Override Visitor implementations provided by ANTLR     │
@@ -76,11 +87,13 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     @Override
     public PrimDeclNode visitIdDeclPrim(DBLParser.IdDeclPrimContext ctx) {
         PrimDeclNode node = new PrimDeclNode(ctx.typePrimitive().getText(), ctx.IDENTIFIER().getText());
-        
-        System.out.println("VISIT" + visitChildren(ctx));
-        //node.addChild();
-        System.out.println(node);
-        System.out.println("Found IDENTIFIER: " + node.getID() + " | TYPE: " + node.getType());
+        System.out.println("returning leaf - IDENTIFIER: " + node.getID() + " | TYPE: " + node.getType());
+        // for(int i = 0; i < ctx.getChildCount(); i++){
+        //     var childnode = visit(ctx.getChild(i));
+        //     System.out.println("Child nr: " +i+ " "+ childnode);
+        //     // node.addChild(childnode);
+        // }
+        // System.out.println(node);
         return node;
 
 
@@ -226,12 +239,12 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
 
    
     /*** Bool EXP ***/
-    @Override
-    public BoolExp visitGTBool(DBLParser.GTBoolContext ctx){
+    // @Override
+    // public BoolExp visitGTBool(DBLParser.GTBoolContext ctx){
         
         
-        /BoolExp node = new BoolExp(BoolExpOperator.GREATER_THAN, ctx. )
-    }
+    //     /BoolExp node = new BoolExp(BoolExpOperator.GREATER_THAN, ctx. )
+    // }
 
     // @Override
     // public BoolExp visitLitteralBool(DBLParser.LitteralBoolContext ctx){
