@@ -9,5 +9,7 @@ public enum BoolExpOperator {
     NOT_EQUALS,             //  a!=b
     OR,                     //  a||b
     AND,                    //  a&&b
-    NOT                     //  !a
+    NOT ,                    //  !a
+    CONSTANT,   //  return what's in the "constant"-field
+    VARIABLE    //  return the value bound to the identifier in the "identifier"-field
 }

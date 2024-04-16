@@ -1,18 +1,20 @@
 package com.proj4.AST.nodes;
 
+import java.util.ArrayList;
+
 //technically a declaration, but shouldn't be usable in places where other declarations are
 public class RuleDecl extends AST{
     //Field
-    private String[] actions;
+    private ArrayList<String> actions;
 
     //Constructor
-    public RuleDecl(String[] actions, IfElse ruleBody){
-        this.actions = actions;
+    public RuleDecl(IfElse ruleBody){
+        this.actions = new ArrayList<String>();
         addChild(ruleBody);
     }
 
     //Method
-    public String[] getTriggerActions(){
+    public ArrayList<String> getTriggerActions(){
         return actions;
     }
 

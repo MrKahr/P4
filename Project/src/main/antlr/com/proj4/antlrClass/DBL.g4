@@ -49,7 +49,7 @@ stmt
     |   forLoop
     |   declaration
     |   assignment SEMICOLON
-    |   actionCall
+    |   actionCall SEMICOLON
     |   templateInit
     ;
 
@@ -86,7 +86,9 @@ boolExpr
     ;
 
 stringExpr
-    :   (string | expr) (ADD (string | expr))+  # addString      // Doing it this way means implicit type conversion from int to string! Also, ensure types are correct! (int, str)
+    :   stringExpr ADD stringExpr  # addString      // Doing it this way means implicit type conversion from int to string! Also, ensure types are correct! (int, str)
+    |   stringExpr ADD expr        #addStringexpr1
+    |   expr ADD stringExpr        #addStringexpr2
     |   string                     # litteralString
     |   IDENTIFIER                 # idString
     ;
@@ -101,7 +103,6 @@ assignment // Remember to add semicolon if relevant
     |   (templateAccess | IDENTIFIER) ASSIGN actionCall       # actionCallAssign
     |   (templateAccess | IDENTIFIER) ASSIGN IDENTIFIER       # idAssign
     ;
-
 typePrimitive
     :   TYPEDEF_PRIMITIVE
     ;
@@ -128,7 +129,7 @@ body
 
 forLoop
     :   FOR BRAC_START typedefUser IDENTIFIER OF (templateAccess | actionCall | IDENTIFIER) BRAC_END BODY_START body BODY_END    # forOF
-    |   FOR BRAC_START declaration boolExpr SEMICOLON (expr | assignment) BRAC_END BODY_START body BODY_END                      # forI
+    |   FOR BRAC_START declaration boolExpr SEMICOLON assignment BRAC_END BODY_START body BODY_END                               # forI
     ;
 
 ifBlock
@@ -152,13 +153,12 @@ ruleDecl
     ;
 
 actionDecl
-    :   ACTION typedefUser BRAC_START parameterList BRAC_END 
-        (RESULTS_IN (typedefUser | typePrimitive | STATE) (BODY_START body return BODY_END)?)?    # returnActionDecl // Right now return is optional. Should it be like that?
+    :   ACTION typedefUser BRAC_START parameterList BRAC_END resultIn BODY_START body return BODY_END   # returnActionDecl
     |   ACTION typedefUser BRAC_START parameterList BRAC_END BODY_START body BODY_END             # noReturnActionDecl       // Without RESULTS IN, return is not needed. Meaning this action does not return anything
     ;
 
 actionCall
-    :   typedefUser BRAC_START argumentList BRAC_END SEMICOLON
+    :   typedefUser BRAC_START argumentList BRAC_END
     ;
 
 actionResult   // NOTICE: currently action_result is an expr, which means it's allowed almost everywhere! The only valid use of it is in the "IF()" of an if_block in Rule. Semantic Analysis should handle this
@@ -193,6 +193,10 @@ arrayAccess
 
 return
     :   RESULT_IN (expr | boolExpr | stringExpr) SEMICOLON
+    ;
+
+resultIn
+    :   RESULTS_IN (typedefUser | typePrimitive | STATE)
     ;
 
 multOp

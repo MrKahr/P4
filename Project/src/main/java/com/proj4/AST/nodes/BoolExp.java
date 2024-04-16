@@ -4,10 +4,10 @@ public class BoolExp extends Expression implements Identifiable {
     // Field
     private BoolExpOperator operator;
     private String identifier;
-    private boolean constant;
+    private Boolean constant;
 
     // Constructor
-    public BoolExp(BoolExpOperator operator, String identifier, boolean constant) {
+    public BoolExp(BoolExpOperator operator, String identifier, Boolean constant) {
         this.operator = operator;
         this.identifier = identifier;
         this.constant = constant;
@@ -22,7 +22,7 @@ public class BoolExp extends Expression implements Identifiable {
         return identifier;
     }
 
-    public boolean getConstant() {
+    public Boolean getConstant() {
         return constant;
     }
 }

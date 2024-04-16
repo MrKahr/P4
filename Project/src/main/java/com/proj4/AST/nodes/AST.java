@@ -18,6 +18,10 @@ public abstract class AST {
         return children;
     }
 
+    public AST getChild(Integer index) {
+        return children.get(index);
+    }
+
     //put a new child on the list of children
     public void addChild(AST newChild){
         children.add(newChild);
