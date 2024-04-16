@@ -54,8 +54,8 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         // We want to visit program's children
 
         this.root = new ProgramNode();
-
-        for(int i = 0; i < ctx.getChildCount(); i++){
+        //count is subtracted by one to ignore EOF node in parse tree
+        for(int i = 0; i < ctx.getChildCount()-1; i++){
             var childnode = visit(ctx.getChild(i));
             this.root.addChild((AST)childnode);
         }
