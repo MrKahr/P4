@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Queue;
 
 import com.proj4.AST.visitors.NodeVisitor;
+import com.proj4.AST.visitors.TestDecider;
 import com.proj4.AST.visitors.VisitorDecider;
 
 public abstract class AST {
@@ -71,13 +72,20 @@ public abstract class AST {
 
     }
 
+    //this method can be used to control which VisitorDecider that will pick a visitor for this node
+    //to start a visiting sequence, simply call this method on an abstract syntax tree
+    public void acceptDecider(VisitorDecider decider){
+        decider.decideVisitor(this);
+    }
+
+    //this method activates the given NodeVisitor
     public void acceptVisitor(NodeVisitor visitor){
         visitor.visit(this);
     }
 
     public void visitChildren(){
         children.forEach((child) -> {
-          VisitorDecider.decideVisitor(child);  
+          new TestDecider().decideVisitor(child);  
         });
     }
 

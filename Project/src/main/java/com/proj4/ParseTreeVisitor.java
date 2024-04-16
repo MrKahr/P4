@@ -34,7 +34,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         // Here, we should define global scope
         // We want to visit program's children
 
-        this.root = new ProgramNode();
+        this.root = new Program(null);
         var test = visitChildren(ctx);
         System.out.println(test);
 

@@ -9,8 +9,8 @@ public class ForLoop extends Statement{
         addChild((AST)iterator);    //first child is the iterator
         addChild(condition);        //second child is the condition
         addChild(iteratorAction);   //third child is what to do with the iterator every loop
-        addChild((AST)loopBlock);   //fourth child is the loop itself
-    }
+        addChild(loopBlock);        //fourth child is the loop itself. More can be added as children later but at least one is required
+    }                               //TODO: should a loopBlock be required?
 
     //Method
     public Identifiable getIterator(){                      //using Identifiable here instead of PrimitiveDecl 
@@ -23,9 +23,5 @@ public class ForLoop extends Statement{
 
     public AST getIteratorAction(){
         return (AST) getChildren().get(2);
-    }
-
-    public Statement getLoopBlock(){
-        return (Statement) getChildren().get(3);
     }
 }
