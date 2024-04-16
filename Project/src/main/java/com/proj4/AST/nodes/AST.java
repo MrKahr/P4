@@ -41,8 +41,12 @@ public abstract class AST {
         Integer currentLevel = 0;
         List<List<AST>> result = new ArrayList<>();
         getLevel(this, currentLevel, result);
+        
         for (List<AST> list : result) {
-            System.out.println("\nLevel " + currentLevel);
+            // Avoid printing level for leaf nodes
+            if(list.size() > 0){
+                System.out.println("\nLevel " + currentLevel);
+            }
             for (AST ast : list) {
                 System.out.print(ast.getClass().getSimpleName() + " | ");
             }
@@ -63,9 +67,6 @@ public abstract class AST {
         result.get(level).add(root);
 
         for (AST ast : root.getChildren()) {
-            if (this.getChildren().size() < 1) {
-                return;
-            }
             getLevel(ast, level + 1, result);
         }
 
