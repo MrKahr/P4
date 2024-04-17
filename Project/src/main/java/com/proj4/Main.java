@@ -9,6 +9,7 @@ import com.proj4.antlrClass.DBLParser;
 
 import com.proj4.AST.nodes.*;
 import com.proj4.AST.visitors.NodeVisitor;
+import com.proj4.AST.visitors.TestDecider;
 import com.proj4.AST.visitors.VisitorDecider;
 
 public class Main {
@@ -37,16 +38,17 @@ public class Main {
         parseVisitor.visit(tree);
         // visitor.getAST(); - use this pattern to get tree
 
-
+/*
         // Sketch test of visitors - REMOVE 
-        ProgramNode pn = new ProgramNode();
+        Program pn = new Program(null);
         pn.addChild(new PrimDeclNode("Integer", "fisk1"));
         pn.addChild(new PrimDeclNode("Booleoolean", "fisk2"));
         pn.addChild(new ActionDeclNode("Action", "fisk3"));
         pn.getChildren().get(0).addChild(new PrimDeclNode("String", "fisk4"));
-        VisitorDecider.decideVisitor(pn);
+        new TestDecider().decideVisitor(pn);
         pn.walk(pn);
         // Sketch test of print parse tree 
         pn.printTree();
+ */
     }
 }
