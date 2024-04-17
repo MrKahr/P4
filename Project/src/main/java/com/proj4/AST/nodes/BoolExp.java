@@ -1,25 +1,19 @@
 package com.proj4.AST.nodes;
 
-public class BoolExp extends Expression implements Identifiable {
-    // Field
+public class BoolExp extends Expression{
+    //Field
     private BoolExpOperator operator;
-    private String identifier;
     private Boolean constant;
 
-    // Constructor
-    public BoolExp(BoolExpOperator operator, String identifier, Boolean constant) {
+    //Constructor
+    public BoolExp(BoolExpOperator operator, Boolean constant){
         this.operator = operator;
-        this.identifier = identifier;
         this.constant = constant;
     }
 
     // Method
     public BoolExpOperator getOperator() {
         return operator;
-    }
-
-    public String getIdentifier() {
-        return identifier;
     }
 
     public Boolean getConstant() {

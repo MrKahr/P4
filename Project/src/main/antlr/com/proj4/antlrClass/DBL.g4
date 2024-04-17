@@ -72,15 +72,16 @@ expr
 // This is very much left-recursive - FIND WAY TO REMOVE IN CFG!
 boolExpr
     :   BRAC_START boolExpr BRAC_END        # parBool
-    |   expr GT expr                        # GTBool
-    |   expr GTOE expr                      # GTOEBool
-    |   expr LT expr                        # LTBool
-    |   expr LTOE expr                      # LTOEBool
-    |   expr (NOTEQUALS | EQUALS) expr      # equalBool               
-    |   stringExpr (NOTEQUALS | EQUALS) stringExpr  # equalStringBool
+    |   expr GT expr                        # exprGTBool
+    |   expr GTOE expr                      # exprGTOEBool
+    |   expr LT expr                        # exprLTBool
+    |   expr LTOE expr                      # exprLTOEBool
+    |   expr (NOTEQUALS | EQUALS) expr      # exprEqualBool            
+    |   stringExpr (NOTEQUALS | EQUALS) stringExpr  # stringEqualBool
     |   NOT boolExpr                        # negateBool
     |   boolExpr AND boolExpr               # andBool
     |   boolExpr OR  boolExpr               # orBool
+    |   boolExpr EQUALS boolExpr            # equalBool
     |   BOOLEAN                             # litteralBool
     |   IDENTIFIER                          # idBool
     ;
@@ -128,8 +129,14 @@ body
     ;
 
 forLoop
-    :   FOR BRAC_START typedefUser IDENTIFIER OF (templateAccess | actionCall | IDENTIFIER) BRAC_END BODY_START body BODY_END    # forOF
-    |   FOR BRAC_START declaration boolExpr SEMICOLON assignment BRAC_END BODY_START body BODY_END                               # forI
+    :   FOR BRAC_START typedefUser IDENTIFIER OF iterable BRAC_END BODY_START body BODY_END         # forOF
+    |   FOR BRAC_START declaration boolExpr SEMICOLON assignment BRAC_END BODY_START body BODY_END  # forI
+    ;
+
+iterable
+    :   templateAccess  # iterTemplateAccess
+    |   actionCall      # iterActionCall
+    |   IDENTIFIER      # iterID
     ;
 
 ifBlock
@@ -153,7 +160,7 @@ ruleDecl
     ;
 
 actionDecl
-    :   ACTION typedefUser BRAC_START parameterList BRAC_END resultIn BODY_START body return BODY_END   # returnActionDecl
+    :   ACTION typedefUser BRAC_START parameterList BRAC_END resultsIn BODY_START body return BODY_END   # returnActionDecl
     |   ACTION typedefUser BRAC_START parameterList BRAC_END BODY_START body BODY_END             # noReturnActionDecl       // Without RESULTS IN, return is not needed. Meaning this action does not return anything
     ;
 
@@ -192,11 +199,11 @@ arrayAccess
     ;
 
 return
-    :   RESULT_IN (expr | boolExpr | stringExpr) SEMICOLON
+    :   RESULT_IN (expr | boolExpr | stringExpr) SEMICOLON  // The ActionDecl will return 3
     ;
 
-resultIn
-    :   RESULTS_IN (typedefUser | typePrimitive | STATE)
+resultsIn
+    :   RESULTS_IN (typedefUser | typePrimitive | STATE)    // The ActionDecl must return something of a specific type
     ;
 
 multOp

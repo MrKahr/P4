@@ -49,7 +49,7 @@ stmt
     |   forLoop
     |   declaration
     |   assignment SEMICOLON
-    |   actionCall
+    |   actionCall SEMICOLON
     |   templateInit
     ;
 
@@ -72,21 +72,24 @@ expr
 // This is very much left-recursive - FIND WAY TO REMOVE IN CFG!
 boolExpr
     :   BRAC_START boolExpr BRAC_END        # parBool
-    |   expr GT expr                        # GTBool
-    |   expr GTOE expr                      # GTOEBool
-    |   expr LT expr                        # LTBool
-    |   expr LTOE expr                      # LTOEBool
-    |   expr (NOTEQUALS | EQUALS) expr      # equalBool               
-    |   stringExpr (NOTEQUALS | EQUALS) stringExpr  # equalStringBool
+    |   expr GT expr                        # exprGTBool
+    |   expr GTOE expr                      # exprGTOEBool
+    |   expr LT expr                        # exprLTBool
+    |   expr LTOE expr                      # exprLTOEBool
+    |   expr (NOTEQUALS | EQUALS) expr      # exprEqualBool            
+    |   stringExpr (NOTEQUALS | EQUALS) stringExpr  # stringEqualBool
     |   NOT boolExpr                        # negateBool
     |   boolExpr AND boolExpr               # andBool
     |   boolExpr OR  boolExpr               # orBool
+    |   boolExpr EQUALS boolExpr            # equalBool
     |   BOOLEAN                             # litteralBool
     |   IDENTIFIER                          # idBool
     ;
 
 stringExpr
-    :   (string | expr) (ADD (string | expr))+  # addString      // Doing it this way means implicit type conversion from int to string! Also, ensure types are correct! (int, str)
+    :   stringExpr ADD stringExpr  # addString      // Doing it this way means implicit type conversion from int to string! Also, ensure types are correct! (int, str)
+    |   stringExpr ADD expr        #addStringexpr1
+    |   expr ADD stringExpr        #addStringexpr2
     |   string                     # litteralString
     |   IDENTIFIER                 # idString
     ;
@@ -101,7 +104,6 @@ assignment // Remember to add semicolon if relevant
     |   (templateAccess | IDENTIFIER) ASSIGN actionCall       # actionCallAssign
     |   (templateAccess | IDENTIFIER) ASSIGN IDENTIFIER       # idAssign
     ;
-
 typePrimitive
     :   TYPEDEF_PRIMITIVE
     ;
@@ -127,8 +129,14 @@ body
     ;
 
 forLoop
-    :   FOR BRAC_START typedefUser IDENTIFIER OF (templateAccess | actionCall | IDENTIFIER) BRAC_END BODY_START body BODY_END    # forOF
-    |   FOR BRAC_START declaration boolExpr SEMICOLON (expr | assignment) BRAC_END BODY_START body BODY_END                      # forI
+    :   FOR BRAC_START typedefUser IDENTIFIER OF iterable BRAC_END BODY_START body BODY_END         # forOF
+    |   FOR BRAC_START declaration boolExpr SEMICOLON assignment BRAC_END BODY_START body BODY_END  # forI
+    ;
+
+iterable
+    :   templateAccess  # iterTemplateAccess
+    |   actionCall      # iterActionCall
+    |   IDENTIFIER      # iterID
     ;
 
 ifBlock
@@ -152,13 +160,12 @@ ruleDecl
     ;
 
 actionDecl
-    :   ACTION typedefUser BRAC_START parameterList BRAC_END 
-        (RESULTS_IN (typedefUser | typePrimitive | STATE) (BODY_START body return BODY_END)?)?    # returnActionDecl // Right now return is optional. Should it be like that?
+    :   ACTION typedefUser BRAC_START parameterList BRAC_END resultsIn BODY_START body return BODY_END   # returnActionDecl
     |   ACTION typedefUser BRAC_START parameterList BRAC_END BODY_START body BODY_END             # noReturnActionDecl       // Without RESULTS IN, return is not needed. Meaning this action does not return anything
     ;
 
 actionCall
-    :   typedefUser BRAC_START argumentList BRAC_END SEMICOLON
+    :   typedefUser BRAC_START argumentList BRAC_END
     ;
 
 actionResult   // NOTICE: currently action_result is an expr, which means it's allowed almost everywhere! The only valid use of it is in the "IF()" of an if_block in Rule. Semantic Analysis should handle this
@@ -192,7 +199,11 @@ arrayAccess
     ;
 
 return
-    :   RESULT_IN (expr | boolExpr | stringExpr) SEMICOLON
+    :   RESULT_IN (expr | boolExpr | stringExpr) SEMICOLON  // The ActionDecl will return 3
+    ;
+
+resultsIn
+    :   RESULTS_IN (typedefUser | typePrimitive | STATE)    // The ActionDecl must return something of a specific type
     ;
 
 multOp

@@ -1,6 +1,7 @@
-package com.proj4.AST.visitors;
+package com.proj4.AST.visitors.TestVisitors;
 
 import com.proj4.AST.nodes.*;
+import com.proj4.AST.visitors.NodeVisitor;
 
 public class ActionDeclNodeVisitor implements NodeVisitor {
 

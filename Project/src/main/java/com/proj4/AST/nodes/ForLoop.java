@@ -24,8 +24,4 @@ public class ForLoop extends Statement{
     public AST getIteratorAction(){
         return (AST) getChildren().get(2);
     }
-
-    public Statement getLoopBlock(){
-        return (Statement) getChildren().get(3);
-    }
 }

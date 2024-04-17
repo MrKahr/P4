@@ -4,6 +4,7 @@ import com.proj4.antlrClass.DBLBaseVisitor;
 import com.proj4.antlrClass.DBLParser;
 import com.proj4.antlrClass.DBLParser.ForIContext;
 import com.proj4.antlrClass.DBLParser.ForOFContext;
+import com.proj4.antlrClass.DBLParser.IfBlockContext;
 
 import org.antlr.v4.runtime.tree.ParseTree;
 
@@ -24,11 +25,11 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         return this.root;
     }
 
-/*
-    ┌──────────────────────────────────┐
-    │     Override ANTLR Internals     │
-    └──────────────────────────────────┘
-*/
+    /*
+     * ┌──────────────────────────────────┐
+     * │ Override ANTLR Internals │
+     * └──────────────────────────────────┘
+     */
     @Override
     /**
      * This method overrides the default implementation of the ANTLR visitor,
@@ -48,97 +49,99 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         return aggregate;
     }
 
-/*
-    ┌─────────────────────────────────┐
-    │     Set up Root Node of AST     │
-    └─────────────────────────────────┘
-*/
+    /*
+     * ┌─────────────────────────────────┐
+     * │ Set up Root Node of AST │
+     * └─────────────────────────────────┘
+     */
 
     @Override
     public Object visitProgram(DBLParser.ProgramContext ctx) {
         // Here, we should define global scope
         // We want to visit program's children
 
-        this.root = new ProgramNode();
-        //count is subtracted by one to ignore EOF node in parse tree
-        for(int i = 0; i < ctx.getChildCount()-1; i++){
+        this.root = new Program();
+        // count is subtracted by one to ignore EOF node in parse tree
+        for (int i = 0; i < ctx.getChildCount() - 1; i++) {
             var childnode = visit(ctx.getChild(i));
-            this.root.addChild((AST)childnode);
+            this.root.addChild((AST) childnode);
         }
         System.out.println("Program Children: " + root.getChildren());
         return root;
     }
-    @Override 
+
+    @Override
     public StmtList visitStmtList(DBLParser.StmtListContext ctx) {
         StmtList node = new StmtList();
-        for(int i = 0; i < ctx.getChildCount(); i++){
+        for (int i = 0; i < ctx.getChildCount(); i++) {
             var childnode = visit(ctx.getChild(i));
-            node.addChild((AST)childnode);
+            node.addChild((AST) childnode);
         }
         System.out.println("Stmtlist Children: " + node.getChildren());
         return node;
     }
-    @Override 
+
+    @Override
     public AST visitStmt(DBLParser.StmtContext ctx) {
         AST childnode = (AST) visit(ctx.getChild(0));
         System.out.println("removed parse tree stmt node, handing child AST to parent");
         return childnode;
     }
-    
-/*
-    ┌────────────────────────────────────────────────────────────┐
-    │     Override Visitor implementations provided by ANTLR     │
-    └────────────────────────────────────────────────────────────┘
-*/
+
+    /*
+     * ┌────────────────────────────────────────────────────────────┐
+     * │ Override Visitor implementations provided by ANTLR │
+     * └────────────────────────────────────────────────────────────┘
+     */
     @Override
     public PrimDeclNode visitIdDeclPrim(DBLParser.IdDeclPrimContext ctx) {
         PrimDeclNode node = new PrimDeclNode(ctx.typePrimitive().getText(), ctx.IDENTIFIER().getText());
         System.out.println("returning leaf - IDENTIFIER: " + node.getID() + " | TYPE: " + node.getType());
         // for(int i = 0; i < ctx.getChildCount(); i++){
-        //     var childnode = visit(ctx.getChild(i));
-        //     System.out.println("Child nr: " +i+ " "+ childnode);
-        //     // node.addChild(childnode);
+        // var childnode = visit(ctx.getChild(i));
+        // System.out.println("Child nr: " +i+ " "+ childnode);
+        // // node.addChild(childnode);
         // }
         // System.out.println(node);
         return node;
 
-
     }
 
     /*** ACTION DECLARATION ***/
-    
+
     @Override
     public ActionDecl visitReturnActionDecl(DBLParser.ReturnActionDeclContext ctx) {
-        String resultType = ctx.resultIn().getChild(0).getText();
-        ActionDecl node = new ActionDecl(ctx.getChild(1).getText(),resultType);
-        for(int i = 0; i < ctx.getChildCount(); i++){
+        String resultType = ctx.resultsIn().getChild(0).getText();
+        ActionDecl node = new ActionDecl(ctx.getChild(1).getText(), resultType);
+        for (int i = 0; i < ctx.getChildCount(); i++) {
             var childnode = visit(ctx.getChild(i));
-            node.addChild((AST)childnode);
+            node.addChild((AST) childnode);
         }
         System.out.println(node.getChildren());
-        return node; 
+        return node;
     }
     // @Override
-    // public ActionDecl visitNoReturnActionDecl(DBLParser.NoReturnActionDeclContext ctx){
-    //     ActionDecl node = new ActionDecl();
-    //     var children = visitChildren(ctx);
-    //     for (AST child : children) {
-    //         node.addChild(child);
-    //     }
-    //     System.out.println(children);
-    //     return node;
+    // public ActionDecl visitNoReturnActionDecl(DBLParser.NoReturnActionDeclContext
+    // ctx){
+    // ActionDecl node = new ActionDecl();
+    // var children = visitChildren(ctx);
+    // for (AST child : children) {
+    // node.addChild(child);
+    // }
+    // System.out.println(children);
+    // return node;
     // }
 
     /*** ACTION CALL ***/
 
-    // @Override public 
+    // @Override public
     // ActionCall visitActionCall(DBLParser.ActionCallContext ctx) {
-    //     var children = visitChildren(ctx);
-    //     for (AST child : children) {
-    //         node.addChild(child);
-    //     }
-    //     System.out.println(children);
-    //     return node; 
+    // var children = visitChildren(ctx);
+    // for (AST child : children) {
+    // node.addChild(child);
+    // }
+    // System.out.println(children);
+    // return node;
     // }
     @Override
     public ActionCall visitActionCallExpr(DBLParser.ActionCallExprContext ctx) {
@@ -148,112 +151,142 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
             node.addChild((AST) child);
         }
         System.out.println(node);
-        return node;  
+        return node;
     }
-    // @Override public ActionCall visitActionCallAssign(DBLParser.ActionCallAssignContext ctx) {
-    //     ActionCall node = new ActionCall();
-    //     var children = visitChildren(ctx);
-    //     for (AST child : children) {
-    //         node.addChild(child);
-    //     }
-    //     System.out.println(children);
-    //     return node;
+    // @Override public ActionCall
+    // visitActionCallAssign(DBLParser.ActionCallAssignContext ctx) {
+    // ActionCall node = new ActionCall();
+    // var children = visitChildren(ctx);
+    // for (AST child : children) {
+    // node.addChild(child);
+    // }
+    // System.out.println(children);
+    // return node;
     // }
 
-    /*** ASSIGNMENT ***/   
+    /*** ASSIGNMENT ***/
 
-	@Override public Assignment visitTemplateAccessAssign(DBLParser.TemplateAccessAssignContext ctx) {
+    @Override
+    public Assignment visitTemplateAccessAssign(DBLParser.TemplateAccessAssignContext ctx) {
         Assignment node = new Assignment();
         visitChildren(ctx);
-        return node; 
+        return node;
     }
 
-	@Override public Assignment visitIdAssign(DBLParser.IdAssignContext ctx) {
+    @Override
+    public Assignment visitIdAssign(DBLParser.IdAssignContext ctx) {
         Assignment node = new Assignment();
         visitChildren(ctx);
-        return node; 
+        return node;
     }
 
     /*** ARRAY DECLARATION ***/
     // @Override public ArrayDecl visitArrayDecl(DBLParser.ArrayDeclContext ctx) {
-    //     ActionDecl node = new ArrayDecl();
-    //     visitChildren(ctx);
-    //     return node;  
+    // ActionDecl node = new ArrayDecl();
+    // visitChildren(ctx);
+    // return node;
     // }
-    // @Override public ArrayDecl visitDeclarrayDecl(DBLParser.DeclarrayDeclContext ctx) {
-    //     ActionDecl node = new ArrayDecl();
-    //     visitChildren(ctx);
-    //     return node;
+    // @Override public ArrayDecl visitDeclarrayDecl(DBLParser.DeclarrayDeclContext
+    // ctx) {
+    // ActionDecl node = new ArrayDecl();
+    // visitChildren(ctx);
+    // return node;
     // }
 
     // /*** ARRAY Access ***/
-    // @Override public ArrayAccess visitArrayAccess(DBLParser.ArrayAccessContext ctx) {
-    //     ArrayAccess node = new ArrayAccess();
-    //     visitChildren(ctx);
-    //     return node;
+    // @Override public ArrayAccess visitArrayAccess(DBLParser.ArrayAccessContext
+    // ctx) {
+    // ArrayAccess node = new ArrayAccess();
+    // visitChildren(ctx);
+    // return node;
     // }
-    // @Override public ArrayAccess visitArrayAccessAssign(DBLParser.ArrayAccessAssignContext ctx) {
-    //     ArrayAccess node = new ArrayAccess();
-    //     visitChildren(ctx);
-    //     return node;
+    // @Override public ArrayAccess
+    // visitArrayAccessAssign(DBLParser.ArrayAccessAssignContext ctx) {
+    // ArrayAccess node = new ArrayAccess();
+    // visitChildren(ctx);
+    // return node;
     // }
 
-    @Override 
-    public MathExp visitParExpr(DBLParser.ParExprContext ctx){
-        return (MathExp) visit(ctx.children.get(1)); 
+    @Override
+    public MathExp visitParExpr(DBLParser.ParExprContext ctx) {
+        return (MathExp) visit(ctx.children.get(1));
     }
 
-    @Override 
-    public MathExp visitMultExpr(DBLParser.MultExprContext ctx){
-        // Create parent 
-        MathExp node = new MathExp(MathExpOperator.MULTIPLY,null, null);
+    @Override
+    public MathExp visitMultExpr(DBLParser.MultExprContext ctx) {
+        // Create parent
+        MathExp node = new MathExp(MathExpOperator.MULTIPLY, null);
 
         // Add potential children
-        node.addChild((AST) visit(ctx.children.get(0))); // Add left expression 
-        node.addChild((AST) visit(ctx.children.get(2))); // Add right expression 
-        
+        node.addChild((AST) visit(ctx.children.get(0))); // Add left expression
+        node.addChild((AST) visit(ctx.children.get(2))); // Add right expression
+
         return node;
     }
 
-    @Override 
-    public MathExp visitAddExpr(DBLParser.AddExprContext ctx){
-        // Create parent 
-        MathExp node = new MathExp(MathExpOperator.ADD,null, null);
+    @Override
+    public MathExp visitAddExpr(DBLParser.AddExprContext ctx) {
+        // Create parent
+        MathExp node = new MathExp(MathExpOperator.ADD, null);
 
         // Add potential children
-        node.addChild((AST) visit(ctx.children.get(0))); // Add left expression 
-        node.addChild((AST) visit(ctx.children.get(2))); // Add right expression 
-        
+        node.addChild((AST) visit(ctx.children.get(0))); // Add left expression
+        node.addChild((AST) visit(ctx.children.get(2))); // Add right expression
         return node;
     }
 
-    @Override 
-    public MathExp visitDigitExpr(DBLParser.DigitExprContext ctx){
-        MathExp node = new MathExp(MathExpOperator.CONSTANT, null, Integer.parseInt(ctx.DIGIT().getText()));
+    @Override
+    public MathExp visitDigitExpr(DBLParser.DigitExprContext ctx) {
+        MathExp node = new MathExp(MathExpOperator.CONSTANT, Integer.parseInt(ctx.DIGIT().getText()));
         return node;
-   }
+    }
 
-    @Override 
-    public MathExp visitIdExpr(DBLParser.IdExprContext ctx){
-        MathExp node = new MathExp(MathExpOperator.VARIABLE, ctx.IDENTIFIER().getText(), null);
+    @Override
+    public Variable visitIdExpr(DBLParser.IdExprContext ctx) {
+        Variable node = new Variable(ctx.IDENTIFIER().getText());
         return node;
     }
 
     /*** Declaration ***/
-    //@Override  public PrimDeclNode visitIdDeclPrim(DBLParser.IdDeclPrimContext ctx) {rreturn new PrimDeclNode(); 
-    //@Override public PrimDeclNode visitAssignDeclPrim(DBLParser.AssignDeclPrimContext ctx) { return new PrimDeclNode(); }
-    //@Override public T visitIdDeclUser(DBLParser.IdDeclUserContext ctx) { return visitChildren(ctx); }
-    //@Override public T visitAssignDeclUser(DBLParser.AssignDeclUserContext ctx) { return visitChildren(ctx); }
+    // @Override public PrimDeclNode visitIdDeclPrim(DBLParser.IdDeclPrimContext
+    // ctx) {rreturn new PrimDeclNode();
+    // @Override public PrimDeclNode
+    // visitAssignDeclPrim(DBLParser.AssignDeclPrimContext ctx) { return new
+    // PrimDeclNode(); }
+
+    @Override
+    public UserDeclNode visitIdDeclUser(DBLParser.IdDeclUserContext ctx) {
+        UserDeclNode node = new UserDeclNode(ctx.typedefUser().getText(), ctx.IDENTIFIER().getText());
+        return node;
+    }
+
+    /*** MADS START HERE***/
+    @Override
+    public UserDeclNode visitAssignDeclUser(DBLParser.AssignDeclUserContext ctx) {
+        String typedef = ctx.typedefUser().getText();
+        String expressionType = "";
+
+        // This context has a number of children as its first, either this is an identifier or a bunch of template decle. 
+        // Find a way to loop through all of these template decl.
+        
+        UserDeclNode node = new UserDeclNode(typedef, expressionType);
+        return node;
+}
 
     /*** Return ***/
-    // ?????
+    @Override
+    public Return visitReturn(DBLParser.ReturnContext ctx) {
+        Return node = new Return((Expression) ctx.children.get(1));
+        return node;
+    }
 
     /*** RuleDecl ***/
-   @Override public RuleDecl visitRuleDecl(DBLParser.RuleDeclContext ctx) {
-        // Add if else block 
+    @Override
+    public RuleDecl visitRuleDecl(DBLParser.RuleDeclContext ctx) {
+        // Add if else block
         RuleDecl node = new RuleDecl((IfElse) visit(ctx.ifBlock()));
-        
-        // Add all actions 
+
+        // Add all actions
         for (ParseTree currentNode : ctx.identifierList().children) {
             node.getTriggerActions().add(currentNode.getText());
         }
@@ -261,96 +294,100 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         return node;
     }
 
-   
     /*** Boolean Expressions ***/
     @Override
-    public BoolExp visitGTBool(DBLParser.GTBoolContext ctx){
-        BoolExp node = new BoolExp(BoolExpOperator.GREATER_THAN, null, null);
+    public BoolExp visitExprGTBool(DBLParser.ExprGTBoolContext ctx) {
+        BoolExp node = new BoolExp(BoolExpOperator.GREATER_THAN, null);
         node.addChild((AST) visit(ctx.children.get(0)));
         node.addChild((AST) visit(ctx.children.get(2)));
         return node;
     }
 
     @Override
-    public BoolExp visitLitteralBool(DBLParser.LitteralBoolContext ctx){
-        BoolExp node = new BoolExp(BoolExpOperator.CONSTANT, null, Boolean.getBoolean(ctx.BOOLEAN().getText()));
+    public BoolExp visitLitteralBool(DBLParser.LitteralBoolContext ctx) {
+        BoolExp node = new BoolExp(BoolExpOperator.CONSTANT, Boolean.getBoolean(ctx.BOOLEAN().getText()));
         return node;
     }
 
     @Override
-    public BoolExp visitAndBool(DBLParser.AndBoolContext ctx){
-        BoolExp node = new BoolExp(BoolExpOperator.AND, null, null);
+    public BoolExp visitAndBool(DBLParser.AndBoolContext ctx) {
+        BoolExp node = new BoolExp(BoolExpOperator.AND, null);
         node.addChild((AST) visit(ctx.children.get(0)));
         node.addChild((AST) visit(ctx.children.get(2)));
         return node;
     }
 
     @Override
-    public BoolExp visitGTOEBool(DBLParser.GTOEBoolContext ctx){
-        BoolExp node = new BoolExp(BoolExpOperator.GREATER_OR_EQUALS, null, null);
+    public BoolExp visitExprGTOEBool(DBLParser.ExprGTOEBoolContext ctx) {
+        BoolExp node = new BoolExp(BoolExpOperator.GREATER_OR_EQUALS, null);
         node.addChild((AST) visit(ctx.children.get(0)));
         node.addChild((AST) visit(ctx.children.get(2)));
         return node;
     }
 
     @Override
-    public BoolExp visitEqualStringBool(DBLParser.EqualStringBoolContext ctx){
+    public BoolExp visitStringEqualBool(DBLParser.StringEqualBoolContext ctx) {
         BoolExpOperator op = ctx.EQUALS() == null ? BoolExpOperator.NOT_EQUALS : BoolExpOperator.EQUALS;
-        BoolExp node = new BoolExp(op, null, null);
+        BoolExp node = new BoolExp(op, null);
         node.addChild((AST) visit(ctx.children.get(0)));
         node.addChild((AST) visit(ctx.children.get(2)));
         return node;
     }
 
     @Override
-    public BoolExp visitLTOEBool(DBLParser.LTOEBoolContext ctx){
-        BoolExp node = new BoolExp(BoolExpOperator.LESS_OR_EQUALS, null, null);
+    public BoolExp visitExprLTOEBool(DBLParser.ExprLTOEBoolContext ctx) {
+        BoolExp node = new BoolExp(BoolExpOperator.LESS_OR_EQUALS, null);
         node.addChild((AST) visit(ctx.children.get(0)));
         node.addChild((AST) visit(ctx.children.get(2)));
-        return node;   
-    }
-
-    @Override
-    public BoolExp visitIdBool(DBLParser.IdBoolContext ctx){
-        BoolExp node = new BoolExp(BoolExpOperator.VARIABLE, ctx.IDENTIFIER().getText(), null);
         return node;
     }
 
     @Override
-    public BoolExp visitNegateBool(DBLParser.NegateBoolContext ctx){
-        BoolExp node = new BoolExp(BoolExpOperator.NOT, null, null);
+    public Variable visitIdBool(DBLParser.IdBoolContext ctx) {
+        Variable node = new Variable(ctx.IDENTIFIER().getText());
+        return node;
+    }
+
+    @Override
+    public BoolExp visitNegateBool(DBLParser.NegateBoolContext ctx) {
+        BoolExp node = new BoolExp(BoolExpOperator.NOT, null);
         node.addChild((AST) ctx.children.getLast());
         return node;
     }
 
     @Override
-    public BoolExp visitEqualBool(DBLParser.EqualBoolContext ctx){
+    public BoolExp visitEqualBool(DBLParser.EqualBoolContext ctx) {
         BoolExpOperator op = ctx.EQUALS() == null ? BoolExpOperator.NOT_EQUALS : BoolExpOperator.EQUALS;
-        BoolExp node = new BoolExp(op, null, null);
+        BoolExp node = new BoolExp(op, null);
         node.addChild((AST) visit(ctx.children.get(0)));
         node.addChild((AST) visit(ctx.children.get(2)));
         return node;
     }
 
     @Override
-    public BoolExp visitParBool(DBLParser.ParBoolContext ctx){
+    public BoolExp visitParBool(DBLParser.ParBoolContext ctx) {
         return (BoolExp) visit(ctx.children.get(1));
     }
 
     @Override
-    public BoolExp visitLTBool(DBLParser.LTBoolContext ctx){
-        BoolExp node = new BoolExp(BoolExpOperator.LESS_THAN, null, null);
+    public BoolExp visitExprLTBool(DBLParser.ExprLTBoolContext ctx) {
+        BoolExp node = new BoolExp(BoolExpOperator.LESS_THAN, null);
         node.addChild((AST) visit(ctx.children.get(0)));
         node.addChild((AST) visit(ctx.children.get(2)));
         return node;
     }
 
     @Override
-    public BoolExp visitOrBool(DBLParser.OrBoolContext ctx){
-        BoolExp node = new BoolExp(BoolExpOperator.OR, null, null);
+    public BoolExp visitOrBool(DBLParser.OrBoolContext ctx) {
+        BoolExp node = new BoolExp(BoolExpOperator.OR, null);
         node.addChild((AST) visit(ctx.children.get(0)));
         node.addChild((AST) visit(ctx.children.get(2)));
         return node;
+    }
+
+    @Override
+    public BoolExp visitEqualBool(DBLParser.EqualBoolContext ctx) {
+        
     }
 
 
@@ -367,9 +404,19 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     }
 
     @Override
-    public Object visitForOF(ForOFContext ctx) {
+    public ForOf visitForOF(ForOFContext ctx) {
+        ForOf node = new ForOf();
+
+        // node.addChild(DECLARATION NODE); //TODO: Implement this when Decls are done
+        node.addChild((AST) ctx.children.get(5));
+        node.addChild((AST) ctx.children.get(8));
+        return node;
+    }
+
+    @Override
+    public Object visitIfBlock(IfBlockContext ctx) {
         // TODO Auto-generated method stub
-        return super.visitForOF(ctx);
+        return super.visitIfBlock(ctx);
     }
 
     /*** State declaration ***/
@@ -388,7 +435,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     @Override
     public StateDecl visitIdActionState(DBLParser.IdActionStateContext ctx) {
         StateDecl node = new StateDecl(ctx.typedefUser().getText());
-        for(ParseTree treeNode : ctx.actionCall()) {
+        for (ParseTree treeNode : ctx.actionCall()) {
             node.addChild((AST) visit(treeNode));
         }
         return node;
@@ -397,7 +444,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     /*** String expression ***/
     @Override
     public StringExp visitAddString(DBLParser.AddStringContext ctx) {
-        StringExp node = new StringExp(StringExpOperator.CONCAT, null, null);
+        StringExp node = new StringExp(StringExpOperator.CONCAT, null);
         node.addChild((AST) visit(ctx.stringExpr(0)));
         node.addChild((AST) visit(ctx.stringExpr(1)));
         return node;
@@ -405,7 +452,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
 
     @Override
     public StringExp visitAddStringexpr1(DBLParser.AddStringexpr1Context ctx) {
-        StringExp node = new StringExp(StringExpOperator.CONCAT, null, null);
+        StringExp node = new StringExp(StringExpOperator.CONCAT, null);
         node.addChild((AST) visit(ctx.stringExpr()));
         node.addChild((AST) visit(ctx.expr()));
         return node;
@@ -413,7 +460,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
 
     @Override
     public StringExp visitAddStringexpr2(DBLParser.AddStringexpr2Context ctx) {
-        StringExp node = new StringExp(StringExpOperator.CONCAT, null, null);
+        StringExp node = new StringExp(StringExpOperator.CONCAT, null);
         node.addChild((AST) visit(ctx.expr()));
         node.addChild((AST) visit(ctx.stringExpr()));
         return node;
@@ -421,17 +468,17 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
 
     @Override
     public StringExp visitLitteralString(DBLParser.LitteralStringContext ctx) {
-        StringExp node = new StringExp(StringExpOperator.LITERAL, null, ctx.string().getText());
+        StringExp node = new StringExp(StringExpOperator.LITERAL, ctx.string().getText());
         return node;
     }
 
     @Override
-    public StringExp visitIdString(DBLParser.IdStringContext ctx) {
-        StringExp node = new StringExp(StringExpOperator.VARIABLE, ctx.IDENTIFIER().getText(), null);
+    public Variable visitIdString(DBLParser.IdStringContext ctx) {
+        Variable node = new Variable(ctx.IDENTIFIER().getText());
         return node;
     }
 
-    /*** Templates***/
+    /*** Templates ***/
     @Override
     public TemplateDecl visitTemplateDecl(DBLParser.TemplateDeclContext ctx) {
         TemplateDecl node = new TemplateDecl(ctx.typedefUser().getText());
@@ -444,25 +491,37 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     @Override
     public TemplateInstance visitTemplateInit(DBLParser.TemplateInitContext ctx) {
         TemplateInstance node = new TemplateInstance(ctx.IDENTIFIER().getText(), ctx.typedefUser().getText());
-        for(ParseTree treeNode : ctx.children) {
-            if(treeNode instanceof DBLParser.TemplateInitContext || treeNode instanceof DBLParser.AssignmentContext) {
+        for (ParseTree treeNode : ctx.children) {
+            if (treeNode instanceof DBLParser.TemplateInitContext || treeNode instanceof DBLParser.AssignmentContext) {
                 node.addChild((AST) visit(ctx));
             }
         }
         return node;
     }
 
-	/**
-	 * Visit a parse tree produced by {@link DBLParser#actionCall}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
+    @Override
+    public TemplateAccess visitTemplateAccess(DBLParser.TemplateAccessContext ctx) {
+        TemplateAccess node = new TemplateAccess(ctx.typedefUser().getText(), (Variable) visit(ctx.IDENTIFIER(0)));
+        for (int i = 1; i < ctx.IDENTIFIER().size(); i++) {
+            node.addChild((AST) visit(ctx.IDENTIFIER(i)));
+        }
+        return node;
+    }
+
+    /**
+     * Visit a parse tree produced by {@link DBLParser#actionCall}.
+     * 
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    /**
+     * {@inheritDoc}
+     *
+     * <p>
+     * The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.
+     * </p>
+     */
 
     // @Override
     // public Object visitIdDeclUser(DBLParser.IdDeclUserContext ctx){

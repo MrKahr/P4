@@ -6,7 +6,7 @@ public class TemplateAccess extends Expression implements Identifiable{
     private String identifier;  //the identity that the template is bound to in the symbol table
     
     //Constructor
-    public TemplateAccess(String identifier, MathExp index){
+    public TemplateAccess(String identifier, Variable index){
         this.identifier = identifier;
         addChild(index);
     }
@@ -16,7 +16,7 @@ public class TemplateAccess extends Expression implements Identifiable{
         return identifier;
     }
 
-    public MathExp getIndex(){
-        return (MathExp) getChildren().get(0);
+    public Variable getIndex(){
+        return (Variable) getChildren().get(0);
     }
 }

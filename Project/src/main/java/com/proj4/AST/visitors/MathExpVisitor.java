@@ -8,7 +8,7 @@ class MathExpressionVisitor implements NodeVisitor{
     public void visit(AST node){
         MathExp mathExp = (MathExp) node;
         System.out.println("Visiting MathExpression");
-        System.out.println("Contains " + mathExp.getConstant() + " " + mathExp.getIdentifier() + " " + mathExp.getOperator());
+        System.out.println("Contains " + mathExp.getConstant() + " " + mathExp.getOperator());
 
     }
 }
