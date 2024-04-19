@@ -112,7 +112,8 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     @Override
     public ActionDecl visitReturnActionDecl(DBLParser.ReturnActionDeclContext ctx) {
         String resultType = ctx.resultsIn().getChild(0).getText();
-        ActionDecl node = new ActionDecl(ctx.getChild(1).getText(), resultType);
+        String identifier = ctx.getChild(1).getText();
+        ActionDecl node = new ActionDecl(identifier, resultType);
         for (int i = 0; i < ctx.getChildCount(); i++) {
             var childnode = visit(ctx.getChild(i));
             node.addChild((AST) childnode);
@@ -120,49 +121,53 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         System.out.println(node.getChildren());
         return node;
     }
-    // @Override
-    // public ActionDecl visitNoReturnActionDecl(DBLParser.NoReturnActionDeclContext
-    // ctx){
-    // ActionDecl node = new ActionDecl();
-    // var children = visitChildren(ctx);
-    // for (AST child : children) {
-    // node.addChild(child);
-    // }
-    // System.out.println(children);
-    // return node;
-    // }
+    @Override
+    public ActionDecl visitNoReturnActionDecl(DBLParser.NoReturnActionDeclContext ctx){
+        String identifier = ctx.getChild(1).getText();
+        ActionDecl node = new ActionDecl(identifier);
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            var childnode = visit(ctx.getChild(i));
+            node.addChild((AST) childnode);
+        }
+        System.out.println(node.getChildren());
+        return node;
+    }
 
     /*** ACTION CALL ***/
 
-    // @Override public
-    // ActionCall visitActionCall(DBLParser.ActionCallContext ctx) {
-    // var children = visitChildren(ctx);
-    // for (AST child : children) {
-    // node.addChild(child);
-    // }
-    // System.out.println(children);
-    // return node;
-    // }
-    @Override
-    public ActionCall visitActionCallExpr(DBLParser.ActionCallExprContext ctx) {
-        ActionCall node = new ActionCall();
-        var children = (ArrayList<Object>) visitChildren(ctx);
-        for (Object child : children) {
-            node.addChild((AST) child);
+    @Override 
+    public ActionCall visitActionCall(DBLParser.ActionCallContext ctx) {
+        String identifier = ctx.getChild(0).getText();
+        ActionCall node = new ActionCall(identifier);
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            var childnode = visit(ctx.getChild(i));
+            node.addChild((AST) childnode);
         }
         System.out.println(node);
         return node;
     }
-    // @Override public ActionCall
-    // visitActionCallAssign(DBLParser.ActionCallAssignContext ctx) {
-    // ActionCall node = new ActionCall();
-    // var children = visitChildren(ctx);
-    // for (AST child : children) {
-    // node.addChild(child);
-    // }
-    // System.out.println(children);
-    // return node;
-    // }
+    @Override
+    public ActionCall visitActionCallExpr(DBLParser.ActionCallExprContext ctx) {
+        String identifier = ctx.getChild(0).getText();
+        ActionCall node = new ActionCall(identifier);
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            var childnode = visit(ctx.getChild(i));
+            node.addChild((AST) childnode);
+        }
+        System.out.println(node);
+        return node;
+    }
+    @Override 
+    public ActionCall visitActionCallAssign(DBLParser.ActionCallAssignContext ctx) {
+        String identifier = ctx.getChild(0).getText();
+        ActionCall node = new ActionCall(identifier);
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            var childnode = visit(ctx.getChild(i));
+            node.addChild((AST) childnode);
+        }
+        System.out.println(node);
+        return node;
+    }
 
     /*** ASSIGNMENT ***/
 
@@ -181,31 +186,54 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     }
 
     /*** ARRAY DECLARATION ***/
-    // @Override public ArrayDecl visitArrayDecl(DBLParser.ArrayDeclContext ctx) {
-    // ActionDecl node = new ArrayDecl();
-    // visitChildren(ctx);
-    // return node;
-    // }
-    // @Override public ArrayDecl visitDeclarrayDecl(DBLParser.DeclarrayDeclContext
-    // ctx) {
-    // ActionDecl node = new ArrayDecl();
-    // visitChildren(ctx);
-    // return node;
-    // }
+    @Override 
+    public ArrayDecl visitArrayDecl(DBLParser.ArrayDeclContext ctx) {
+        String valueType = ctx.getChild(0).getText();
+        String identifier = ctx.getChild(3).getText();
+        ArrayDecl node = new ArrayDecl(identifier, valueType);
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            var childnode = visit(ctx.getChild(i));
+            node.addChild((AST) childnode);
+        }
+        System.out.println(node.getChildren());
+        return node;
+    }
+    @Override 
+    public ArrayDecl visitDeclarrayDecl(DBLParser.DeclarrayDeclContext ctx) {
+        String valueType = ctx.getChild(0).getText();
+        String identifier = ctx.getChild(3).getText();
+        ArrayDecl node = new ArrayDecl(identifier, valueType);
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            var childnode = visit(ctx.getChild(i));
+            node.addChild((AST) childnode);
+        }
+        System.out.println(node.getChildren());
+        return node;
+    }
 
     // /*** ARRAY Access ***/
-    // @Override public ArrayAccess visitArrayAccess(DBLParser.ArrayAccessContext
-    // ctx) {
-    // ArrayAccess node = new ArrayAccess();
-    // visitChildren(ctx);
-    // return node;
-    // }
-    // @Override public ArrayAccess
-    // visitArrayAccessAssign(DBLParser.ArrayAccessAssignContext ctx) {
-    // ArrayAccess node = new ArrayAccess();
-    // visitChildren(ctx);
-    // return node;
-    // }
+    @Override 
+    public ArrayAccess visitArrayAccess(DBLParser.ArrayAccessContext ctx) {
+        String identifier = ctx.getChild(0).getText();
+        ArrayAccess node = new ArrayAccess(identifier);
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            var childnode = visit(ctx.getChild(i));
+            node.addChild((AST) childnode);
+        }
+        System.out.println(node.getChildren());
+        return node;
+    }
+    @Override 
+        public ArrayAccess visitArrayAccessAssign(DBLParser.ArrayAccessAssignContext ctx) {
+            String identifier = ctx.getChild(0).getText();
+            ArrayAccess node = new ArrayAccess(identifier);
+            for (int i = 0; i < ctx.getChildCount(); i++) {
+                var childnode = visit(ctx.getChild(i));
+                node.addChild((AST) childnode);
+            }
+            System.out.println(node.getChildren());
+            return node;
+    }
 
     @Override
     public MathExp visitParExpr(DBLParser.ParExprContext ctx) {
