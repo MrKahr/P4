@@ -2,18 +2,17 @@ package com.proj4;
 
 import com.proj4.antlrClass.DBLBaseVisitor;
 import com.proj4.antlrClass.DBLParser;
-import com.proj4.antlrClass.DBLParser.ForIContext;
-import com.proj4.antlrClass.DBLParser.ForOFContext;
-import com.proj4.antlrClass.DBLParser.IfBlockContext;
 
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.TerminalNode;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import com.proj4.AST.nodes.*;
 
-// TODO: First example should be a declaration 
+// TODO: First example should be a declaration
 // TODO: For ANTLR annotations, check p39 - can make it easier to traverse tree
 // TODO: create tree walker printer
 
@@ -27,7 +26,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
 
     /*
      * ┌──────────────────────────────────┐
-     * │ Override ANTLR Internals │
+     * │     Override ANTLR Internals     │
      * └──────────────────────────────────┘
      */
     @Override
@@ -51,7 +50,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
 
     /*
      * ┌─────────────────────────────────┐
-     * │ Set up Root Node of AST │
+     * │     Set up Root Node of AST     │
      * └─────────────────────────────────┘
      */
 
@@ -90,7 +89,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
 
     /*
      * ┌────────────────────────────────────────────────────────────┐
-     * │ Override Visitor implementations provided by ANTLR │
+     * │    Override Visitor implementations provided by ANTLR      │
      * └────────────────────────────────────────────────────────────┘
      */
     @Override
@@ -135,7 +134,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
 
     /*** ACTION CALL ***/
 
-    @Override 
+    @Override
     public ActionCall visitActionCall(DBLParser.ActionCallContext ctx) {
         String identifier = ctx.getChild(0).getText();
         ActionCall node = new ActionCall(identifier);
@@ -157,36 +156,92 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         System.out.println(node);
         return node;
     }
-    @Override 
-    public ActionCall visitActionCallAssign(DBLParser.ActionCallAssignContext ctx) {
-        String identifier = ctx.getChild(0).getText();
-        ActionCall node = new ActionCall(identifier);
-        for (int i = 0; i < ctx.getChildCount(); i++) {
-            var childnode = visit(ctx.getChild(i));
-            node.addChild((AST) childnode);
+    @Override
+    public Assignment visitActionCallAssign(DBLParser.ActionCallAssignContext ctx) {
+        Assignment node;
+        if (ctx.templateAccess().isEmpty()){
+            node = new Assignment(ctx.IDENTIFIER().getText()); // Get left side of assignment
+        } else {
+            TemplateAccess tAccess = (TemplateAccess) visit(ctx.templateAccess());  // Get left side of assignment
+            node = new Assignment(null);
+            node.addChild(tAccess);
         }
-        System.out.println(node);
+        node.addChild((ActionCall) visit(ctx.actionCall()));
         return node;
     }
 
     /*** ASSIGNMENT ***/
-
     @Override
     public Assignment visitTemplateAccessAssign(DBLParser.TemplateAccessAssignContext ctx) {
-        Assignment node = new Assignment();
-        visitChildren(ctx);
+        Assignment node;
+        if (ctx.templateAccess().size() > 1){
+            node = new Assignment(null);
+            node.addChild((TemplateAccess) visit(ctx.templateAccess().get(0))); // Get left side of assignment
+        } else {
+            node = new Assignment(ctx.IDENTIFIER().getText());  // Get left side of assignment
+        }
+        node.addChild((TemplateAccess) visit(ctx.templateAccess().get(2))); // Get right side of assignment
         return node;
     }
 
     @Override
     public Assignment visitIdAssign(DBLParser.IdAssignContext ctx) {
-        Assignment node = new Assignment();
-        visitChildren(ctx);
+        Assignment node;
+        if (ctx.templateAccess().isEmpty()){
+            node = new Assignment(ctx.IDENTIFIER().get(0).getText()); // Get left side of assignment
+        } else {
+            TemplateAccess tAccess = (TemplateAccess) visit(ctx.templateAccess());  // Get left side of assignment
+            node = new Assignment(null);
+            node.addChild(tAccess);
+        }
+        node.addChild(new Variable(ctx.IDENTIFIER().get(2).getText()));
         return node;
     }
 
+    @Override
+    public Assignment visitExprAssign(DBLParser.ExprAssignContext ctx) {
+        Assignment node;
+        if (ctx.templateAccess().isEmpty()){
+            node = new Assignment(ctx.IDENTIFIER().getText()); // Get left side of assignment
+        } else {
+            TemplateAccess tAccess = (TemplateAccess) visit(ctx.templateAccess());  // Get left side of assignment
+            node = new Assignment(null);
+            node.addChild(tAccess);
+        }
+        node.addChild((MathExp) visit(ctx.expr()));
+        return node;
+    }
+
+    @Override
+    public Assignment visitBoolExprAssign(DBLParser.BoolExprAssignContext ctx) {
+        Assignment node;
+        if (ctx.templateAccess().isEmpty()){
+            node = new Assignment(ctx.IDENTIFIER().getText()); // Get left side of assignment
+        } else {
+            TemplateAccess tAccess = (TemplateAccess) visit(ctx.templateAccess());  // Get left side of assignment
+            node = new Assignment(null);
+            node.addChild(tAccess);
+        }
+        node.addChild((BoolExp) visit(ctx.boolExpr()));
+        return node;        
+    }
+
+    @Override
+    public Assignment visitStringExprAssign(DBLParser.StringExprAssignContext ctx) {
+        Assignment node;
+        if (ctx.templateAccess().isEmpty()){
+            node = new Assignment(ctx.IDENTIFIER().getText()); // Get left side of assignment
+        } else {
+            TemplateAccess tAccess = (TemplateAccess) visit(ctx.templateAccess());  // Get left side of assignment
+            node = new Assignment(null);
+            node.addChild(tAccess);
+        }
+        node.addChild((StringExp) visit(ctx.stringExpr()));
+        return node;     
+    }
+
     /*** ARRAY DECLARATION ***/
-    @Override 
+    @Override
     public ArrayDecl visitArrayDecl(DBLParser.ArrayDeclContext ctx) {
         String valueType = ctx.getChild(0).getText();
         String identifier = ctx.getChild(3).getText();
@@ -198,7 +253,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         System.out.println(node.getChildren());
         return node;
     }
-    @Override 
+    @Override
     public ArrayDecl visitDeclarrayDecl(DBLParser.DeclarrayDeclContext ctx) {
         String valueType = ctx.getChild(0).getText();
         String identifier = ctx.getChild(3).getText();
@@ -212,7 +267,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     }
 
     // /*** ARRAY Access ***/
-    @Override 
+    @Override
     public ArrayAccess visitArrayAccess(DBLParser.ArrayAccessContext ctx) {
         String identifier = ctx.getChild(0).getText();
         ArrayAccess node = new ArrayAccess(identifier);
@@ -223,16 +278,23 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         System.out.println(node.getChildren());
         return node;
     }
-    @Override 
-        public ArrayAccess visitArrayAccessAssign(DBLParser.ArrayAccessAssignContext ctx) {
-            String identifier = ctx.getChild(0).getText();
-            ArrayAccess node = new ArrayAccess(identifier);
-            for (int i = 0; i < ctx.getChildCount(); i++) {
-                var childnode = visit(ctx.getChild(i));
-                node.addChild((AST) childnode);
+    @Override
+        public Assignment visitArrayAccessAssign(DBLParser.ArrayAccessAssignContext ctx) {
+            Assignment node;
+            if (ctx.templateAccess().isEmpty()){
+                node = new Assignment(ctx.IDENTIFIER().getText()); // Get left side of assignment
+            } else {
+                TemplateAccess tAccess = (TemplateAccess) visit(ctx.templateAccess());  // Get left side of assignment
+                node = new Assignment(null);
+                node.addChild(tAccess);
             }
-            System.out.println(node.getChildren());
+            node.addChild((ArrayAccess) visit(ctx.arrayAccess()));
             return node;
+    }
+
+    @Override
+    public Object visitArrayInitAssign(ArrayInitAssignContext ctx) {
+        
     }
 
     @Override
@@ -294,9 +356,9 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         String typedef = ctx.typedefUser().getText();
         String expressionType = "";
 
-        // This context has a number of children as its first, either this is an identifier or a bunch of template decle. 
+        // This context has a number of children as its first, either this is an identifier or a bunch of template decle.
         // Find a way to loop through all of these template decl.
-        
+
         UserDeclNode node = new UserDeclNode(typedef, expressionType);
         return node;
 }
@@ -312,7 +374,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     @Override
     public RuleDecl visitRuleDecl(DBLParser.RuleDeclContext ctx) {
         // Add if else block
-        RuleDecl node = new RuleDecl((IfElse) visit(ctx.ifBlock()));
+        RuleDecl node = new RuleDecl((If) visit(ctx.ifBlock()));
 
         // Add all actions
         for (ParseTree currentNode : ctx.identifierList().children) {
@@ -379,16 +441,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     @Override
     public BoolExp visitNegateBool(DBLParser.NegateBoolContext ctx) {
         BoolExp node = new BoolExp(BoolExpOperator.NOT, null);
-        node.addChild((AST) ctx.children.getLast());
-        return node;
-    }
-
-    @Override
-    public BoolExp visitEqualBool(DBLParser.EqualBoolContext ctx) {
-        BoolExpOperator op = ctx.EQUALS() == null ? BoolExpOperator.NOT_EQUALS : BoolExpOperator.EQUALS;
-        BoolExp node = new BoolExp(op, null);
-        node.addChild((AST) visit(ctx.children.get(0)));
-        node.addChild((AST) visit(ctx.children.get(2)));
+        node.addChild((AST) visit(ctx.children.getLast()));
         return node;
     }
 
@@ -415,13 +468,16 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
 
     @Override
     public BoolExp visitEqualBool(DBLParser.EqualBoolContext ctx) {
-        
+        BoolExpOperator op = ctx.EQUALS() == null ? BoolExpOperator.NOT_EQUALS : BoolExpOperator.EQUALS;
+        BoolExp node = new BoolExp(op, null);
+        node.addChild((AST) visit(ctx.children.get(0)));
+        node.addChild((AST) visit(ctx.children.get(2)));
+        return node;
     }
-
 
     /*** For-loops ***/
     @Override
-    public ForLoop visitForI(ForIContext ctx) {
+    public ForLoop visitForI(DBLParser.ForIContext ctx) {
         Identifiable iterator = (Identifiable) visit(ctx.children.get(2));
         BoolExp condition = (BoolExp) visit(ctx.children.get(3));
         Assignment iteratorAction = (Assignment) visit(ctx.children.get(5));
@@ -432,19 +488,39 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     }
 
     @Override
-    public ForOf visitForOF(ForOFContext ctx) {
+    public ForOf visitForOF(DBLParser.ForOFContext ctx) {
         ForOf node = new ForOf();
-
-        // node.addChild(DECLARATION NODE); //TODO: Implement this when Decls are done
-        node.addChild((AST) ctx.children.get(5));
-        node.addChild((AST) ctx.children.get(8));
+        UserDeclNode declNode = new UserDeclNode(ctx.children.get(3).getText(),
+                                                ctx.children.get(2).getText());
+        node.addChild(declNode);
+        node.addChild((AST) visit(ctx.children.get(5)));
+        node.addChild((AST) visit(ctx.children.get(8)));
         return node;
     }
 
+    /*** If-statements ***/
     @Override
-    public Object visitIfBlock(IfBlockContext ctx) {
-        // TODO Auto-generated method stub
-        return super.visitIfBlock(ctx);
+    public If visitIfBlock(DBLParser.IfBlockContext ctx) {
+        int elseIfOffset = 7; // Offset from start to 'ELSE IF'  |  Begin search for ELSE IF-Statements at this index
+        int boolExpOffSet = 2;
+        int bodyOffset = 5;
+
+        If node = new If();
+        node.addChild((AST) visit(ctx.getChild(boolExpOffSet)));
+        node.addChild((AST) visit(ctx.children.get(bodyOffset)));;
+
+        List<TerminalNode> elseif = ctx.ELSEIF();
+        for (int i = 1; i <= elseif.size(); i++){
+            ElseIf eiNode = new ElseIf();
+            eiNode.addChild((AST) visit(ctx.children.get(i * elseIfOffset + boolExpOffSet + 1))); // BoolExpr, +1 to align with next 'ELSE IF'
+            eiNode.addChild((AST) visit(ctx.children.get(i * elseIfOffset + bodyOffset + 1)));    // Body, +1 to align with next 'ELSE IF'
+        }
+
+        if (ctx.ELSE() != null) {
+            Else enode = new Else();
+            enode.addChild((AST) visit(ctx.getChild(ctx.children.size()-1)));
+        }
+        return node;
     }
 
     /*** State declaration ***/
@@ -538,7 +614,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
 
     /**
      * Visit a parse tree produced by {@link DBLParser#actionCall}.
-     * 
+     *
      * @param ctx the parse tree
      * @return the visitor result
      */

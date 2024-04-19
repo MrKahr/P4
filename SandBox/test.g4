@@ -95,12 +95,12 @@ stringExpr
     ;
 
 assignment // Remember to add semicolon if relevant
-    :   (templateAccess | IDENTIFIER) ASSIGN expr             # exprAssign
+    :   (templateAccess | IDENTIFIER) ASSIGN templateAccess   # templateAccessAssign    // This must be at the top since expr can also match templateAccess
+    |   (templateAccess | IDENTIFIER) ASSIGN expr             # exprAssign
     |   (templateAccess | IDENTIFIER) ASSIGN boolExpr         # boolExprAssign
     |   (templateAccess | IDENTIFIER) ASSIGN stringExpr       # stringExprAssign
     |   (templateAccess | IDENTIFIER) ASSIGN arrayAccess      # arrayAccessAssign
     |   (templateAccess | IDENTIFIER) ASSIGN arrayInit        # arrayInitAssign
-    |   (templateAccess | IDENTIFIER) ASSIGN templateAccess   # templateAccessAssign
     |   (templateAccess | IDENTIFIER) ASSIGN actionCall       # actionCallAssign
     |   (templateAccess | IDENTIFIER) ASSIGN IDENTIFIER       # idAssign
     ;
@@ -140,7 +140,7 @@ iterable
     ;
 
 ifBlock
-    :   IF BRAC_START boolExpr BRAC_END BODY_START body BODY_END (ELSE IF BRAC_START boolExpr BRAC_END BODY_START body BODY_END)* (ELSE BODY_START body BODY_END)?
+    :   IF BRAC_START boolExpr BRAC_END BODY_START body BODY_END (ELSEIF BRAC_START boolExpr BRAC_END BODY_START body BODY_END)* (ELSE BODY_START body BODY_END)?
     ;
 
 templateDecl
@@ -236,7 +236,7 @@ NEWLINE: [\r\n] -> skip;                     // This may allow newlines to be us
 
 /*** Keywords ***/
 IF          : 'IF';
-THEN        : 'THEN';
+ELSEIF      : 'ELSE IF';
 ELSE        : 'ELSE';
 WHEN        : 'WHEN';
 ACTION      : 'Action';

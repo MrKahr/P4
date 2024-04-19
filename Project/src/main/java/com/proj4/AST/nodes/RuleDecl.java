@@ -8,7 +8,7 @@ public class RuleDecl extends AST{
     private ArrayList<String> actions;
 
     //Constructor
-    public RuleDecl(IfElse ruleBody){
+    public RuleDecl(If ruleBody){
         this.actions = new ArrayList<String>();
         addChild(ruleBody);
     }
@@ -18,7 +18,7 @@ public class RuleDecl extends AST{
         return actions;
     }
 
-    public IfElse getRuleBody(){
-        return (IfElse) getChildren().get(0);
+    public If getRuleBody(){
+        return (If) getChildren().get(0);
     }
 }

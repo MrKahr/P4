@@ -6,7 +6,6 @@ public class Assignment extends Statement implements Identifiable{
     //Field
     private String identifier;
     
-    public Assignment(){}
     //Constructor
     public Assignment(String identifier){
         this.identifier = identifier;
