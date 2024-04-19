@@ -23,7 +23,7 @@ ActionDecl      (This is basically a function definition and also very important
     Values: Return type, Identifier
     Child Nodes: Parameters and a statement-node that corresponds to the code in the action.
     ----------------
-    The parameter-nodes should always be first in the list of child nodes for easier type checking and interpreting
+    The parameter-nodes (which are declarations) should always be first in the list of child nodes for easier type checking and interpreting
 
     (technically declarations are also statements, I think, so the child nodes are all statements)
 

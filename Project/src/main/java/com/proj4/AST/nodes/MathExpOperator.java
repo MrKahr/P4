@@ -7,5 +7,4 @@ public enum MathExpOperator {
     MULTIPLY,   //  a*b
     NEGATE,     //  -a
     CONSTANT,   //  return what's in the "constant"-field
-    VARIABLE    //  return the value bound to the identifier in the "identifier"-field
 }

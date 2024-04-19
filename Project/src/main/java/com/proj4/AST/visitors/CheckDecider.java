@@ -1,19 +1,19 @@
 package com.proj4.AST.visitors;
 
 import com.proj4.AST.nodes.*;
-import com.proj4.AST.visitors.ScopeVisitors.*;
+import com.proj4.AST.visitors.CheckVisitors.*;
 
-public class ScopeDecider implements VisitorDecider {
+public class CheckDecider implements VisitorDecider {
      //decide which visitor class to use for the given node
      public void decideVisitor(AST node){
         switch (node.getClass().getSimpleName()) {
             case "Program":
-                node.acceptVisitor(null);
+                node.acceptVisitor(new ProgramTypeChecker());
                 break;
-            case "PrimDeclNode":
-                node.acceptVisitor(null);
+            case "PrimitiveDecl":
+                node.acceptVisitor(new PrimitiveDeclTypeChecker());
                 break;
-            case "ActionDeclNode":
+            case "a":
                 node.acceptVisitor(null);
                 break;
             default:

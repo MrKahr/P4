@@ -1,3 +1,4 @@
+/*
 package com.proj4.symbolTable;
 
 import java.util.HashMap;
@@ -51,3 +52,4 @@ public class SymbolTable {
         return scopes;
     }
 }
+ */

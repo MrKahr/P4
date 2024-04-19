@@ -1,40 +1,69 @@
 package com.proj4.symbolTable;
 
 import java.util.HashMap;
+import java.util.HashSet;
+
+import com.proj4.exceptions.VariableAlreadyDefinedException;
+import com.proj4.symbolTable.symbols.SymbolTableEntry;
 
 //this class represents a scope in the programming language
 public class Scope {
     //Field
-    private HashMap<String, Type> variableTable = new HashMap<>();
-    private HashMap<String, Type> functionTable = new HashMap<>();
+    private HashMap<String, SymbolTableEntry> variableTable = new HashMap<>();
+    private HashMap<String, SymbolTableEntry> functionTable = new HashMap<>();
+    private HashSet<String> declaredTable = new HashSet<>();   //this table keeps track of whether or not a variable or function has been declared in this scope
 
     //Method
-    public HashMap<String, Type> getVTable(){
+    public HashMap<String, SymbolTableEntry> getVTable(){
         return variableTable;
     }
 
-    public HashMap<String, Type> getFTable(){
+    public HashMap<String, SymbolTableEntry> getFTable(){
         return functionTable;
     }
 
-    public void setVtable(HashMap<String, Type> table){
+    public HashSet<String> getDTable(){
+        return declaredTable;
+    }
+
+    public void setVTable(HashMap<String, SymbolTableEntry> table){
         variableTable = table;
     }
 
-    public void setFtable(HashMap<String, Type> table){
+    public void setFTable(HashMap<String, SymbolTableEntry> table){
         functionTable = table;
     }
     
+    public void setDTable(HashSet<String> table){
+        declaredTable = table;
+    }
+
     //Copy all mappings from the specified scope to this scope, overwriting duplicates with mappings from the other scope
     private void putAll(Scope other){
         variableTable.putAll(other.getVTable());
         functionTable.putAll(other.getFTable());
     }
 
+    //clones all the stuff from a scope except for the declaredTable(!)
     @Override
     public Scope clone(){
         Scope clonedScope = new Scope();
         clonedScope.putAll(this);
         return clonedScope;
+    }
+
+    public void declareVariable(String identifier, SymbolTableEntry variable){
+        if (declaredTable.contains(identifier)) {
+            throw new VariableAlreadyDefinedException("The variable name \"" + identifier + "\" is already in use!");
+        } else {
+            variableTable.put(identifier, variable);
+            declaredTable.add(identifier);
+        }
+    }
+
+    //creates a new scope with all the mappings of the origin scope, but with the declaredTable reset so variables can be overwritten by new declarations
+    public static Scope open(Scope origin){
+        Scope newScope = origin.clone();
+        return newScope;
     }
 }
