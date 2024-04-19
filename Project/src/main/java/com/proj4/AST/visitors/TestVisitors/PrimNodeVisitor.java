@@ -7,9 +7,8 @@ import com.proj4.AST.visitors.TestDecider;
 public class PrimNodeVisitor implements NodeVisitor {
 
     public void visit(AST node) {
-        PrimDeclNode declNode = (PrimDeclNode) node;
+        PrimitiveDecl declNode = (PrimitiveDecl) node;
         System.out.println("\nVisiting DeclNode:");
-        System.out.println("Type = " + declNode.getType() + " ID = " + declNode.getID());
         node.getChildren().get(0).acceptDecider(new TestDecider());
     }
 }

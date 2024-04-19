@@ -31,12 +31,12 @@ public abstract class AST {
     //put a new child on the list of children
     public void addChild(AST newChild){
         children.add(newChild);
-        newChild.setParent(this);
+        // newChild.setParent(this);
     }
 
-    public void setParent(AST parent){
-        this.parent = parent;
-    }
+    // public void setParent(AST parent){
+    //     this.parent = parent;
+    // }
 
     public void walk(AST node){
         if(true){    //call recursively if there are children of this node
@@ -104,7 +104,7 @@ public abstract class AST {
     public void parentWalk(AST root){
         if (children.size() > 0) {
             for(AST child : root.getChildren()){
-                child.setParent(root);
+                // child.setParent(root);
                 parentWalk(child);
             }
         }

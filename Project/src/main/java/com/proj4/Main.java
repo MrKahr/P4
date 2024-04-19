@@ -16,7 +16,11 @@ public class Main {
     public static void main(String[] args) {
 
         if (args.length == 0) {
-            args = new String[]{"Integer fisk; String fisk2;"};   // <----- INPUT
+            // args = new String[]{"Integer Fisk; String Fisk2;"};
+            args = new String[]{
+            "Action AttackPlayer(Card attacking, Player attacked) RESULTS IN Player {\n"
+            +"    RESULT IN 1+1;\n"
+            +"}"};
         }
 
         System.out.println("Parsing: " + args[0] + "\n");
@@ -40,16 +44,16 @@ public class Main {
 
 
         // Sketch test of visitors - REMOVE 
-        Program pn = new Program(null);
-        pn.addChild(new PrimDeclNode("Integer", "fisk1"));
-        pn.addChild(new PrimDeclNode("Booleoolean", "fisk2"));
-        //pn.addChild(new MathExp(MathExpOperator.ADD, "fisk", 0));
-        //pn.addChild(new ActionDeclNode("Action", "fisk3"));
-        pn.getChildren().get(0).addChild(new PrimDeclNode("String", "fisk4"));
-        new TestDecider().decideVisitor(pn);
-        pn.walk(pn);
-        // Sketch test of print parse tree 
-        pn.printTree();
+        // Program pn = new Program(null);
+        // pn.addChild(new PrimitiveDecl("Integer", "fisk1"));
+        // pn.addChild(new PrimitiveDecl("Booleoolean", "fisk2"));
+        // //pn.addChild(new MathExp(MathExpOperator.ADD, "fisk", 0));
+        // //pn.addChild(new ActionDeclNode("Action", "fisk3"));
+        // pn.getChildren().get(0).addChild(new PrimitiveDecl("String", "fisk4"));
+        // new TestDecider().decideVisitor(pn);
+        // pn.walk(pn);
+        // // Sketch test of print parse tree 
+        // pn.printTree();
  
     }
 }

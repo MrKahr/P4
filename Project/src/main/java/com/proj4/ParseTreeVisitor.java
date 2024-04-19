@@ -2,6 +2,8 @@ package com.proj4;
 
 import com.proj4.antlrClass.DBLBaseVisitor;
 import com.proj4.antlrClass.DBLParser;
+import com.proj4.antlrClass.DBLParser.DigitExprContext;
+
 
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -29,24 +31,25 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
      * │     Override ANTLR Internals     │
      * └──────────────────────────────────┘
      */
-    @Override
+    
     /**
      * This method overrides the default implementation of the ANTLR visitor,
      * such that the result returned from a visit to a child node is correctly
      * merged into the result of the parent node.
      */
-    public ArrayList<Object> aggregateResult(Object result, Object childResult) {
-        ArrayList<Object> aggregate = new ArrayList<Object>();
-        if (result instanceof Collection) {
-            aggregate.addAll((Collection<Object>) result);
-        } else {
-            aggregate.add(result);
-        }
-        if (childResult != null)
-            aggregate.add(childResult);
+    // @Override
+    // public ArrayList<Object> aggregateResult(Object result, Object childResult) {
+    //     ArrayList<Object> aggregate = new ArrayList<Object>();
+    //     if (result instanceof Collection) {
+    //         aggregate.addAll((Collection<Object>) result);
+    //     } else {
+    //         aggregate.add(result);
+    //     }
+    //     if (childResult != null)
+    //         aggregate.add(childResult);
 
-        return aggregate;
-    }
+    //     return aggregate;
+    // }
 
     /*
      * ┌─────────────────────────────────┐
@@ -74,7 +77,9 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         StmtList node = new StmtList();
         for (int i = 0; i < ctx.getChildCount(); i++) {
             var childnode = visit(ctx.getChild(i));
-            node.addChild((AST) childnode);
+            if (childnode != null) {
+                node.addChild((AST) childnode);
+            }
         }
         System.out.println("Stmtlist Children: " + node.getChildren());
         return node;
@@ -93,9 +98,8 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
      * └────────────────────────────────────────────────────────────┘
      */
     @Override
-    public PrimDeclNode visitIdDeclPrim(DBLParser.IdDeclPrimContext ctx) {
-        PrimDeclNode node = new PrimDeclNode(ctx.typePrimitive().getText(), ctx.IDENTIFIER().getText());
-        System.out.println("returning leaf - IDENTIFIER: " + node.getID() + " | TYPE: " + node.getType());
+    public PrimitiveDecl visitIdDeclPrim(DBLParser.IdDeclPrimContext ctx) {
+        PrimitiveDecl node = new PrimitiveDecl(ctx.typePrimitive().getText(), ctx.IDENTIFIER().getText());
         // for(int i = 0; i < ctx.getChildCount(); i++){
         // var childnode = visit(ctx.getChild(i));
         // System.out.println("Child nr: " +i+ " "+ childnode);
@@ -110,14 +114,26 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
 
     @Override
     public ActionDecl visitReturnActionDecl(DBLParser.ReturnActionDeclContext ctx) {
-        String resultType = ctx.resultsIn().getChild(0).getText();
+        String resultType = ctx.resultsIn().getChild(1).getText();
         String identifier = ctx.getChild(1).getText();
         ActionDecl node = new ActionDecl(identifier, resultType);
+        System.out.println("Action() " + node.getIdentifier() + " RESULTS IN " + node.getType());
         for (int i = 0; i < ctx.getChildCount(); i++) {
-            var childnode = visit(ctx.getChild(i));
-            node.addChild((AST) childnode);
+            var parseChild = ctx.getChild(i);
+            var childnode = visit(parseChild);
+            if (childnode != null) {
+                // index 3 contains the parameter list
+                if (i == 3) {
+                    for (UserDeclNode parameter : (ArrayList<UserDeclNode>) childnode) {
+                        node.addChild((AST) parameter);
+                    }
+                } else {
+                    node.addChild((AST) childnode);
+                }
+            }
         }
-        System.out.println(node.getChildren());
+        
+        System.out.println("children actionDecl: "+node.getChildren());
         return node;
     }
     @Override
@@ -132,6 +148,24 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         return node;
     }
 
+    @Override 
+    public ArrayList< UserDeclNode> visitParameterList(DBLParser.ParameterListContext ctx) {
+        ArrayList<UserDeclNode> parameterNodes = new ArrayList< UserDeclNode>();
+        String identifier = new String();
+        String type = new String();
+        for (int i = 0; i < ctx.getChildCount(); i++){
+            if((i+1)%3 == 1){
+                identifier = ctx.getChild(i).getText();
+            }
+            if((i+1)%3 == 2){
+                type = ctx.getChild(i).getText();
+                UserDeclNode node = new UserDeclNode(identifier, type);
+                parameterNodes.add(node);
+            }
+        }
+        return parameterNodes; 
+    }
+	
     /*** ACTION CALL ***/
 
     @Override
@@ -292,10 +326,10 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
             return node;
     }
 
-    @Override
-    public Object visitArrayInitAssign(ArrayInitAssignContext ctx) {
+    // @Override
+    // public Object visitArrayInitAssign(ArrayInitAssignContext ctx) {
         
-    }
+    // }
 
     @Override
     public MathExp visitParExpr(DBLParser.ParExprContext ctx) {
@@ -362,12 +396,21 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         UserDeclNode node = new UserDeclNode(typedef, expressionType);
         return node;
 }
-
+//TODO: 
     /*** Return ***/
     @Override
     public Return visitReturn(DBLParser.ReturnContext ctx) {
-        Return node = new Return((Expression) ctx.children.get(1));
-        return node;
+        if (!(ctx.expr() instanceof DigitExprContext) && ctx.expr() != null) {
+            Expression expression = (Expression) visit(ctx.children.get(1));
+            Return node = new Return(expression);
+            System.out.println(node);
+            return node;
+        } else {
+            int returnValue = Integer.valueOf(ctx.children.get(1).getText());
+            Return node = new Return(returnValue);
+            System.out.println(node);
+            return node;
+        }
     }
 
     /*** RuleDecl ***/

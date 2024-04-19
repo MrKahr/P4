@@ -4,16 +4,20 @@ package com.proj4.AST.nodes;
 //TODO: but I think it makes sense to have some way to mark what should be returned
 public class Return extends Statement{
     //Field
-
+    private Integer returnValueInteger;
 
     //Constructor
     public Return(Expression returnValue){
         addChild(returnValue);
+    }
+    public Return(Integer returnValue){
+        this.returnValueInteger = returnValue;
     }
 
     //Method
     public Expression getReturnValue(){
         return (Expression) getChildren().get(0);
     }
+    
 
 }
