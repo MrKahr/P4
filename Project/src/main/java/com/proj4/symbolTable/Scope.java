@@ -3,6 +3,7 @@ package com.proj4.symbolTable;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import com.proj4.exceptions.StateAlreadyDefinedExpection;
 import com.proj4.exceptions.VariableAlreadyDefinedException;
 import com.proj4.symbolTable.symbols.SymbolTableEntry;
 
@@ -12,7 +13,8 @@ public class Scope {
     private HashMap<String, SymbolTableEntry> variableTable = new HashMap<>();
     private HashMap<String, SymbolTableEntry> functionTable = new HashMap<>();
     private HashSet<String> declaredTable = new HashSet<>();   //this table keeps track of whether or not a variable or function has been declared in this scope
-
+    private HashSet<String> stateTable = new HashSet<>(); //this table keeps track of which states have been declared in the current scopes
+    
     //Method
     public HashMap<String, SymbolTableEntry> getVTable(){
         return variableTable;
@@ -26,6 +28,10 @@ public class Scope {
         return declaredTable;
     }
 
+    public HashSet<String> getStateTable(){
+        return stateTable;
+    }
+
     public void setVTable(HashMap<String, SymbolTableEntry> table){
         variableTable = table;
     }
@@ -37,6 +43,11 @@ public class Scope {
     public void setDTable(HashSet<String> table){
         declaredTable = table;
     }
+
+    public void setStateTabel(HashSet<String> table){
+        stateTable = table;
+    }
+
 
     //Copy all mappings from the specified scope to this scope, overwriting duplicates with mappings from the other scope
     private void putAll(Scope other){
@@ -57,6 +68,14 @@ public class Scope {
             throw new VariableAlreadyDefinedException("The variable name \"" + identifier + "\" is already in use!");
         } else {
             variableTable.put(identifier, variable);
+            declaredTable.add(identifier);
+        }
+    }
+
+    public void declareState(String identifier){
+        if(stateTable.contains(identifier)){
+            throw new StateAlreadyDefinedExpection();
+        } else {
             declaredTable.add(identifier);
         }
     }
