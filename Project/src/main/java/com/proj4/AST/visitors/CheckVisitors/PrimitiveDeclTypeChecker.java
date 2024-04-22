@@ -35,13 +35,13 @@ public class PrimitiveDeclTypeChecker extends TypeCheckVisitor{
         String identifier = primitiveDecl.getIdentifier();
         switch (primitiveDecl.getExpectedType()) {  //at this point, we know the value is this type as well
             case "Integer":
-                primitiveDecl.getScope().declareVariable(identifier, new IntSymbol(null));
+                primitiveDecl.getScope().declareVariable(identifier, new IntSymbol(0)); //placeholder value to prevent ambiguity
                 break;
             case "Boolean":
-                primitiveDecl.getScope().declareVariable(identifier, new BooleanSymbol(null));
+                primitiveDecl.getScope().declareVariable(identifier, new BooleanSymbol(false)); //placeholder value to prevent ambiguity
                 break;
             case "String":
-                primitiveDecl.getScope().declareVariable(identifier, new StringSymbol(null));
+                primitiveDecl.getScope().declareVariable(identifier, new StringSymbol("")); //placeholder value to prevent ambiguity
                 break;
             default:
                 throw new UndefinedTypeException("Value assigned to " + identifier + " is not a primitive type!");

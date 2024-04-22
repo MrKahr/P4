@@ -120,6 +120,22 @@ public abstract class AST {
 
     //call this to set the parent's scope to this node's scope
     public void synthesizeScope(){
-        parent.setScope(scope);
+        //we get the parent's scope and copy all mappings from the current scope to that one
+        //but we leave the set of declared variables alone!
+        parent.getScope().putAll(scope);
+    }
+
+    //call this to set the parent scope's value of the variable bound to the given identifier to the value it has in this scope
+    public void synthesizeVariable(String identifier){
+        parent.getScope().getVTable().put(identifier, scope.getVTable().get(identifier));
+    }
+
+    //call this to synthesize all variables that were not declared in this scope
+    public void synthesizeInheritedVariables(){
+        for (String identifier : scope.getVTable().keySet()) {
+            if (!scope.getDTable().contains(identifier)) {  //if we didn't declare a variable with this identifier in this scope
+                synthesizeVariable(identifier);             //synthesize it
+            }
+        }
     }
 }
