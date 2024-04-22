@@ -18,9 +18,7 @@ public class Main {
         if (args.length == 0) {
             // args = new String[]{"Integer Fisk; String Fisk2;"};
             args = new String[]{
-            "Action AttackPlayer(Card attacking, Player attacked) RESULTS IN Player {\n"
-            +"    RESULT IN 1+1;\n"
-            +"}"};
+            "card.attack IS card.health;"};
         }
 
         System.out.println("Parsing: " + args[0] + "\n");

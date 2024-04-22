@@ -132,19 +132,27 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
                 }
             }
         }
-        
-        System.out.println("children actionDecl: "+node.getChildren());
         return node;
     }
     @Override
     public ActionDecl visitNoReturnActionDecl(DBLParser.NoReturnActionDeclContext ctx){
         String identifier = ctx.getChild(1).getText();
         ActionDecl node = new ActionDecl(identifier);
+        System.out.println("Action() " + node.getIdentifier());
         for (int i = 0; i < ctx.getChildCount(); i++) {
-            var childnode = visit(ctx.getChild(i));
-            node.addChild((AST) childnode);
+            var parseChild = ctx.getChild(i);
+            var childnode = visit(parseChild);
+            if (childnode != null) {
+                // index 3 contains the parameter list
+                if (i == 3) {
+                    for (UserDeclNode parameter : (ArrayList<UserDeclNode>) childnode) {
+                        node.addChild((AST) parameter);
+                    }
+                } else {
+                    node.addChild((AST) childnode);
+                }
+            }
         }
-        System.out.println(node.getChildren());
         return node;
     }
 
@@ -153,12 +161,13 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         ArrayList<UserDeclNode> parameterNodes = new ArrayList< UserDeclNode>();
         String identifier = new String();
         String type = new String();
+        //modulo expressions here separate parameters as each parameter is in the form: Type - Identifier - ,
         for (int i = 0; i < ctx.getChildCount(); i++){
             if((i+1)%3 == 1){
-                identifier = ctx.getChild(i).getText();
+                type = ctx.getChild(i).getText();
             }
             if((i+1)%3 == 2){
-                type = ctx.getChild(i).getText();
+                identifier = ctx.getChild(i).getText();
                 UserDeclNode node = new UserDeclNode(identifier, type);
                 parameterNodes.add(node);
             }
@@ -174,9 +183,11 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         ActionCall node = new ActionCall(identifier);
         for (int i = 0; i < ctx.getChildCount(); i++) {
             var childnode = visit(ctx.getChild(i));
-            node.addChild((AST) childnode);
+            if (childnode != null){
+                node.addChild((AST) childnode);
+            }
         }
-        System.out.println(node);
+        System.out.println("ActionCall Children"+ node.getChildren());
         return node;
     }
     @Override
