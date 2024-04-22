@@ -1,19 +1,17 @@
 package com.proj4.AST.nodes;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
 import com.proj4.AST.visitors.NodeVisitor;
-import com.proj4.AST.visitors.TestDecider;
 import com.proj4.AST.visitors.VisitorDecider;
+import com.proj4.symbolTable.Scope;
 
 public abstract class AST {
     //Field
     private ArrayList<AST> children = new ArrayList<AST>();
-    private Integer treeLevel = 0;
     private AST parent;
+    private Scope scope;
 
     //Method
     public ArrayList<AST> getChildren() {
@@ -22,6 +20,10 @@ public abstract class AST {
 
     public AST getParent(){
         return parent;
+    }
+    
+    public Scope getScope(){
+        return scope;
     }
 
     //put a new child on the list of children
@@ -34,14 +36,8 @@ public abstract class AST {
         this.parent = parent;
     }
 
-    public void walk(AST node){
-        if(true){    //call recursively if there are children of this node
-            System.out.println("Fisk");
-            for(AST child : node.getChildren()){
-                walk(child);
-                System.out.println(child.getClass().getSimpleName());
-            }
-        }
+    public void setScope(Scope scope){
+        this.scope = scope;
     }
 
     public void printTree(){
@@ -90,10 +86,20 @@ public abstract class AST {
         visitor.visit(this);
     }
 
-    public void visitChildren(){
+    //specify a decider and use it to visit all children
+    public void visitChildren(VisitorDecider decider){
         children.forEach((child) -> {
-          new TestDecider().decideVisitor(child);  
+            decider.decideVisitor(child);  
         });
+    }
+
+    //specify a decider and use it to visit a specified child
+    public void visitChild(VisitorDecider decider, int childNumber){
+        decider.decideVisitor(children.get(childNumber));
+    }
+
+    public void visitChild(VisitorDecider decider, AST child){
+        decider.decideVisitor(child);
     }
 
     //a version of the walk-method that assigns parents to every node that is a child of the root
@@ -102,6 +108,34 @@ public abstract class AST {
             for(AST child : root.getChildren()){
                 child.setParent(root);
                 parentWalk(child);
+            }
+        }
+    }
+
+    //call this to set the symbol tables of this node's scope to those of its parent's scope
+    public void inheritScope(){
+        scope = Scope.open(parent.getScope());
+        //we're specifically not just doing scope = parent.getScope()
+        //because Scope.open() makes sure to not clone the set of variables declared in the parent scope
+    }
+
+    //call this to set the parent's scope to this node's scope
+    public void synthesizeScope(){
+        //we get the parent's scope and copy all mappings from the current scope to that one
+        //but we leave the set of declared variables alone!
+        parent.getScope().putAll(scope);
+    }
+
+    //call this to set the parent scope's value of the variable bound to the given identifier to the value it has in this scope
+    public void synthesizeVariable(String identifier){
+        parent.getScope().getVTable().put(identifier, scope.getVTable().get(identifier));
+    }
+
+    //call this to synthesize all variables that were not declared in this scope
+    public void synthesizeInheritedVariables(){
+        for (String identifier : scope.getVTable().keySet()) {
+            if (!scope.getDTable().contains(identifier)) {  //if we didn't declare a variable with this identifier in this scope
+                synthesizeVariable(identifier);             //synthesize it
             }
         }
     }
