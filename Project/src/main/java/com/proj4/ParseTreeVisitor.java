@@ -2,8 +2,7 @@ package com.proj4;
 
 import com.proj4.antlrClass.DBLBaseVisitor;
 import com.proj4.antlrClass.DBLParser;
-import com.proj4.antlrClass.DBLParser.DigitExprContext;
-
+import com.proj4.antlrClass.DBLParser.ArrayInitContext;
 
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -276,6 +275,9 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
 
     /*** ARRAY DECLARATION ***/
     @Override
+    /**
+     * Declaration of an array - can happen everywhere
+     */
     public ArrayDecl visitArrayDecl(DBLParser.ArrayDeclContext ctx) {
         String valueType = ctx.getChild(0).getText();
         String identifier = ctx.getChild(3).getText();
@@ -288,7 +290,10 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         return node;
     }
     @Override
-    public ArrayDecl visitDeclarrayDecl(DBLParser.DeclarrayDeclContext ctx) {
+    /**
+     * Declaration of an array - this instance is declared alone, i.e. on a line for itself
+     */
+    public ArrayDecl visitDeclArrayDecl(DBLParser.DeclArrayDeclContext ctx) {
         String valueType = ctx.getChild(0).getText();
         String identifier = ctx.getChild(3).getText();
         ArrayDecl node = new ArrayDecl(identifier, valueType);
@@ -312,6 +317,13 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         System.out.println(node.getChildren());
         return node;
     }
+
+    @Override
+    public Object visitArrayInit(ArrayInitContext ctx) {
+        
+    }
+
+
     @Override
         public Assignment visitArrayAccessAssign(DBLParser.ArrayAccessAssignContext ctx) {
             Assignment node;
@@ -326,10 +338,18 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
             return node;
     }
 
-    // @Override
-    // public Object visitArrayInitAssign(ArrayInitAssignContext ctx) {
-        
-    // }
+    @Override
+    public Assignment visitArrayInitAssign(ArrayInitAssignContext ctx) {
+        Assignment node;
+        if (ctx.templateAccess().isEmpty()){
+            node = new Assignment(ctx.IDENTIFIER().getText()); // Get left side of assignment
+        } else {
+            TemplateAccess tAccess = (TemplateAccess) visit(ctx.templateAccess());  // Get left side of assignment
+            node = new Assignment(null);
+            node.addChild(tAccess);
+        }
+        node.addChild((ArrayInit) visit(ctx.arrayInit()));
+    }
 
     @Override
     public MathExp visitParExpr(DBLParser.ParExprContext ctx) {

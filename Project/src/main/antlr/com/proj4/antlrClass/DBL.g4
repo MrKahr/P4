@@ -117,7 +117,7 @@ declaration
     |   typePrimitive assignment SEMICOLON     # assignDeclPrim
     |   typedefUser IDENTIFIER SEMICOLON       # idDeclUser
     |   typedefUser assignment SEMICOLON       # assignDeclUser
-    |   arrayDecl SEMICOLON                    # declarrayDecl
+    |   arrayDecl SEMICOLON                    # declArrayDecl
     ;
 
 declarationList
