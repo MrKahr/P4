@@ -2,11 +2,11 @@ package com.proj4.AST.visitors.CheckVisitors;
 
 import com.proj4.AST.nodes.AST;
 import com.proj4.AST.nodes.ArrayAccess;
+import com.proj4.AST.visitors.CheckDecider;
 import com.proj4.AST.visitors.TypeCheckVisitor;
 import com.proj4.exceptions.MismatchedTypeException;
 import com.proj4.exceptions.UndefinedArrayExpection;
-import com.proj4.symbolTable.symbols.ComplexSymbol;
-import com.proj4.symbolTable.symbols.SymbolTableEntry;
+import com.proj4.symbolTable.symbols.ArraySymbol;
 
 public class ArrayAccessTypeChecker extends TypeCheckVisitor{
     
@@ -19,20 +19,20 @@ public class ArrayAccessTypeChecker extends TypeCheckVisitor{
             throw new UndefinedArrayExpection("Array accessed in not defined in current scope");
         }
 
-    
-        // Case 2: Variable accessed is not an array 
-        SymbolTableEntry possibleArray = arrayAccess.getScope().getVTable().get(arrayAccess.getIdentifier());
+        // Case 2: Array is not an array 
+        ArraySymbol array = null;
         try {
-            ComplexSymbol array = (ComplexSymbol) possibleArray;
-        } catch (Exception e) {
-            throw new MismatchedTypeException(arrayAccess.getIdentifier() + " is not an array!");
+            array = (ArraySymbol) arrayAccess.getScope().getVTable().get(arrayAccess.getIdentifier());
+        } catch (ClassCastException cce) {
+            throw new MismatchedTypeException("Identifier \"" + arrayAccess.getIdentifier() + "\" indexed as array but is not an array!");
         }
-        if (true) {
-            
-        }
-        
-        // Case 3: Array is out of bounds 
 
-        // Case 4: Index is not correct format 
+        // Case 3: Index is not correct format 
+        arrayAccess.visitChild(new CheckDecider(), arrayAccess.getIndex());
+        if(!TypeCheckVisitor.getFoundType().equals("Integer")){
+            throw new MismatchedTypeException("Index for array \"" + arrayAccess.getIdentifier() + "\" is not integer!");
+        }
+
+        TypeCheckVisitor.setFoundType(array.getType());
     }
 }

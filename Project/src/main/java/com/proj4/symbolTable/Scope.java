@@ -6,7 +6,7 @@ import java.util.HashSet;
 
 import com.proj4.exceptions.StateAlreadyDefinedExpection;
 import com.proj4.exceptions.VariableAlreadyDefinedException;
-import com.proj4.symbolTable.symbols.ComplexSymbol;
+import com.proj4.symbolTable.symbols.TemplateSymbol;
 import com.proj4.symbolTable.symbols.SymbolTableEntry;
 
 //this class represents a scope in the programming language
@@ -14,7 +14,7 @@ public class Scope implements Cloneable{
     //Field
 
     //this table keeps track of template blueprints and their default values, to be used when instantiating them
-    private static HashMap<String, ComplexSymbol> blueprintTable = new HashMap<>();
+    private static HashMap<String, TemplateSymbol> blueprintTable = new HashMap<>();
     //this table keeps a map of every declared template in order to properly index them
     private static HashMap<String, ArrayList<String>> templateTable = new HashMap<>();
     //this table keeps track of actions
@@ -36,7 +36,7 @@ public class Scope implements Cloneable{
         return functionTable;
     }
 
-    public static HashMap<String, ComplexSymbol> getBTable(){
+    public static HashMap<String, TemplateSymbol> getBTable(){
         return blueprintTable;
     }
 
@@ -60,7 +60,7 @@ public class Scope implements Cloneable{
         functionTable = table;
     }
     
-    public static void setBTable(HashMap<String, ComplexSymbol> table){
+    public static void setBTable(HashMap<String, TemplateSymbol> table){
         blueprintTable = table;
     }
 
