@@ -15,7 +15,7 @@ public class ArrayAccess extends Expression implements Identifiable{
         return identifier;
     }
 
-    public MathExp getIndex(){
-        return (MathExp) getChildren().get(0);
+    public Expression getIndex(){
+        return (Expression) getChildren().get(0);
     }
 }

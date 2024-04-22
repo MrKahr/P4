@@ -7,8 +7,8 @@ public class If extends Statement {
     public If(){}
 
     //Method
-    public BoolExp getCondition(){
-        return (BoolExp) getChildren().get(0);
+    public Expression getCondition(){
+        return (Expression) getChildren().get(0);
     }
 
     public Statement getThenBlock(){

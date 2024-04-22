@@ -14,19 +14,39 @@ import com.proj4.AST.visitors.VisitorDecider;
 
 public class Main {
     public static void main(String[] args) {
+        Boolean isFile = false;
 
         if (args.length == 0) {
             // args = new String[]{"Integer Fisk; String Fisk2;"};
             args = new String[]{
-            "card.attack IS card.health;"};
-        }
+            "FOR(Card card OF Shuffle(cardUniverse)) {\n"
+            +"    IF(i LESS THAN bucketCount) {\n"
+            +"    NEW Deck market {}\n"
+            +"    FOR(Integer j IS 0; j LESS THAN bucketSize; j IS j + 1) {\n"
+            +"        AddCard(card, market)\n"
+            +"    };\n"
+            +"options IS market;\n"
+            +"}\n"
+            +"i IS i + 1;\n"
+            +"}"};
+        } else {isFile = true;}
 
         System.out.println("Parsing: " + args[0] + "\n");
 
 
         // Set args[0] as the input to our lexer
-        DBLLexer lexer = new DBLLexer(CharStreams.fromString(args[0]));
-        
+
+        DBLLexer lexer = null;
+        try {
+            if (isFile) {
+                lexer = new DBLLexer(CharStreams.fromFileName(args[0]));
+            } else {
+                lexer = new DBLLexer(CharStreams.fromString(args[0]));
+            }
+        } catch (Exception e) {
+            System.out.println("Something happened to the input file\n" + e.getMessage());
+        }
+
         // Set the lexed file as input to our parser
         DBLParser parser = new DBLParser(new CommonTokenStream(lexer));
         
@@ -40,6 +60,7 @@ public class Main {
         parseVisitor.visit(tree);
         // visitor.getAST(); - use this pattern to get tree
 
+        parseVisitor.getRoot().printTree();
 
         // Sketch test of visitors - REMOVE 
         // Program pn = new Program(null);

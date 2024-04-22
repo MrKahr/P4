@@ -1,8 +1,46 @@
 package com.proj4.AST.nodes;
 
+import com.proj4.symbolTable.symbols.PrimitiveSymbol;
+
 //Expressions can have up to two operands (which are also expressions)
 //note that one or both operands may be null if the operator type is CONSTANT or IDENTIFIER
-public abstract class Expression extends Statement{
+public class Expression extends Statement{
+    
+    //Field
+    private ExpressionOperator operator;
+    @SuppressWarnings("rawtypes")   //compiler complains about unspecified generics, but it's fine because we check the type ourselves
+    private PrimitiveSymbol constant;
+
+    //Constructor
+    public Expression(){} //constructor with nothing, required for Variable.java to extend this class
+
+    public Expression(ExpressionOperator operator, @SuppressWarnings("rawtypes") PrimitiveSymbol constant){
+        this.operator = operator;
+        this.constant = constant;
+    }
+
+    public Expression(ExpressionOperator operator, Expression firstOperand, Expression secondOperand){
+        this.operator = operator;
+        addChild(firstOperand);
+        addChild(secondOperand);
+        //constant field is untouched and becomes null
+    }    
+
+    public Expression(ExpressionOperator operator, Expression firstOperand){
+        this.operator = operator;
+        addChild(firstOperand);
+        //constant field is untouched and becomes null
+    }    
+
+    //Method
+    public ExpressionOperator getOperator(){
+        return operator;
+    }
+
+    @SuppressWarnings("rawtypes")
+    public PrimitiveSymbol getConstant(){
+        return constant;
+    }
 
     public Expression getFirstOperand(){
         return (Expression) getChildren().get(0);
@@ -12,19 +50,3 @@ public abstract class Expression extends Statement{
         return (Expression) getChildren().get(1);
     }
 }
-/* TODO: here's a problem:
- * Accessing arrays or template instances is currently impossible.
- * This operation cannot happen at the moment, because there is no node for it,
- * and the existing expressions don't support it.
- * There is, however, some hope:
- * It would take some doing, but creating new operator types to index arrays or templates would work.
- * Say all operator-enumerations get expanded with the type "ARRAY".
- * This would make an expression return the value of the array bound the value in the "identifier-field"
- * indexed by the value returned by the first operand of the expression, which would have to be a MathExp.
- * We could do the same for templates with the operator type "TEMPLATE" which would work the same as ARRAY,
- * except the first operand of the expression would have to be a StringExp to access the needed field.
- * 
- * We could also let ARRAY and TEMPLATE not use the identifier field,
- * and instead let them use the first operand to find the identifier, which would either be an expression or a new class "Identifier",
- * and the second operator to do the indexing as discussed before.
- */
