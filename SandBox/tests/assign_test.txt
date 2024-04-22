@@ -1,8 +1,8 @@
-card.health IS 4;
-true IS FALSE;
-fish IS "FISH";
-arr IS iarr[i];
+card.health IS 4; //tested
+true IS FALSE; //tested
+fish IS "FISH"; //tested
+arr IS iarr[i]; //tested
 star IS [1+2, 2+3];
-card.attack IS card.health;
-async IS SlowLoading(value);
-x IS x+1;
+card.attack IS card.health; //tested
+async IS SlowLoading(value); //tested
+x IS x+1; //tested
