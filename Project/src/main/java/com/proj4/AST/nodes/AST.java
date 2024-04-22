@@ -44,8 +44,12 @@ public abstract class AST {
         Integer currentLevel = 0;
         List<List<AST>> result = new ArrayList<>();
         getLevel(this, currentLevel, result);
+        
         for (List<AST> list : result) {
-            System.out.println("\nLevel " + currentLevel);
+            // Avoid printing level for leaf nodes
+            if(list.size() > 0){
+                System.out.println("\nLevel " + currentLevel);
+            }
             for (AST ast : list) {
                 System.out.print(ast.getClass().getSimpleName() + " | ");
             }
@@ -66,9 +70,6 @@ public abstract class AST {
         result.get(level).add(root);
 
         for (AST ast : root.getChildren()) {
-            if (this.getChildren().size() < 1) {
-                return;
-            }
             getLevel(ast, level + 1, result);
         }
 
@@ -120,6 +121,22 @@ public abstract class AST {
 
     //call this to set the parent's scope to this node's scope
     public void synthesizeScope(){
-        parent.setScope(scope);
+        //we get the parent's scope and copy all mappings from the current scope to that one
+        //but we leave the set of declared variables alone!
+        parent.getScope().putAll(scope);
+    }
+
+    //call this to set the parent scope's value of the variable bound to the given identifier to the value it has in this scope
+    public void synthesizeVariable(String identifier){
+        parent.getScope().getVTable().put(identifier, scope.getVTable().get(identifier));
+    }
+
+    //call this to synthesize all variables that were not declared in this scope
+    public void synthesizeInheritedVariables(){
+        for (String identifier : scope.getVTable().keySet()) {
+            if (!scope.getDTable().contains(identifier)) {  //if we didn't declare a variable with this identifier in this scope
+                synthesizeVariable(identifier);             //synthesize it
+            }
+        }
     }
 }

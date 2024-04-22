@@ -6,4 +6,9 @@ public class BooleanSymbol extends PrimitiveSymbol<Boolean>{
         this.setType("Boolean");
         this.setValue(value);
     }
+
+    public BooleanSymbol(BooleanSymbol other){
+        this.setType("Boolean");
+        this.setValue(other.getValue());
+    }
 }

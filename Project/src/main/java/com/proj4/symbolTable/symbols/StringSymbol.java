@@ -6,4 +6,9 @@ public class StringSymbol extends PrimitiveSymbol<String>{
         this.setType("String");
         this.setValue(value);
     }
+
+    public StringSymbol(StringSymbol other){
+        this.setType("String");
+        this.setValue(other.getValue());
+    }
 }
