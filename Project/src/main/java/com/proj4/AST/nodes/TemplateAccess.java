@@ -10,18 +10,14 @@ public class TemplateAccess extends Expression implements Identifiable{
     private ArrayList<String> path = new ArrayList<>(); //the fields that should be indexed, in the order they are added to this list
     
     //Constructor
-    public TemplateAccess(String identifier, MathExp index){
+    public TemplateAccess(String identifier, ArrayList<String> path){
         this.identifier = identifier;
-        addChild(index);
+        this.path = path;
     }
     
     //Method
     public String getIdentifier(){
         return identifier;
-    }
-
-    public MathExp getIndex(){
-        return (MathExp) getChildren().get(0);
     }
 
     public ArrayList<String> getPath(){

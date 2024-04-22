@@ -5,7 +5,7 @@ public class ArrayAccess extends Expression implements Identifiable{
     private String identifier;  //the identity that the array is bound to in the symbol table
     
     //Constructor
-    public ArrayAccess(String identifier, MathExp index){
+    public ArrayAccess(String identifier, Expression index){
         this.identifier = identifier;
         addChild(index);
     }
@@ -15,7 +15,7 @@ public class ArrayAccess extends Expression implements Identifiable{
         return identifier;
     }
 
-    public MathExp getIndex(){
-        return (MathExp) getChildren().get(0);
+    public Expression getIndex(){
+        return (Expression) getChildren().get(0);
     }
 }

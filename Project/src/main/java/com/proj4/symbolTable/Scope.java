@@ -17,28 +17,30 @@ public class Scope implements Cloneable{
     private static HashMap<String, ComplexSymbol> blueprintTable = new HashMap<>();
     //this table keeps a map of every declared template in order to properly index them
     private static HashMap<String, ArrayList<String>> templateTable = new HashMap<>();
+    //this table keeps track of actions
+    private static HashMap<String, SymbolTableEntry> functionTable = new HashMap<>();
+    //this table keeps track of which states have been declared in the current scope
+    private static HashSet<String> stateTable = new HashSet<>(); 
 
     //this table keeps track of variables
     private HashMap<String, SymbolTableEntry> variableTable = new HashMap<>();
-    //this table keeps track of actions
-    private HashMap<String, SymbolTableEntry> functionTable = new HashMap<>();
+
     private HashSet<String> declaredTable = new HashSet<>();   //this table keeps track of whether or not a variable or function has been declared in this scope
-    private HashSet<String> stateTable = new HashSet<>(); //this table keeps track of which states have been declared in the current scopes
 
     //Method
     public HashMap<String, SymbolTableEntry> getVTable(){
         return variableTable;
     }
 
-    public HashMap<String, SymbolTableEntry> getFTable(){
+    public static HashMap<String, SymbolTableEntry> getFTable(){
         return functionTable;
     }
 
-    public HashMap<String, ComplexSymbol> getBTable(){
+    public static HashMap<String, ComplexSymbol> getBTable(){
         return blueprintTable;
     }
 
-    public HashMap<String, ArrayList<String>> getTTable(){
+    public static HashMap<String, ArrayList<String>> getTTable(){
         return templateTable;
     }
 
@@ -46,7 +48,7 @@ public class Scope implements Cloneable{
         return declaredTable;
     }
 
-    public HashSet<String> getStateTable(){
+    public static HashSet<String> getStateTable(){
         return stateTable;
     }
 
@@ -54,11 +56,11 @@ public class Scope implements Cloneable{
         variableTable = table;
     }
 
-    public void setFTable(HashMap<String, SymbolTableEntry> table){
+    public static void setFTable(HashMap<String, SymbolTableEntry> table){
         functionTable = table;
     }
     
-    public void setBTable(HashMap<String, ComplexSymbol> table){
+    public static void setBTable(HashMap<String, ComplexSymbol> table){
         blueprintTable = table;
     }
 
@@ -66,7 +68,7 @@ public class Scope implements Cloneable{
         declaredTable = table;
     }
 
-    public void setStateTabel(HashSet<String> table){
+    public static void setStateTabel(HashSet<String> table){
         stateTable = table;
     }
 
@@ -74,8 +76,6 @@ public class Scope implements Cloneable{
     //Copy all mappings from the specified scope to this scope, overwriting duplicates with mappings from the other scope
     public void putAll(Scope other){
         variableTable.putAll(other.getVTable());
-        functionTable.putAll(other.getFTable());
-        blueprintTable.putAll(other.getBTable());
     }
 
     //clones all the stuff from a scope except for the declaredTable(!)
