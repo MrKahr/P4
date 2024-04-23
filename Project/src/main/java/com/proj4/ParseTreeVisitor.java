@@ -515,8 +515,12 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         Expression condition = (Expression) visit(ctx.children.get(3));
         Assignment iteratorAction = (Assignment) visit(ctx.children.get(5));
         StmtList body = (StmtList) visit(ctx.children.get(8));
-
-        ForLoop node = new ForLoop(iterator, condition, iteratorAction, body);
+        
+        ForLoop node = new ForLoop(iterator, condition, iteratorAction);
+        
+        for (AST child : body.getChildren()) {
+            node.addChild(child);
+        }
         return node;
     }
 
@@ -554,9 +558,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         }
 
         if (ctx.ELSE() != null) {
-            Else enode = new Else();
-            enode.addChild((AST) visit(ctx.getChild(ctx.children.size()-1)));
-            tempNode.addChild(enode);
+            tempNode.addChild((AST) visit(ctx.getChild(ctx.children.size()-1)));
         }
         return node;
     }

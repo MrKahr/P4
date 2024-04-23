@@ -5,11 +5,10 @@ public class ForLoop extends Statement{
 
 
     //Constructor
-    public ForLoop(Identifiable iterator, Expression condition, Assignment iteratorAction, StmtList loopBlock){
+    public ForLoop(Identifiable iterator, Expression condition, Assignment iteratorAction){
         addChild((AST) iterator);    //first child is the iterator
         addChild(condition);        //second child is the condition
         addChild(iteratorAction);   //third child is what to do with the iterator every loop
-        addChild((AST) loopBlock);   //fourth child is the loop itself
     }
 
     //Method
