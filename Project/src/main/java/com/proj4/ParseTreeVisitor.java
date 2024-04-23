@@ -2,6 +2,7 @@ package com.proj4;
 
 import com.proj4.antlrClass.DBLBaseVisitor;
 import com.proj4.antlrClass.DBLParser;
+import com.proj4.antlrClass.DBLParser.BodyContext;
 import com.proj4.symbolTable.symbols.BooleanSymbol;
 import com.proj4.symbolTable.symbols.IntSymbol;
 import com.proj4.symbolTable.symbols.StringSymbol;
@@ -129,7 +130,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     }
 
     @Override
-    public ArrayList< UserDeclNode> visitParameterList(DBLParser.ParameterListContext ctx) {
+    public ArrayList<UserDeclNode> visitParameterList(DBLParser.ParameterListContext ctx) {
         ArrayList<UserDeclNode> parameterNodes = new ArrayList< UserDeclNode>();
         String identifier = new String();
         String type = new String();
@@ -541,18 +542,28 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         node.addChild((AST) visit(ctx.getChild(boolExpOffSet)));
         node.addChild((AST) visit(ctx.children.get(bodyOffset)));;
 
+        If tempNode = node;
         List<TerminalNode> elseif = ctx.ELSEIF();
         for (int i = 1; i <= elseif.size(); i++){
-            ElseIf eiNode = new ElseIf();
-            eiNode.addChild((AST) visit(ctx.children.get(i * elseIfOffset + boolExpOffSet + 1))); // BoolExpr, +1 to align with next 'ELSE IF'
-            eiNode.addChild((AST) visit(ctx.children.get(i * elseIfOffset + bodyOffset + 1)));    // Body, +1 to align with next 'ELSE IF'
+            If eiNode = new If();
+            eiNode.addChild((AST) visit(ctx.children.get(i * elseIfOffset + boolExpOffSet))); // BoolExpr, +1 to align with next 'ELSE IF'
+            eiNode.addChild((AST) visit(ctx.children.get(i * elseIfOffset + bodyOffset)));    // Body, +1 to align with next 'ELSE IF'
+
+            tempNode.addChild(eiNode);
+            tempNode = eiNode;
         }
 
         if (ctx.ELSE() != null) {
             Else enode = new Else();
             enode.addChild((AST) visit(ctx.getChild(ctx.children.size()-1)));
+            tempNode.addChild(enode);
         }
         return node;
+    }
+
+    @Override
+    public StmtList visitBody(BodyContext ctx) {
+        return (StmtList) visit(ctx.stmtList());
     }
 
     /*** State declaration ***/

@@ -30,7 +30,7 @@ Action ChangeState(State state) RESULTS IN State {RESULT IN fisk;}
 // HS actions
 
 Action GenerateMinions() RESULTS IN Deck {
-    //String[] names IS ["Yeti", "Gnome McGnomington", "Slime", "Blackrock Orc", "Tirion Fordring", "John MinionMan", "Fish", "Void Sphere", "Wizard", "Madman"];
+    String[] names IS ["Yeti", "Gnome McGnomington", "Slime", "Blackrock Orc", "Tirion Fordring", "John MinionMan", "Fish", "Void Sphere", "Wizard", "Madman"];
     NEW Deck generatedDeck{}
     FOR(Integer i IS 1; i LESS OR EQUALS names.size; i IS i + 1) {
         NEW Card minion {
