@@ -23,6 +23,7 @@ public class TemplateInstanceTypeChecker extends TypeCheckVisitor{
             scope.getVTable().put(identifier, new TemplateSymbol(blueprint));
         }
 
+        TypeCheckVisitor.setFoundType(templateType);
         templateInstance.synthesizeVariable(identifier);
     }
 }

@@ -54,6 +54,8 @@ public class ArrayDeclTypeChecker extends TypeCheckVisitor{
             //TODO: without the actual values, we can't create proper subarrays or templates in the array
         }
 
+        TypeCheckVisitor.setFoundType(arrayDecl.getType());
         arrayDecl.getScope().declareVariable(arrayDecl.getType(), array);
+        arrayDecl.synthesizeScope();
     }
 }

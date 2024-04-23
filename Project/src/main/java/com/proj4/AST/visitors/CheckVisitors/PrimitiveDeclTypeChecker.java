@@ -46,7 +46,9 @@ public class PrimitiveDeclTypeChecker extends TypeCheckVisitor{
             default:
                 throw new UndefinedTypeException("Value assigned to " + identifier + " is not a primitive type!");
         }
-
+        // Set the found type to that of the declaration
+        TypeCheckVisitor.setFoundType(primitiveDecl.getExpectedType());
+        
         // New variable is added to parent scope 
         primitiveDecl.synthesizeScope();
     }

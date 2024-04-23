@@ -66,7 +66,7 @@ public class TemplateDeclTypeChecker extends TypeCheckVisitor{
             Scope.getTTable().put(identifier, map);
             Scope.getBTable().put(identifier, blueprint);
         } else {
-            throw new VariableAlreadyDefinedException("Template \" " + identifier + "\" is already defined!");
+            throw new VariableAlreadyDefinedException("Template \"" + identifier + "\" is already defined!");
         }
         // Add to blueprint 
         // Add to map
@@ -83,4 +83,6 @@ public class TemplateDeclTypeChecker extends TypeCheckVisitor{
 
     //TODO: Note: templateDecls do NOT synthesize their scope. They only modify the global BTable and TTable.
     //TODO: Thus, all declarations in the the templateDecl's VTable should be fields in that template
+
+    
 }
