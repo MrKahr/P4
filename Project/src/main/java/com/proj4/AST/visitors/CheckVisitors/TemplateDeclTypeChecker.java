@@ -28,6 +28,37 @@ public class TemplateDeclTypeChecker extends TypeCheckVisitor{
 
             Declaration identifiableChild = (Declaration) child; //will throw a ClassCastException if the child does not extend Declaration
 
+            identifiableChild.getType();
+
+            map.add(identifiableChild.getIdentifier());
+            blueprint.addContent(entry);
+
+        }
+        String identifier = templateDecl.getIdentifier();
+        if (Scope.getTTable().get(identifier) == null && Scope.getBTable().get(identifier) == null) {
+            Scope.getTTable().put(identifier, map);
+            Scope.getBTable().put(identifier, blueprint);
+        } else {
+            throw new VariableAlreadyDefinedException("Template \"" + identifier + "\" is already defined!");
+        }
+        // Add to blueprint 
+        // Add to map
+
+        //how to typecheck:
+
+        //typecheck a child
+        //add child as field in blueprint
+        //repeat for all children
+
+        //if child is another template
+        //create an instance of that template as a field
+    }
+
+    //TODO: Note: templateDecls do NOT synthesize their scope. They only modify the global BTable and TTable.
+    //TODO: Thus, all declarations in the the templateDecl's VTable should be fields in that template
+
+ 
+    /*
             switch (child.getClass().getSimpleName()) {
                 case "PrimitiveDecl":
                     //get the type, identifier, and value
@@ -57,32 +88,5 @@ public class TemplateDeclTypeChecker extends TypeCheckVisitor{
                 default:
                     throw new UndefinedTypeException("Unrecognized declaration in template \"" + templateDecl.getIdentifier() + "\"!");
             }
-            map.add(identifiableChild.getIdentifier());
-            blueprint.addContent(entry);
-
-        }
-        String identifier = templateDecl.getIdentifier();
-        if (Scope.getTTable().get(identifier) == null && Scope.getBTable().get(identifier) == null) {
-            Scope.getTTable().put(identifier, map);
-            Scope.getBTable().put(identifier, blueprint);
-        } else {
-            throw new VariableAlreadyDefinedException("Template \"" + identifier + "\" is already defined!");
-        }
-        // Add to blueprint 
-        // Add to map
-
-        //how to typecheck:
-
-        //typecheck a child
-        //add child as field in blueprint
-        //repeat for all children
-
-        //if child is another template
-        //create an instance of that template as a field
-    }
-
-    //TODO: Note: templateDecls do NOT synthesize their scope. They only modify the global BTable and TTable.
-    //TODO: Thus, all declarations in the the templateDecl's VTable should be fields in that template
-
-    
+     */
 }

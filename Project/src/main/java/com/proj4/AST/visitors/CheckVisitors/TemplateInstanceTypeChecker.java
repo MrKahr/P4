@@ -13,7 +13,7 @@ public class TemplateInstanceTypeChecker extends TypeCheckVisitor{
         TemplateInstance templateInstance = (TemplateInstance) node;
         templateInstance.inheritScope();
 
-        String templateType = templateInstance.getInstanceType();
+        String templateType = templateInstance.getType();
         String identifier = templateInstance.getIdentifier();
         TemplateSymbol blueprint = Scope.getBTable().get(templateType);  //get the ComplexTemplate bound to the given identifier
         Scope scope = templateInstance.getScope();

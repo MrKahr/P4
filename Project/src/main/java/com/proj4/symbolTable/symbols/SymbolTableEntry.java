@@ -1,9 +1,10 @@
 package com.proj4.symbolTable.symbols;
 
+import com.proj4.AST.nodes.Typed;
 import com.proj4.exceptions.UndefinedTypeException;
 import com.proj4.symbolTable.Scope;
 
-public abstract class SymbolTableEntry{
+public abstract class SymbolTableEntry implements Typed{
     //Field
     private String type;
 
@@ -12,25 +13,21 @@ public abstract class SymbolTableEntry{
         return type;
     }
 
+    public abstract String getComplexType();
+
     public static SymbolTableEntry instantiateDefault(String type, String complexType){
-        switch (type) {
-            case "Integer":
-                return new IntSymbol(0);
-            case "Boolean":
-                return new BooleanSymbol(false);
-            case "String":
-                return new StringSymbol("");
-            default:
+        
                 switch (complexType) {
                     case "Array":
                         return new ArraySymbol(type);
                     case "Template":
                         return new TemplateSymbol(Scope.getBTable().get(type));
+                    case "Primitive": 
+                        return instantiateDefault(type);
                     default:
-                        throw new UndefinedTypeException("The type \"" + type + "\" is undefined and not a primtive!");
+                        throw new UndefinedTypeException("The complex type \"" + complexType + "\" is undefined!");
                 }
         }
-    }
     
     public static SymbolTableEntry instantiateDefault(String type){
         switch (type) {
@@ -44,7 +41,6 @@ public abstract class SymbolTableEntry{
                 throw new UndefinedTypeException("The type \"" + type + "\" is not a primtive!");
         }
     }
-
     
     public void setType(String type){
         this.type = type;

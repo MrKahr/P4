@@ -1,6 +1,6 @@
 package com.proj4.AST.nodes;
 
-public class ArrayDecl extends Declaration{
+public class ArrayDecl extends Declaration implements Typed{
     //Field
     private String type;
     private String identifier;
@@ -18,5 +18,9 @@ public class ArrayDecl extends Declaration{
 
     public String getType(){
         return type;
+    }
+
+    public String getComplexType(){
+        return "Array";
     }
 }

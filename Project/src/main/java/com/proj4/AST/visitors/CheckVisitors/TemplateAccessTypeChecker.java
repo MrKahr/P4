@@ -18,7 +18,7 @@ public class TemplateAccessTypeChecker extends TypeCheckVisitor{
         //proof of concept: indexing a field in a template:
         Scope scope = templateAccess.getScope();
         String identifier = templateAccess.getIdentifier();
-        ArrayList<String> map = scope.getTTable().get(identifier);  //get the arraylist with the chosen template's fields
+        ArrayList<String> map = Scope.getTTable().get(identifier);  //get the arraylist with the chosen template's fields
         ArrayList<String> path = templateAccess.getPath();  //get the path to take through the template
         TemplateSymbol subject = (TemplateSymbol) scope.getVTable().get(identifier);  //get the template we must index from the variable table
 
