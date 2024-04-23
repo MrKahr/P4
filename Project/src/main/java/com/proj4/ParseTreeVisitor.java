@@ -2,10 +2,6 @@ package com.proj4;
 
 import com.proj4.antlrClass.DBLBaseVisitor;
 import com.proj4.antlrClass.DBLParser;
-import com.proj4.antlrClass.DBLParser.BodyContext;
-import com.proj4.symbolTable.symbols.BooleanSymbol;
-import com.proj4.symbolTable.symbols.IntSymbol;
-import com.proj4.symbolTable.symbols.StringSymbol;
 
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -14,6 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.proj4.AST.nodes.*;
+import com.proj4.symbolTable.symbols.BooleanSymbol;
+import com.proj4.symbolTable.symbols.IntSymbol;
+import com.proj4.symbolTable.symbols.StringSymbol;
+
 
 public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     Boolean DEBUG_MODE = false;  // USE THIS WHEN DEBUGGING!!!
@@ -562,7 +562,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     }
 
     @Override
-    public StmtList visitBody(BodyContext ctx) {
+    public StmtList visitBody(DBLParser.BodyContext ctx) {
         return (StmtList) visit(ctx.stmtList());
     }
 

@@ -7,10 +7,6 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import com.proj4.antlrClass.DBLLexer;
 import com.proj4.antlrClass.DBLParser;
 
-import com.proj4.AST.nodes.*;
-import com.proj4.AST.visitors.NodeVisitor;
-import com.proj4.AST.visitors.TestDecider;
-import com.proj4.AST.visitors.VisitorDecider;
 
 public class Main {
     public static void main(String[] args) {
