@@ -19,4 +19,8 @@ public class ArrayDecl extends Declaration{
     public String getType(){
         return type;
     }
+
+    public String getComplexType(){
+        return "Array";
+    }
 }

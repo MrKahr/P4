@@ -4,6 +4,7 @@ import com.proj4.symbolTable.symbols.PrimitiveSymbol;
 
 //Expressions can have up to two operands (which are also expressions)
 //note that one or both operands may be null if the operator type is CONSTANT or IDENTIFIER
+
 public class Expression extends Statement{
     
     //Field
@@ -24,8 +25,9 @@ public class Expression extends Statement{
         addChild(firstOperand);
         addChild(secondOperand);
         //constant field is untouched and becomes null
-    }    
-
+    
+    }
+    //TODO: Show 
     public Expression(ExpressionOperator operator, Expression firstOperand){
         this.operator = operator;
         addChild(firstOperand);

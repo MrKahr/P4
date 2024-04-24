@@ -22,4 +22,8 @@ public class ActionDecl extends Declaration{
     public String getType(){
         return returnType;
     }
+
+    public String getComplexType(){
+        return "Action";
+    }
 }

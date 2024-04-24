@@ -6,7 +6,7 @@ public class ArrayAccess extends Expression implements Identifiable{
     private String identifier;  //the identity that the array is bound to in the symbol table
     
     //Constructor
-    public ArrayAccess(String identifier){
+    public ArrayAccess(String identifier, Expression index){
         this.identifier = identifier;
     }
     

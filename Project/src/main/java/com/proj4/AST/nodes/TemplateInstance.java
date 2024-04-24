@@ -16,7 +16,11 @@ public class TemplateInstance extends Declaration {
         return identifier;
     }
 
-    public String getInstanceType(){
+    public String getType(){
         return instanceType;
+    }
+
+    public String getComplexType(){
+        return "Template";
     }
 }

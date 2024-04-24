@@ -16,7 +16,11 @@ public class PrimitiveDecl extends Declaration{
         return identifier;
     }
 
-    public String getExpectedType(){
+    public String getType(){
         return expectedType;
+    }
+
+    public String getComplexType(){
+        return "Primitive";
     }
 }

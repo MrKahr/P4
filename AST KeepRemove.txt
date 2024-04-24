@@ -33,7 +33,7 @@ ActionCall
     Child Nodes: Arguments, formatted as expressions (these must match the types specified in the ActionDecl to not make type errors)
 AST almost done (needs testing)
 
-Assignment      (a variable changes its value but keeps its type. Not important for type checking, essential for interpreting)
+Assignment      (a variable changes its value but keeps its type. Important for type checking, essential for interpreting)
     Values: Identifier
     Child Node: Expression. The variable will assume the value of this expression or cause an error if the types are mismatched
 AST almost done (tested in all cases except 1)

@@ -10,7 +10,7 @@ public class TemplateAccess extends Expression implements Identifiable{
     private ArrayList<String> path;
 
     //Constructor
-    public TemplateAccess(String identifier, ArrayList<String>  path){
+    public TemplateAccess(String identifier, ArrayList<String> path){
         this.identifier = identifier;
         this.path = path;
     }
@@ -22,5 +22,10 @@ public class TemplateAccess extends Expression implements Identifiable{
 
     public ArrayList<String> getPath(){
         return this.path;
+    }
+
+    //adds another field to the path
+    public void extendPath(String field){
+        path.add(field);
     }
 }

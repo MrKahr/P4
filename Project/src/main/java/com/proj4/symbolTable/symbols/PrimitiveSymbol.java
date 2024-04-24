@@ -11,4 +11,8 @@ public abstract class PrimitiveSymbol<T> extends SymbolTableEntry{
     public void setValue(T value){
         this.value = value;
     }
+
+    public String getComplexType(){
+        return "Primitive";
+    }
 }
