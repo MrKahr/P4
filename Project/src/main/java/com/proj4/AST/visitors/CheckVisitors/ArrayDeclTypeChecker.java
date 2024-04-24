@@ -29,7 +29,7 @@ public class ArrayDeclTypeChecker extends TypeCheckVisitor{
             SymbolTableEntry.instantiateDefault(arrayType); //TODO: need a complexType here!
         }
         
-        TypeCheckVisitor.setFoundType(arrayDecl.getType());
+        TypeCheckVisitor.setFoundType(arrayDecl.getType(), "Array");
         arrayDecl.getScope().declareVariable(arrayDecl.getType(), array);
         arrayDecl.synthesizeScope();
     }

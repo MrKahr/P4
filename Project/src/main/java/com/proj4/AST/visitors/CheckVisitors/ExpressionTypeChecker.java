@@ -5,23 +5,22 @@ import com.proj4.AST.nodes.Expression;
 import com.proj4.AST.visitors.CheckDecider;
 import com.proj4.AST.visitors.TypeCheckVisitor;
 import com.proj4.exceptions.MismatchedTypeException;
-import com.proj4.AST.nodes.ExpressionOperator;
 
 public class ExpressionTypeChecker extends TypeCheckVisitor{
     
     public void visit(AST node){
         Expression expression = (Expression) node;
         expression.inheritScope();
-
+        //Note: These operators always return primitive types
         //Note: Fallthrough for each operator type 
         switch (expression.getOperator()) {
-            case ExpressionOperator.ADD:
+            case ADD:
             //falltrough
-            case ExpressionOperator.SUBTRACT:
+            case SUBTRACT:
             //falltrough
-            case ExpressionOperator.DIVIDE:
+            case DIVIDE:
             //falltrough
-            case ExpressionOperator.MULTIPLY:   //all above are binary and return and consume integers
+            case MULTIPLY:   //all above are binary and return and consume integers
                 expression.visitChild(new CheckDecider(), expression.getFirstOperand());    
                 if (!TypeCheckVisitor.getFoundType().equals("Integer")) {
                     throw new MismatchedTypeException();
@@ -30,22 +29,22 @@ public class ExpressionTypeChecker extends TypeCheckVisitor{
                 if (!TypeCheckVisitor.getFoundType().equals("Integer")) {
                     throw new MismatchedTypeException();
                 }
-                TypeCheckVisitor.setFoundType("Integer");
+                TypeCheckVisitor.setFoundType("Integer", "Primitive");
                 break;
-            case ExpressionOperator.NEGATE:
+            case NEGATE:
                 expression.visitChild(new CheckDecider(), expression.getFirstOperand());    
                 if (!TypeCheckVisitor.getFoundType().equals("Integer")) {
                     throw new MismatchedTypeException();
                 }
-                TypeCheckVisitor.setFoundType("Integer");
+                TypeCheckVisitor.setFoundType("Integer", "Primitive");
                 break;            
-            case ExpressionOperator.LESS_THAN:
+            case LESS_THAN:
             //falltrough   
-            case ExpressionOperator.LESS_OR_EQUALS:
+            case LESS_OR_EQUALS:
             //falltrough   
-            case ExpressionOperator.GREATER_THAN:
+            case GREATER_THAN:
             //falltrough
-            case ExpressionOperator.GREATER_OR_EQUALS:  //all above are binary and return booleans and consume integers
+            case GREATER_OR_EQUALS:  //all above are binary and return booleans and consume integers
                 expression.visitChild(new CheckDecider(), expression.getFirstOperand());    
                 if (!TypeCheckVisitor.getFoundType().equals("Integer")) {
                     throw new MismatchedTypeException();
@@ -54,22 +53,22 @@ public class ExpressionTypeChecker extends TypeCheckVisitor{
                 if (!TypeCheckVisitor.getFoundType().equals("Integer")) {
                     throw new MismatchedTypeException();
                 }
-                TypeCheckVisitor.setFoundType("Boolean");
+                TypeCheckVisitor.setFoundType("Boolean", "Primitive");
                 break;
-            case ExpressionOperator.EQUALS:
+            case EQUALS:
             //fallthrough
-            case ExpressionOperator.NOT_EQUALS: //all above consume two identical types and return booleans
+            case NOT_EQUALS: //all above consume two identical types and return booleans
                 expression.visitChild(new CheckDecider(), expression.getFirstOperand());
                 String firstType = TypeCheckVisitor.getFoundType();
                 expression.visitChild(new CheckDecider(), expression.getSecondOperand());
                 if (!firstType.equals(TypeCheckVisitor.getFoundType())) {
                     throw new MismatchedTypeException();
                 }
-                TypeCheckVisitor.setFoundType("Boolean");
+                TypeCheckVisitor.setFoundType("Boolean", "Primitive");
                 break;
-            case ExpressionOperator.OR:
+            case OR:
             //falltrough
-            case ExpressionOperator.AND:    //all above are binary and consume and return booleans
+            case AND:    //all above are binary and consume and return booleans
                 expression.visitChild(new CheckDecider(), expression.getFirstOperand());    
                 if (!TypeCheckVisitor.getFoundType().equals("Boolean")) {
                     throw new MismatchedTypeException();
@@ -78,16 +77,16 @@ public class ExpressionTypeChecker extends TypeCheckVisitor{
                 if (!TypeCheckVisitor.getFoundType().equals("Boolean")) {
                     throw new MismatchedTypeException();
                 }
-                TypeCheckVisitor.setFoundType("Boolean");
+                TypeCheckVisitor.setFoundType("Boolean", "Primitive");
                 break;
-            case ExpressionOperator.NOT:
+            case NOT:
                 expression.visitChild(new CheckDecider(), expression.getFirstOperand());    
                 if (!TypeCheckVisitor.getFoundType().equals("Boolean")) {
                     throw new MismatchedTypeException();
                 }
-                TypeCheckVisitor.setFoundType("Boolean");
+                TypeCheckVisitor.setFoundType("Boolean", "Primitive");
                 break;
-            case ExpressionOperator.CONCAT:
+            case CONCAT:
                 expression.visitChild(new CheckDecider(), expression.getFirstOperand());    
                 if (!TypeCheckVisitor.getFoundType().equals("String")) {
                     throw new MismatchedTypeException();
@@ -96,13 +95,13 @@ public class ExpressionTypeChecker extends TypeCheckVisitor{
                 if (!TypeCheckVisitor.getFoundType().equals("String")) {
                     throw new MismatchedTypeException();
                 }
-                TypeCheckVisitor.setFoundType("String");
+                TypeCheckVisitor.setFoundType("String", "Primitive");
                 break;
-            case ExpressionOperator.VARIABLE:
-                TypeCheckVisitor.setFoundType("String");
+            case VARIABLE:
+                TypeCheckVisitor.setFoundType("String", "Primitive");
                 break;
-            case ExpressionOperator.CONSTANT:
-                TypeCheckVisitor.setFoundType(expression.getConstant().getType());
+            case CONSTANT:
+                TypeCheckVisitor.setFoundType(expression.getConstant().getType(), "Primitive");
                 break;
             default:
                 break;

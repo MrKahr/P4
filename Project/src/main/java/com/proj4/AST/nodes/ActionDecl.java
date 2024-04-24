@@ -1,6 +1,6 @@
 package com.proj4.AST.nodes;
 
-public class ActionDecl extends Declaration{
+public class ActionDecl extends AST implements Identifiable, Typed{
     //Field
     private String returnType;
     private String identifier;

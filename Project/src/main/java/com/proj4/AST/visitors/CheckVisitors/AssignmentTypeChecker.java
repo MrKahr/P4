@@ -18,5 +18,7 @@ public class AssignmentTypeChecker extends TypeCheckVisitor{
         if(!expectedType.equals(TypeCheckVisitor.getFoundType())){
             throw new MismatchedTypeException();
         }
+
+        assignment.synthesizeScope();
     }
 }

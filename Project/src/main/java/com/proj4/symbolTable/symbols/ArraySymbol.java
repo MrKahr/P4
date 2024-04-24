@@ -7,10 +7,12 @@ import com.proj4.exceptions.UndefinedTypeException;
 public class ArraySymbol extends SymbolTableEntry{
     //Field
     private ArrayList<SymbolTableEntry> content = new ArrayList<>();
+    private String contentComplexType;
 
     //Constructor
-    public ArraySymbol(String type){    //content list is created by default
+    public ArraySymbol(String type, String contentComplexType){    //content list is created by default
         setType(type);
+        this.contentComplexType = contentComplexType;
     }    
 
     public ArraySymbol(ArraySymbol other){  //create a copy of a given ComplexSymbol{
@@ -66,5 +68,9 @@ public class ArraySymbol extends SymbolTableEntry{
 
     public String getComplexType(){
         return "Array";
+    }
+
+    public String getContentComplexType(){
+        return contentComplexType;
     }
 }

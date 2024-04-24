@@ -27,12 +27,12 @@ public class ArrayAccessTypeChecker extends TypeCheckVisitor{
             throw new MismatchedTypeException("Identifier \"" + arrayAccess.getIdentifier() + "\" indexed as array but is not an array!");
         }
 
-        // Case 3: Index is not correct format 
+        // Case 3: Index is not an integer 
         arrayAccess.visitChild(new CheckDecider(), arrayAccess.getIndex());
         if(!TypeCheckVisitor.getFoundType().equals("Integer")){
             throw new MismatchedTypeException("Index for array \"" + arrayAccess.getIdentifier() + "\" is not integer!");
         }
 
-        TypeCheckVisitor.setFoundType(array.getType());
+        TypeCheckVisitor.setFoundType(array.getType(), array.getContentComplexType());
     }
 }

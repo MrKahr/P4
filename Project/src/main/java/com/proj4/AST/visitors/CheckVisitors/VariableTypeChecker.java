@@ -12,9 +12,9 @@ public class VariableTypeChecker extends TypeCheckVisitor{
         variable.inheritScope();
         SymbolTableEntry entry = variable.getScope().getVTable().get(variable.getIdentifier());
         if (entry == null) {
-            setFoundType(null);
+            setFoundType(null, null);
         } else {
-            setFoundType(entry.getType());   
+            setFoundType(entry.getType(), entry.getComplexType());   
         }
     }
     //not visiting children here because Variable-nodes are leaf nodes
