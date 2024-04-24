@@ -1,0 +1,22 @@
+    IF(attacked EQUALS 3) {
+        IF(activePlayer EQUALS p1) {
+            AttackPlayer(attackingMinion, playerOne);
+        } ELSE {
+            AttackPlayer(attackingMinion, playerTwo);
+        }
+    } ELSE { 
+        IF(nacctivePlayer EQUALS p1) {
+            Card attackedMinion IS 9;
+    }
+    }
+
+
+    IF(TRUE){Card attackedMinion IS 9;}
+    ELSE IF (TRUE){Card attackedMinion IS 9;}
+    ELSE IF (TRUE){Card attackedMinion IS 9;}
+    ELSE IF (TRUE){Card attackedMinion IS 9;}
+    ELSE IF (TRUE){Card attackedMinion IS 9;}
+    ELSE IF (TRUE){Card attackedMinion IS 9;}
+    ELSE IF (TRUE){Card attackedMinion IS 9;}
+    ELSE IF (TRUE){Card attackedMinion IS 9;}
+    ELSE {Card attackedMinion IS 9;}

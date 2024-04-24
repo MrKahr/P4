@@ -1,6 +1,6 @@
 package com.proj4.symbolTable.symbols;
 
-public class PrimitiveSymbol<T> extends SymbolTableEntry{
+public abstract class PrimitiveSymbol<T> extends SymbolTableEntry{
     //Field
     private T value;
     //Method

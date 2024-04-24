@@ -6,4 +6,6 @@ public class Program extends AST{
     public Program(AST child){
         addChild(child);
     }
+
+    public Program() {}
 }
