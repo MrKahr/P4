@@ -1,6 +1,6 @@
 package com.proj4.AST.nodes;
 
-public class ArrayDecl extends Declaration implements Typed{
+public class ArrayDecl extends Declaration{
     //Field
     private String type;
     private String identifier;
