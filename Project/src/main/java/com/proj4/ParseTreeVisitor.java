@@ -407,17 +407,10 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     /*** Return ***/
     @Override
     public Return visitReturn(DBLParser.ReturnContext ctx) {
-        if (!(ctx.expr() instanceof DBLParser.DigitExprContext) && ctx.expr() != null) {
-            Expression expression = (Expression) visit(ctx.children.get(1));
-            Return node = new Return(expression);
-            System.out.println(node);
-            return node;
-        } else {
-            int returnValue = Integer.valueOf(ctx.children.get(1).getText());
-            Return node = new Return(returnValue);
-            System.out.println(node);
-            return node;
-        }
+        Expression expression = (Expression) visit(ctx.children.get(1));
+        Return node = new Return(expression);
+        System.out.println(node);
+        return node;
     }
 
     /*** RuleDecl ***/
