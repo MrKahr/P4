@@ -1,7 +1,6 @@
 package com.proj4.AST.nodes;
 
 import com.proj4.symbolTable.Scope;
-
 public abstract class Statement extends AST {
     
     private Scope scope;        //for now, I'll let every statement have its own scope.
