@@ -41,7 +41,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         // this.root.addChild();
         return test;
     }
-
+/*
     @Override
     public PrimDeclNode visitIdDeclPrim(DBLParser.IdDeclPrimContext ctx) {
         PrimDeclNode node = new PrimDeclNode(ctx.typePrimitive().getText(), ctx.IDENTIFIER().getText());
