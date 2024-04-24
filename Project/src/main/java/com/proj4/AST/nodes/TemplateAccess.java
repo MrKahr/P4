@@ -7,8 +7,8 @@ import java.util.ArrayList;
 public class TemplateAccess extends Expression implements Identifiable{
     //Field
     private String identifier;  //the identity that the template is bound to in the symbol table
-    private ArrayList<String> path = new ArrayList<>(); //the fields that should be indexed, in the order they are added to this list
-    
+    private ArrayList<String> path;
+
     //Constructor
     public TemplateAccess(String identifier, ArrayList<String> path){
         this.identifier = identifier;
@@ -21,7 +21,7 @@ public class TemplateAccess extends Expression implements Identifiable{
     }
 
     public ArrayList<String> getPath(){
-        return path;
+        return this.path;
     }
 
     //adds another field to the path

@@ -1,22 +1,20 @@
 package com.proj4.AST.nodes;
 
-public class ForOf extends Statement implements Identifiable{
+
+public class ForOf extends Statement {
     //Field
 
-    private String identifier;
-
     //Constructor
-    public ForOf(String identifier, Statement statement){
-        this.identifier = identifier;
-        addChild((AST)statement);
+    public ForOf(){
+
     }
     
-    //Method
-    public String getIdentifier() {
-       return identifier;
-    }
+    // //Method
+    // public String getType() {
+    //    return this.type;
+    // }
 
-    public Statement getStatement(){
-        return (Statement) getChildren().get(0);
-    }
+    // public Statement getStatement(){
+    //     return (Statement) getChildren().get(0);
+    // }
 }

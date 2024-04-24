@@ -1,7 +1,0 @@
-Template LootBucket CONTAINS {
-    Deck[] options;
-}
-
-String[] names IS ["Yeti", "Gnome McGnomington", "Slime", "Blackrock Orc", "Tirion Fordring", "John MinionMan", "Fish", "Void Sphere", "Wizard", "Madman"];
-
-name IS names[i - 1];

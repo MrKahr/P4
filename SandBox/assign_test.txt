@@ -1,0 +1,8 @@
+card.health IS 4;
+true IS FALSE;
+fish IS "FISH";
+arr IS iarr[i];
+star IS [1+2, 2+3];
+card.attack IS card.health;
+async IS SlowLoading(value);
+x IS x+1;

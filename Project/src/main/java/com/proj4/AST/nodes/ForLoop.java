@@ -5,12 +5,11 @@ public class ForLoop extends Statement{
 
 
     //Constructor
-    public ForLoop(Identifiable iterator, Expression condition, Assignment iteratorAction, Statement loopBlock){
-        addChild((AST)iterator);    //first child is the iterator
+    public ForLoop(Identifiable iterator, Expression condition, Assignment iteratorAction){
+        addChild((AST) iterator);    //first child is the iterator
         addChild(condition);        //second child is the condition
         addChild(iteratorAction);   //third child is what to do with the iterator every loop
-        addChild(loopBlock);        //fourth child is the loop itself. More can be added as children later but at least one is required
-    }                               //TODO: should a loopBlock be required?
+    }
 
     //Method
     public Identifiable getIterator(){                      //using Identifiable here instead of PrimitiveDecl 

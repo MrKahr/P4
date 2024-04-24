@@ -1,0 +1,4 @@
+
+
+String star;
+star IS [1+2, 2+3];

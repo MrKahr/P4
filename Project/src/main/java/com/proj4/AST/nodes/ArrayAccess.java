@@ -1,4 +1,5 @@
 package com.proj4.AST.nodes;
+
 //this class represents the indexing of an array like A[0] or Deck[19]
 public class ArrayAccess extends Expression implements Identifiable{
     //Field
@@ -7,7 +8,6 @@ public class ArrayAccess extends Expression implements Identifiable{
     //Constructor
     public ArrayAccess(String identifier, Expression index){
         this.identifier = identifier;
-        addChild(index);
     }
     
     //Method

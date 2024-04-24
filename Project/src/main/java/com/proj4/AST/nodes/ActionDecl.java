@@ -10,6 +10,9 @@ public class ActionDecl extends Declaration{
         this.identifier = identifier;
         this.returnType = returnType;
     }
+    public ActionDecl(String identifier){
+        this.identifier = identifier;
+    }
 
     //Method
     public String getIdentifier(){

@@ -26,19 +26,24 @@ ActionDecl      (This is basically a function definition and also very important
     The parameter-nodes (which are declarations) should always be first in the list of child nodes for easier type checking and interpreting
 
     (technically declarations are also statements, I think, so the child nodes are all statements)
-
+AST potentially done (only tested on one example)
 
 ActionCall
     Value: Identifier
     Child Nodes: Arguments, formatted as expressions (these must match the types specified in the ActionDecl to not make type errors)
-
+AST almost done (needs testing)
 
 Assignment      (a variable changes its value but keeps its type. Important for type checking, essential for interpreting)
     Values: Identifier
     Child Node: Expression. The variable will assume the value of this expression or cause an error if the types are mismatched
-
+AST almost done (tested in all cases except 1)
 
 ArrayDecl       (It's a complex declaration and needs special attention when interpreting)
+    Values: Type, Identifier    <--- no need for size, since decks should be resizable
+    Child Nodes: none, as this is only declaration
+AST done, tested
+
+ArrayInit       (It's a complex declaration and needs special attention when interpreting)
     Values: Type, Identifier    <--- no need for size, since decks should be resizable
     Child Nodes: Expressions in the order they appear in the array
 
@@ -46,7 +51,7 @@ ArrayDecl       (It's a complex declaration and needs special attention when int
 ArrayAccess     <--- this is technically an expression, but the type could be anything
     Value: Identifier
     Child Node: MathExp     <--- finds the array index, which starts at 0. Runtime error if this is negative
-
+AST done, tested
 
 BoolExp
     Values: Operator, Identifier, Constant  <--- writing this in java, we can let enumerations act as operators instead of using strings
@@ -60,12 +65,12 @@ ForLoop
         BoolExp         <--- the condition that must hold for the loop to run
         Statement       <--- what to do with the iterator after every loop
         Statement       <--- the loop body
-
+AST done, tested
 
 ForOf
     Value: Identifier       <--- the array to iterate over
     Child Node: Statement   <---the statement to execute every iteration
-
+AST done, tested
 
 IfElse
     Value: Nothing      <--- no types or identifiers to be found here, so we don't need anything
@@ -73,7 +78,7 @@ IfElse
         BoolExp     <--- the BoolExp is the condition
         Statement   <--- the first statement executes if the condition is true
         Statement   <--- the second statement executes if the condition false
-
+AST done, Tested
 
 MathExp
     Values: Operator, Identifier, Constant  <--- no type value is needed because we can infer it from the node type
@@ -126,10 +131,6 @@ TemplateInstance
 TemplateAccess
     Value: Identifier       <--- the identifier of the template we should access
     Child Nodes: MathExp    <--- a bit less intuitive, but we can convert dot-notation (template.field) to accessing a linked list of template fields like we would an array: Say "field" is the template's second attribute. Then template.field becomes template[1]
-
-TemplateAccess
-    Value: Identifier       <--- the identifier of the template we should access
-    Child Nodes: MathExp    <--- a bit less intuitive, but we can convert dot-notation (template.field) to accessing a linked list of template fields like we would an array: Say "field" is the template's second attribute. Then template.field becomes template[1].
 
 
 **********
