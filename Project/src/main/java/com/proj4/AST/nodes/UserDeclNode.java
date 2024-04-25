@@ -4,6 +4,7 @@ public class UserDeclNode extends Declaration{
      //Field
     private String identifier;
     private String expectedType;    //the type this variable should have
+    private String complexType;
 
     //Constructor
     public UserDeclNode(String identifier, String expectedType){
@@ -11,12 +12,16 @@ public class UserDeclNode extends Declaration{
         this.expectedType = expectedType;
     }
 
+    
     //Method
     public String getIdentifier(){
         return identifier;
     }
 
-    public String getExpectedType(){
+    public String getType(){
         return expectedType;
+    }
+    public String getComplexType(){
+        return complexType;
     }
 }

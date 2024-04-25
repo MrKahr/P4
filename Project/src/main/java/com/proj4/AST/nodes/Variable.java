@@ -8,15 +8,20 @@ package com.proj4.AST.nodes;
 public class Variable extends Expression implements Identifiable{
     //Field
     private String identifier;
+    private String complexType;
 
     //Constructor
-    public Variable(String identifier){
+    public Variable(String identifier, String complexType){
         this.identifier = identifier;
+        this.complexType = complexType;
     }
 
     //Method
     public String getIdentifier(){
         return identifier;
+    }
+    public String getComplexType(){
+        return complexType;
     }
 
     @Override

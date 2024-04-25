@@ -63,6 +63,7 @@ expr
     |   expr multOp expr           # multExpr
     |   expr addOp expr            # addExpr
     |   templateAccess             # templateAccessExpr
+    |   arrayAccess                # arrayAccessExpr
     |   actionResult               # actionResultExpr
     |   actionCall                 # actionCallExpr     // Ensure action calls are the last of parser definitions
     |   DIGIT                      # digitExpr
@@ -99,7 +100,6 @@ assignment // Remember to add semicolon if relevant
     |   (templateAccess | IDENTIFIER) ASSIGN expr             # exprAssign
     |   (templateAccess | IDENTIFIER) ASSIGN boolExpr         # boolExprAssign
     |   (templateAccess | IDENTIFIER) ASSIGN stringExpr       # stringExprAssign
-    |   (templateAccess | IDENTIFIER) ASSIGN arrayAccess      # arrayAccessAssign
     |   (templateAccess | IDENTIFIER) ASSIGN arrayInit        # arrayInitAssign
     |   (templateAccess | IDENTIFIER) ASSIGN actionCall       # actionCallAssign
     |   (templateAccess | IDENTIFIER) ASSIGN IDENTIFIER       # idAssign
@@ -152,7 +152,7 @@ templateInit
     ;
 
 templateAccess
-    :   typedefUser (DOT IDENTIFIER)+
+    :   typedefUser (DOT expr)+
     ;
 
 ruleDecl
@@ -195,7 +195,7 @@ arrayInit
     ;
 
 arrayAccess
-    :   (templateAccess | IDENTIFIER) SQB_START expr SQB_END
+    :   (templateAccess | IDENTIFIER) (SQB_START expr SQB_END)+
     ;
 
 return

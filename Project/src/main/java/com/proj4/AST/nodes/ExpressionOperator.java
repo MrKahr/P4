@@ -21,6 +21,8 @@ public enum ExpressionOperator {
     CONCAT,     //  concatenate the string returned by the first child node with the string returned by the second
     //LITERAL,    //  print the string as it is stored in the expression's "constant"-field <- obsolete as CONSTANT exists
     VARIABLE,   //  return the value bound to the identifier in the "identifier"-field as a string
+    ACCESS,
+    INDEX,
     //RETURNS ANY
     CONSTANT,   //  return what's in the "constant"-field
 }
