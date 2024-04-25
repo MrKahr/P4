@@ -30,7 +30,7 @@ public class TemplateAccessTypeChecker extends TypeCheckVisitor{
             SymbolTableEntry newSubject = subject.getContent().get(index);  //get the entry stored in that field
             type = newSubject.getType();
             complexType = newSubject.getComplexType();
-            if (complexType.equals("Template")) {       //TODO: we can't handle arrays inside templates at the time of writing! Add a case for getting an array from a template.
+            if (complexType.equals("Template")) {       //TODO: Add a case for getting an array from a template.
                 subject = (TemplateSymbol) newSubject;  //if the complex type of that field is a template, prepare to index another TemplateSymbol
                 map = Scope.getTTable().get(type);      //get a map for the new TemplateSymbol
             }

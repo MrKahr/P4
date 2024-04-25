@@ -7,6 +7,7 @@ import java.util.HashSet;
 import com.proj4.exceptions.StateAlreadyDefinedExpection;
 import com.proj4.exceptions.VariableAlreadyDefinedException;
 import com.proj4.symbolTable.symbols.TemplateSymbol;
+import com.proj4.symbolTable.symbols.ActionSymbol;
 import com.proj4.symbolTable.symbols.SymbolTableEntry;
 
 //this class represents a scope in the programming language
@@ -18,7 +19,7 @@ public class Scope implements Cloneable{
     //this table keeps a map of every declared template in order to properly index them
     private static HashMap<String, ArrayList<String>> templateTable = new HashMap<>();
     //this table keeps track of actions
-    private static HashMap<String, SymbolTableEntry> functionTable = new HashMap<>();
+    private static HashMap<String, ActionSymbol> actionTable = new HashMap<>();
     //this table keeps track of which states have been declared in the current scope
     private static HashSet<String> stateTable = new HashSet<>(); 
 
@@ -32,8 +33,8 @@ public class Scope implements Cloneable{
         return variableTable;
     }
 
-    public static HashMap<String, SymbolTableEntry> getFTable(){
-        return functionTable;
+    public static HashMap<String, ActionSymbol> getATable(){
+        return actionTable;
     }
 
     public static HashMap<String, TemplateSymbol> getBTable(){
@@ -56,8 +57,8 @@ public class Scope implements Cloneable{
         variableTable = table;
     }
 
-    public static void setFTable(HashMap<String, SymbolTableEntry> table){
-        functionTable = table;
+    public static void setATable(HashMap<String, ActionSymbol> table){
+        actionTable = table;
     }
     
     public static void setBTable(HashMap<String, TemplateSymbol> table){

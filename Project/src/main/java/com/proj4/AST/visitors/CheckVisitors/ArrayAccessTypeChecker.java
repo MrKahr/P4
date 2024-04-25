@@ -6,7 +6,7 @@ import com.proj4.AST.visitors.CheckDecider;
 import com.proj4.AST.visitors.TypeCheckVisitor;
 import com.proj4.exceptions.MismatchedTypeException;
 import com.proj4.exceptions.UndefinedArrayExpection;
-import com.proj4.symbolTable.symbols.ArraySymbol;
+import com.proj4.symbolTable.symbols.ActionSymbol;
 
 public class ArrayAccessTypeChecker extends TypeCheckVisitor{
     
@@ -20,9 +20,9 @@ public class ArrayAccessTypeChecker extends TypeCheckVisitor{
         }
 
         // Case 2: Array is not an array 
-        ArraySymbol array = null;
+        ActionSymbol array = null;
         try {
-            array = (ArraySymbol) arrayAccess.getScope().getVTable().get(arrayAccess.getIdentifier());
+            array = (ActionSymbol) arrayAccess.getScope().getVTable().get(arrayAccess.getIdentifier());
         } catch (ClassCastException cce) {
             throw new MismatchedTypeException("Identifier \"" + arrayAccess.getIdentifier() + "\" indexed as array but is not an array!");
         }

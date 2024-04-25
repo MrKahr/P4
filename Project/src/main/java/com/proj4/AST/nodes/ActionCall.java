@@ -6,7 +6,7 @@ public class ActionCall extends Statement implements Identifiable{
 
     //Constructor
     public ActionCall(String identifier){
-        this.identifier = identifier;
+        this.identifier = identifier;   //which action to call
     }
 
     //Method
