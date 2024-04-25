@@ -13,7 +13,7 @@ public class RuleDeclTypeChecker extends TypeCheckVisitor{
 
         //make sure everything that happens in the rule is well typed
         ruleDecl.visitChild(new CheckDecider(), ruleDecl.getRuleBody());
-
+        
 
     }
 }
