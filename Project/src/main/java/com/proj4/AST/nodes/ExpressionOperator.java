@@ -1,6 +1,7 @@
 package com.proj4.AST.nodes;
 
 public enum ExpressionOperator {
+//RETURNS PRIMITIVE
     //RETURNS INTEGER
     ADD,        //  a+b
     SUBTRACT,   //  a-b
