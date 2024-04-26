@@ -10,6 +10,10 @@ public class Assignment extends Statement implements Identifiable{
     public Assignment(String identifier){
         this.identifier = identifier;
     }
+    public Assignment(Expression leftExpression){
+        this.identifier = null;
+        this.addChild(leftExpression);
+    }
     
     //Method
     public String getIdentifier(){
