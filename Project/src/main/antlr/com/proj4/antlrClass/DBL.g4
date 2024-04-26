@@ -62,8 +62,8 @@ expr
     :   BRAC_START expr BRAC_END   # parExpr
     |   expr multOp expr           # multExpr
     |   expr addOp expr            # addExpr
-    |   templateAccess             # templateAccessExpr
-    |   arrayAccess                # arrayAccessExpr
+    |   expr DOT expr              # templateAccessExpr
+    |   expr SQB_START expr SQB_END# arrayAccessExpr
     |   actionResult               # actionResultExpr
     |   actionCall                 # actionCallExpr     // Ensure action calls are the last of parser definitions
     |   DIGIT                      # digitExpr
@@ -96,14 +96,14 @@ stringExpr
     ;
 
 assignment // Remember to add semicolon if relevant
-    :   (templateAccess | IDENTIFIER) ASSIGN templateAccess   # templateAccessAssign    // This must be at the top since expr can also match templateAccess
-    |   (templateAccess | IDENTIFIER) ASSIGN expr             # exprAssign
-    |   (templateAccess | IDENTIFIER) ASSIGN boolExpr         # boolExprAssign
-    |   (templateAccess | IDENTIFIER) ASSIGN stringExpr       # stringExprAssign
-    |   (templateAccess | IDENTIFIER) ASSIGN arrayInit        # arrayInitAssign
-    |   (templateAccess | IDENTIFIER) ASSIGN actionCall       # actionCallAssign
-    |   (templateAccess | IDENTIFIER) ASSIGN IDENTIFIER       # idAssign
+    :   (expr | IDENTIFIER) ASSIGN expr             # exprAssign
+    |   (expr | IDENTIFIER) ASSIGN boolExpr         # boolExprAssign
+    |   (expr | IDENTIFIER) ASSIGN stringExpr       # stringExprAssign
+    |   (expr | IDENTIFIER) ASSIGN arrayInit        # arrayInitAssign
+    |   (expr | IDENTIFIER) ASSIGN actionCall       # actionCallAssign
+    |   (expr | IDENTIFIER) ASSIGN IDENTIFIER       # idAssign
     ;
+
 typePrimitive
     :   TYPEDEF_PRIMITIVE
     ;
@@ -121,7 +121,7 @@ declaration
     ;
 
 declarationList
-    :   (declaration)*
+    :   (declaration)+
     ;
 
 body
@@ -129,14 +129,8 @@ body
     ;
 
 forLoop
-    :   FOR BRAC_START typedefUser IDENTIFIER OF iterable BRAC_END BODY_START body BODY_END         # forOF
+    :   FOR BRAC_START typedefUser IDENTIFIER OF expr BRAC_END BODY_START body BODY_END         # forOF
     |   FOR BRAC_START declaration boolExpr SEMICOLON assignment BRAC_END BODY_START body BODY_END  # forI
-    ;
-
-iterable
-    :   templateAccess  # iterTemplateAccess
-    |   actionCall      # iterActionCall
-    |   IDENTIFIER      # iterID
     ;
 
 ifBlock
@@ -149,10 +143,6 @@ templateDecl
 
 templateInit
     :   NEW typedefUser IDENTIFIER BODY_START (templateInit | (assignment SEMICOLON))* BODY_END
-    ;
-
-templateAccess
-    :   typedefUser (DOT expr)+
     ;
 
 ruleDecl
@@ -192,10 +182,6 @@ arrayDecl
 
 arrayInit
     :   SQB_START ((stringExpr | expr) (COMMA (stringExpr | expr))*)? SQB_END
-    ;
-
-arrayAccess
-    :   (templateAccess | IDENTIFIER) (SQB_START expr SQB_END)+
     ;
 
 return

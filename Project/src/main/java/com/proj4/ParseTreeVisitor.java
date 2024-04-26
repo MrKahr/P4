@@ -2,7 +2,6 @@ package com.proj4;
 
 import com.proj4.antlrClass.DBLBaseVisitor;
 import com.proj4.antlrClass.DBLParser;
-import com.proj4.antlrClass.DBLParser.ExprContext;
 
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -91,7 +90,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         String resultType = ctx.resultsIn().getChild(1).getText();
         String identifier = ctx.getChild(1).getText();
         ActionDecl node = new ActionDecl(identifier, resultType);
-        System.out.println("Action() " + node.getIdentifier() + " RESULTS IN " + node.getType());
+
         for (int i = 0; i < ctx.getChildCount(); i++) {
             var parseChild = ctx.getChild(i);
             var childnode = visit(parseChild);
@@ -112,7 +111,6 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     public ActionDecl visitNoReturnActionDecl(DBLParser.NoReturnActionDeclContext ctx){
         String identifier = ctx.getChild(1).getText();
         ActionDecl node = new ActionDecl(identifier);
-        System.out.println("Action() " + node.getIdentifier());
         for (int i = 0; i < ctx.getChildCount(); i++) {
             var parseChild = ctx.getChild(i);
             var childnode = visit(parseChild);
@@ -152,29 +150,25 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     /*** ACTION CALL ***/
 
     @Override
-    public ActionCall visitActionCall(DBLParser.ActionCallContext ctx) {
-        String identifier = ctx.getChild(0).getText();
-        ActionCall node = new ActionCall(identifier);
+    public Expression visitActionCall(DBLParser.ActionCallContext ctx) {
+        Expression node = new Expression(ExpressionOperator.ACTION, new Variable(ctx.typedefUser().getText()));
+        
         for (int i = 0; i < ctx.getChildCount(); i++) {
             var childnode = visit(ctx.getChild(i));
             if (childnode != null){
                 node.addChild((AST) childnode);
             }
         }
-        System.out.println("ActionCall Children"+ node.getChildren());
         return node;
     }
+    
     @Override
-    public ActionCall visitActionCallExpr(DBLParser.ActionCallExprContext ctx) {
-        String identifier = ctx.getChild(0).getText();
-        ActionCall node = new ActionCall(identifier);
-        for (int i = 0; i < ctx.getChildCount(); i++) {
-            var childnode = visit(ctx.getChild(i));
-            node.addChild((AST) childnode);
-        }
-        System.out.println(node);
+    public Expression visitActionCallExpr(DBLParser.ActionCallExprContext ctx) {
+        Expression node = (Expression) visit(ctx.actionCall());
         return node;
     }
+
+    /*** ASSIGNMENT ***/
     @Override
     public Assignment visitActionCallAssign(DBLParser.ActionCallAssignContext ctx) {
         Assignment node;
@@ -189,20 +183,6 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         return node;
     }
 
-    /*** ASSIGNMENT ***/
-    @Override
-    public Assignment visitTemplateAccessAssign(DBLParser.TemplateAccessAssignContext ctx) {
-        Assignment node;
-        if (ctx.templateAccess().size() > 1){
-            node = new Assignment(null);
-            node.addChild((Expression) visit(ctx.templateAccess().get(0))); // Get left side of assignment
-        } else {
-            node = new Assignment(ctx.IDENTIFIER().getText());  // Get left side of assignment
-        }
-        node.addChild((Expression) visit(ctx.templateAccess().get(1))); // Get right side of assignment
-        return node;
-    }
-
     @Override
     public Assignment visitIdAssign(DBLParser.IdAssignContext ctx) {
         Assignment node;
@@ -213,7 +193,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
             node = new Assignment(null);
             node.addChild(tAccess);
         }
-        node.addChild(new Variable(ctx.IDENTIFIER().get(1).getText(),null));
+        node.addChild(new Variable(ctx.IDENTIFIER().get(1).getText()));
         return node;
     }
 
@@ -294,29 +274,21 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     /*** ARRAY Access ***/
     @Override
     public Expression visitArrayAccess(DBLParser.ArrayAccessContext ctx) {
-        Expression node = new Expression();
-        Expression identifier;
-        
-        if (ctx.templateAccess() == null){
-            identifier = new Expression(ExpressionOperator.VARIABLE, new Variable(ctx.IDENTIFIER().getText(), "Array"));
-        } else {
-            identifier = (Expression) visit(ctx.templateAccess());
-        }
+        Expression node;
+        Expression identifier = new Expression(ExpressionOperator.VARIABLE, new Variable(ctx.IDENTIFIER().getText()));
 
         Expression subNode = identifier;
         for (int i = 0; i < ctx.expr().size()-1; i++){
-            Expression tempNode = new Expression(ExpressionOperator.INDEX,subNode, (Expression) visit(ctx.expr().get(i)));
-
+            Expression tempNode = new Expression(ExpressionOperator.INDEX, subNode, (Expression) visit(ctx.expr().get(i)));
             subNode = tempNode;
         }
         node = subNode;
         return node;
     }
 
-    //TODO: fix
     @Override
     public Expression visitArrayAccessExpr(DBLParser.ArrayAccessExprContext ctx) {
-        Expression node = (Expression)visit(ctx.arrayAccess());
+        Expression node = (Expression) visit(ctx.arrayAccess());
         return node;
     }
 
@@ -375,7 +347,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
 
     @Override
     public Variable visitIdExpr(DBLParser.IdExprContext ctx) {
-        Variable node = new Variable(ctx.IDENTIFIER().getText(), null);
+        Variable node = new Variable(ctx.IDENTIFIER().getText());
         return node;
     }
 
@@ -466,7 +438,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
 
     @Override
     public Variable visitIdBool(DBLParser.IdBoolContext ctx) {
-        Variable node = new Variable(ctx.IDENTIFIER().getText(),null);
+        Variable node = new Variable(ctx.IDENTIFIER().getText());
         return node;
     }
 
@@ -609,7 +581,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
 
     @Override
     public Variable visitIdString(DBLParser.IdStringContext ctx) {
-        Variable node = new Variable(ctx.IDENTIFIER().getText(), null);
+        Variable node = new Variable(ctx.IDENTIFIER().getText());
         return node;
     }
 
@@ -635,25 +607,32 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     }
 
     @Override
-    public Expression visitTemplateAccess(DBLParser.TemplateAccessContext ctx) {
-        Expression node = new Expression();
-        Expression identifier = new Expression(ExpressionOperator.VARIABLE, new Variable(ctx.typedefUser().IDENTIFIER().getText(), "Template"));
+    public Expression visitIdTemplateAccess(DBLParser.IdTemplateAccessContext ctx) {
+        Expression node;
+        Expression identifier = new Expression(ExpressionOperator.VARIABLE, new Variable(ctx.typedefUser().IDENTIFIER().getText()));
 
         Expression subNode = identifier;
-        for (int i = 0; i < ctx.expr().size()-1; i++){
-            Expression tempNode = new Expression(ExpressionOperator.ACCESS, subNode, (Expression) visit(ctx.expr().get(i)));
+        for (int i = 0; i < ctx.IDENTIFIER().size()-1; i++){
+            Expression tempNode = new Expression(ExpressionOperator.ACCESS, subNode, (Expression) visit(ctx.IDENTIFIER().get(i)));
             subNode = tempNode;
         }
         node = subNode;
         return node;
     }
+
+    @Override
+    public Expression visitArrayTemplateAccess(DBLParser.ArrayTemplateAccessContext ctx) {
+        Expression subNode = new Expression(ExpressionOperator.VARIABLE, new Variable(ctx.typedefUser().IDENTIFIER().getText()));
+        
+        for (int i = 0; i < ctx.IDENTIFIER().size()-1; i++){
+            Expression tempNode = new Expression(ExpressionOperator.ACCESS, subNode, (Expression) visit(ctx.IDENTIFIER().get(i)));
+            subNode = tempNode;
+        }
+        Expression root = new Expression(ExpressionOperator.ACCESS, subNode, (Expression) visit(ctx.arrayAccess()));
+        return root;
+    }
+
     @Override public Expression visitTemplateAccessExpr(DBLParser.TemplateAccessExprContext ctx) {
          return (Expression) visit(ctx.templateAccess()); 
-        }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
+    }
 }
