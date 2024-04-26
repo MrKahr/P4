@@ -69,7 +69,7 @@ public class Scope implements Cloneable{
         declaredTable = table;
     }
 
-    public static void setStateTabel(HashSet<String> table){
+    public static void setStateTable(HashSet<String> table){
         stateTable = table;
     }
 
@@ -100,7 +100,7 @@ public class Scope implements Cloneable{
         if(stateTable.contains(identifier)){
             throw new StateAlreadyDefinedExpection();
         } else {
-            declaredTable.add(identifier);
+            stateTable.add(identifier);
         }
     }
 

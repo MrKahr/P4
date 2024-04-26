@@ -19,11 +19,12 @@ public abstract class SymbolTableEntry implements Typed{
         
                 switch (complexType) {
                     case "Array":
-                        return new ArraySymbol(type, complexType);
+                        return new ArraySymbol(type);
                     case "Template":
                         return new TemplateSymbol(Scope.getBTable().get(type));
                     case "Action":
-                        return new ActionSymbol(type, complexType, null);
+                        System.err.println("WARNING: INSTANTIATING DEFAULT ACTION");
+                        return new ActionSymbol(null, null, null);
                     case "Primitive": 
                         return instantiateDefault(type);
                     default:
@@ -43,7 +44,7 @@ public abstract class SymbolTableEntry implements Typed{
                 throw new UndefinedTypeException("The type \"" + type + "\" is not a primtive!");
         }
     }
-    
+
     public void setType(String type){
         this.type = type;
     }

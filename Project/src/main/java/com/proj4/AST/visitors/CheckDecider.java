@@ -16,8 +16,8 @@ public class CheckDecider implements VisitorDecider {
             case "ArrayAccess":
                 node.acceptVisitor(new ArrayAccessTypeChecker());
                 break;
-            case "ArrayDecl":
-                node.acceptVisitor(new ArrayDeclTypeChecker());
+            case "ArrayInstance":
+                node.acceptVisitor(new ArrayInstanceTypeChecker());
                 break;
             case "Assignment":
                 node.acceptVisitor(new AssignmentTypeChecker());
@@ -31,8 +31,8 @@ public class CheckDecider implements VisitorDecider {
             case "IfElse":
                 node.acceptVisitor(new IfElseTypeChecker());
                 break;
-            case "PrimitiveDecl":
-                node.acceptVisitor(new PrimitiveDeclTypeChecker());
+            case "Declaration":
+                node.acceptVisitor(new DeclarationTypeChecker());
                 break;
             case "Program":
                 node.acceptVisitor(new ProgramTypeChecker());

@@ -19,6 +19,7 @@ public class DeclarationTypeChecker extends TypeCheckVisitor{
         } 
 
         //create a new variable with the given type
+        //TODO: Check instantiate default 
         declaration.getScope().declareVariable(declaration.getIdentifier(), SymbolTableEntry.instantiateDefault(declaration.getType(), declaration.getComplexType()));
 
         if(declaration.getChildren().size() > 0){ //if this declaration also assigns a value, check that the type is ok
