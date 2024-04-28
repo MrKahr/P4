@@ -24,4 +24,5 @@ public enum ExpressionOperator {
     VARIABLE,   //  return the value bound to the identifier in the "identifier"-field as a string
     //RETURNS ANY
     CONSTANT,   //  return what's in the "constant"-field
+    INDEX, // return 
 }

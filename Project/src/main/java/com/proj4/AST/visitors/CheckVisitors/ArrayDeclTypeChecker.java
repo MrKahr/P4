@@ -1,7 +1,7 @@
 package com.proj4.AST.visitors.CheckVisitors;
 
 import com.proj4.AST.nodes.AST;
-import com.proj4.AST.nodes.ArrayDecl;
+import com.proj4.AST.nodes.Declaration;
 import com.proj4.AST.nodes.Expression;
 import com.proj4.AST.visitors.CheckDecider;
 import com.proj4.AST.visitors.TypeCheckVisitor;
@@ -34,3 +34,5 @@ public class ArrayDeclTypeChecker extends TypeCheckVisitor{
         arrayDecl.synthesizeScope();
     }
 }
+
+//TODO: this class' role has been taken over by DeclarationTypeChecker
