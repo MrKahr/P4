@@ -4,29 +4,33 @@ import java.util.ArrayList;
 
 import com.proj4.AST.nodes.AST;
 import com.proj4.AST.nodes.Expression;
+import com.proj4.AST.nodes.Variable;
 import com.proj4.AST.visitors.CheckDecider;
 import com.proj4.AST.visitors.TypeCheckVisitor;
+import com.proj4.AST.visitors.VisitorDecider;
 import com.proj4.exceptions.MismatchedTypeException;
 import com.proj4.symbolTable.Scope;
 import com.proj4.symbolTable.symbols.SymbolTableEntry;
 import com.proj4.symbolTable.symbols.TemplateSymbol;
+import com.proj4.exceptions.UndefinedArrayExpection;
+import com.proj4.symbolTable.Scope;
 
-public class ExpressionTypeChecker extends TypeCheckVisitor{
-    
-    public void visit(AST node){
+public class ExpressionTypeChecker extends TypeCheckVisitor {
+
+    public void visit(AST node) {
         Expression expression = (Expression) node;
         expression.inheritScope();
-        //Note: These operators always return primitive types
-        //Note: Fallthrough for each operator type 
+        // Note: These operators always return primitive types
+        // Note: Fallthrough for each operator type
         switch (expression.getOperator()) {
             case ADD:
-            //falltrough
+                // falltrough
             case SUBTRACT:
-            //falltrough
+                // falltrough
             case DIVIDE:
-            //falltrough
-            case MULTIPLY:   //all above are binary and return and consume integers
-                expression.visitChild(new CheckDecider(), expression.getFirstOperand());    
+                // falltrough
+            case MULTIPLY: // all above are binary and return and consume integers
+                expression.visitChild(new CheckDecider(), expression.getFirstOperand());
                 if (!TypeCheckVisitor.getFoundType().equals("Integer")) {
                     throw new MismatchedTypeException();
                 }
@@ -37,20 +41,20 @@ public class ExpressionTypeChecker extends TypeCheckVisitor{
                 TypeCheckVisitor.setFoundType("Integer", "Primitive");
                 break;
             case NEGATE:
-                expression.visitChild(new CheckDecider(), expression.getFirstOperand());    
+                expression.visitChild(new CheckDecider(), expression.getFirstOperand());
                 if (!TypeCheckVisitor.getFoundType().equals("Integer")) {
                     throw new MismatchedTypeException();
                 }
                 TypeCheckVisitor.setFoundType("Integer", "Primitive");
-                break;            
+                break;
             case LESS_THAN:
-            //falltrough   
+                // falltrough
             case LESS_OR_EQUALS:
-            //falltrough   
+                // falltrough
             case GREATER_THAN:
-            //falltrough
-            case GREATER_OR_EQUALS:  //all above are binary and return booleans and consume integers
-                expression.visitChild(new CheckDecider(), expression.getFirstOperand());    
+                // falltrough
+            case GREATER_OR_EQUALS: // all above are binary and return booleans and consume integers
+                expression.visitChild(new CheckDecider(), expression.getFirstOperand());
                 if (!TypeCheckVisitor.getFoundType().equals("Integer")) {
                     throw new MismatchedTypeException();
                 }
@@ -61,8 +65,8 @@ public class ExpressionTypeChecker extends TypeCheckVisitor{
                 TypeCheckVisitor.setFoundType("Boolean", "Primitive");
                 break;
             case EQUALS:
-            //fallthrough
-            case NOT_EQUALS: //all above consume two identical types and return booleans
+                // fallthrough
+            case NOT_EQUALS: // all above consume two identical types and return booleans
                 expression.visitChild(new CheckDecider(), expression.getFirstOperand());
                 String firstType = TypeCheckVisitor.getFoundType();
                 expression.visitChild(new CheckDecider(), expression.getSecondOperand());
@@ -72,9 +76,9 @@ public class ExpressionTypeChecker extends TypeCheckVisitor{
                 TypeCheckVisitor.setFoundType("Boolean", "Primitive");
                 break;
             case OR:
-            //falltrough
-            case AND:    //all above are binary and consume and return booleans
-                expression.visitChild(new CheckDecider(), expression.getFirstOperand());    
+                // falltrough
+            case AND: // all above are binary and consume and return booleans
+                expression.visitChild(new CheckDecider(), expression.getFirstOperand());
                 if (!TypeCheckVisitor.getFoundType().equals("Boolean")) {
                     throw new MismatchedTypeException();
                 }
@@ -85,14 +89,14 @@ public class ExpressionTypeChecker extends TypeCheckVisitor{
                 TypeCheckVisitor.setFoundType("Boolean", "Primitive");
                 break;
             case NOT:
-                expression.visitChild(new CheckDecider(), expression.getFirstOperand());    
+                expression.visitChild(new CheckDecider(), expression.getFirstOperand());
                 if (!TypeCheckVisitor.getFoundType().equals("Boolean")) {
                     throw new MismatchedTypeException();
                 }
                 TypeCheckVisitor.setFoundType("Boolean", "Primitive");
                 break;
             case CONCAT:
-                expression.visitChild(new CheckDecider(), expression.getFirstOperand());    
+                expression.visitChild(new CheckDecider(), expression.getFirstOperand());
                 if (!TypeCheckVisitor.getFoundType().equals("String")) {
                     throw new MismatchedTypeException();
                 }
@@ -134,10 +138,22 @@ public class ExpressionTypeChecker extends TypeCheckVisitor{
 
                 //TODO: When we finally get to interpreting the program, the process of getting the field will be quite similar, 
                 //TODO: the difference being that we use the TemplateSymbol returned by the first operand instead of using the blueprint for the template type
+            case INDEX:
+                // Case 1: Check whether first operand is an array that is declared in scope
+                expression.visitChild(new CheckDecider(), expression.getFirstOperand());
+                // Check whether operand is an array 
+                if (!TypeCheckVisitor.getFoundComplexType().equals("Array")) {
+                    throw new MismatchedTypeException(
+                        "Error on indexing: Cannot index element that is not an array!");
+                    }
+                
+                // Case 2: Check that index i.e. second operand is an integer
+                if (!(TypeCheckVisitor.getFoundType().equals("Integer") && TypeCheckVisitor.getFoundComplexType().equals("Primitive"))) {
+                    throw new MismatchedTypeException("Index for array (or template) is not integer!");
+                }
                 break;
             default:
                 break;
-
         }
     }
 }

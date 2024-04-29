@@ -1,6 +1,8 @@
 package com.proj4.AST.nodes;
 
-public class ActionCall extends Statement implements Identifiable{
+import com.proj4.symbolTable.symbols.PrimitiveSymbol;
+
+public class ActionCall extends Expression implements Identifiable{
     //Field
     private String identifier;
 
@@ -14,4 +16,24 @@ public class ActionCall extends Statement implements Identifiable{
         return identifier;
     }
     
+    @Override
+    public ExpressionOperator getOperator(){
+        return null;
+    }
+
+    @Override
+    @SuppressWarnings("rawtypes")
+    public PrimitiveSymbol getConstant(){
+        return null;
+    }
+
+    @Override
+    public Expression getFirstOperand(){
+        return null;
+    }
+
+    @Override
+    public Expression getSecondOperand(){
+        return null;
+    }
 }
