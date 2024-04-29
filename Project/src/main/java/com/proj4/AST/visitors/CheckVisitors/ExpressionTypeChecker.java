@@ -109,56 +109,24 @@ public class ExpressionTypeChecker extends TypeCheckVisitor {
                 break;
             case INDEX:
                 // Ensure that we can lookup arrays in the current scope if we have an array
-                // operand
-                expression.inheritScope();
                 String arrayIdentifier = "";
 
                 // Case 1: Check whether first operand is an array that is declared in scope
                 expression.visitChild(new CheckDecider(), expression.getFirstOperand());
-                if (expression.getFirstOperand() instanceof Variable) {
-                    // Check whether operand is defined in Vtable
-                    try {
-                        arrayIdentifier = ((Variable) expression.getFirstOperand()).getIdentifier();
-                        expression.getScope().getVTable().get(arrayIdentifier);
-                    } catch (Exception e) {
-                        throw new UndefinedArrayExpection(
-                                "Array\"" + arrayIdentifier + "\"in not defined in current scope");
+                // Check whether operand is an array 
+                if (!TypeCheckVisitor.getFoundComplexType().equals("Array")) {
+                    throw new MismatchedTypeException(
+                        "Error on indexing: Cannot index element that is not an array!");
                     }
-
-                    // Check whether operand is an array 
-                    if (!TypeCheckVisitor.getFoundComplexType().equals("Array")) {
-                        throw new MismatchedTypeException(
-                                "Error on indexing: Cannot index element that is not an array!");
-                    }
-                }
-
-                // Case 2: Check whether second operand is an array defined in scope that can evaluate to an integer. 
-                expression.visitChild(new CheckDecider(), expression.getSecondOperand());
-                if (expression.getSecondOperand() instanceof Variable) {
-                    // Check whether operand is defined in Vtable
-                    try {
-                        arrayIdentifier = ((Variable) expression.getSecondOperand()).getIdentifier();
-                        expression.getScope().getVTable().get(arrayIdentifier);
-                    } catch (Exception e) {
-                        throw new UndefinedArrayExpection(
-                                "Array\"" + arrayIdentifier + "\"in not defined in current scope");
-                    }
-
-                    // Check whether array can be evaluated to an integer.
-                    if (!(TypeCheckVisitor.getFoundComplexType().equals("Array") && TypeCheckVisitor.getFoundType().equals("Integer"))) {
-                        throw new MismatchedTypeException(
-                                "Error on indexing: Cannot index element that is not an array!");
-                    }
-                }
-
-                // Case 3: Check that index i.e. second operand is an integer
-                if (!TypeCheckVisitor.getFoundType().equals("Integer")) {
+                
+                // Case 2: Check that index i.e. second operand is an integer
+                if (!(TypeCheckVisitor.getFoundType().equals("Integer") && TypeCheckVisitor.getFoundComplexType().equals("Primitive"))) {
                     throw new MismatchedTypeException("Index for array (or template) is not integer!");
                 }
                 break;
             default:
+                System.err.println("Hello");
                 break;
-
         }
     }
 }
