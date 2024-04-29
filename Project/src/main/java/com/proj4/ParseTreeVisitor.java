@@ -507,7 +507,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         Identifiable iterator = (Identifiable) visit(ctx.children.get(2));
         Expression condition = (Expression) visit(ctx.children.get(3));
         Assignment iteratorAction = (Assignment) visit(ctx.children.get(5));
-        StmtList body = (StmtList) visit(ctx.children.get(8));
+        Body body = (Body) visit(ctx.children.get(8));
         
         ForLoop node = new ForLoop(iterator, condition, iteratorAction);
         
@@ -557,8 +557,8 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     }
 
     @Override
-    public StmtList visitBody(DBLParser.BodyContext ctx) {
-        return (StmtList) visit(ctx.stmtList());
+    public Body visitBody(DBLParser.BodyContext ctx) {
+        return (Body) visit(ctx.stmtList());
     }
 
     /*** State declaration ***/

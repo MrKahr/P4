@@ -8,3 +8,4 @@ public class ArrayInstance extends Expression{
     }
 }
 //TODO: Note: An array instance is something like "[e_0,...,e_n]" where all e's are expressions with n>=0;
+//TODO: an array can consist of subarrays, in which case their nesting level must all be the same

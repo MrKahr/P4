@@ -1,10 +1,15 @@
 package com.proj4.AST.visitors.CheckVisitors;
 
+import java.util.ArrayList;
+
 import com.proj4.AST.nodes.AST;
 import com.proj4.AST.nodes.Expression;
 import com.proj4.AST.visitors.CheckDecider;
 import com.proj4.AST.visitors.TypeCheckVisitor;
 import com.proj4.exceptions.MismatchedTypeException;
+import com.proj4.symbolTable.Scope;
+import com.proj4.symbolTable.symbols.SymbolTableEntry;
+import com.proj4.symbolTable.symbols.TemplateSymbol;
 
 public class ExpressionTypeChecker extends TypeCheckVisitor{
     
@@ -102,6 +107,33 @@ public class ExpressionTypeChecker extends TypeCheckVisitor{
                 break;
             case CONSTANT:
                 TypeCheckVisitor.setFoundType(expression.getConstant().getType(), "Primitive");
+                break;
+            case ACCESS:
+                //make sure the first operand is actually a template
+                expression.visitChild(new CheckDecider(), expression.getFirstOperand());    
+                if (!TypeCheckVisitor.getFoundComplexType().equals("Template")) {
+                    throw new MismatchedTypeException();
+                }
+                //remember the type of the template we found
+                String templateType = TypeCheckVisitor.getFoundType();
+
+                //make sure the second operand specifies a field to index
+                expression.visitChild(new CheckDecider(), expression.getSecondOperand());   //TODO: find out how exactly to handle the second operand
+                if (!TypeCheckVisitor.getFoundType().equals("String")) {           //TODO: it's supposed to tell us which field of the template we should index
+                    throw new MismatchedTypeException();
+                }
+                //remember the field to find in the template
+                String fieldName = TypeCheckVisitor.getFoundType();  //TODO: USING THIS AS A PLACEHOLDER UNTIL THE SECOND OPERAND GETS IMPLEMENTED PROPERLY!
+
+                ArrayList<String> map = Scope.getTTable().get(templateType);    //get the arraylist with the chosen template's fields
+                TemplateSymbol blueprint = Scope.getBTable().get(templateType); //get the blueprint for the chosen template
+
+                SymbolTableEntry fieldContent = blueprint.getContent().get(map.indexOf(fieldName));  //find the field we need with the map and get the content of the field
+
+                TypeCheckVisitor.setFoundType(fieldContent.getType(), fieldContent.getComplexType());
+
+                //TODO: When we finally get to interpreting the program, the process of getting the field will be quite similar, 
+                //TODO: the difference being that we use the TemplateSymbol returned by the first operand instead of using the blueprint for the template type
                 break;
             default:
                 break;

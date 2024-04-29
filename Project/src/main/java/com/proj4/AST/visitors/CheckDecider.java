@@ -55,6 +55,9 @@ public class CheckDecider implements VisitorDecider {
             case "TemplateInstance":
                 node.acceptVisitor(new TemplateInstanceTypeChecker());
                 break;
+            case "Body":
+                node.acceptVisitor(new BodyTypeChecker());
+                break;
             default:
                 System.err.println("UNRECOGNIZED NODE TYPE!\nGOT " + node.getClass().getSimpleName());
                 break;

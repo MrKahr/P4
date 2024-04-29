@@ -9,6 +9,7 @@ import com.proj4.symbolTable.Scope;
 import com.proj4.symbolTable.symbols.TemplateSymbol;
 import com.proj4.symbolTable.symbols.SymbolTableEntry;
 
+//TODO: THIS CLASS IS OBSOLETE AS THIS OPERATION IS NOW PART OF EXPRESSION
 public class TemplateAccessTypeChecker extends TypeCheckVisitor{
     
     public void visit(AST node){
