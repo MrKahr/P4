@@ -108,9 +108,6 @@ public class ExpressionTypeChecker extends TypeCheckVisitor {
                 TypeCheckVisitor.setFoundType(expression.getConstant().getType(), "Primitive");
                 break;
             case INDEX:
-                // Ensure that we can lookup arrays in the current scope if we have an array
-                String arrayIdentifier = "";
-
                 // Case 1: Check whether first operand is an array that is declared in scope
                 expression.visitChild(new CheckDecider(), expression.getFirstOperand());
                 // Check whether operand is an array 
