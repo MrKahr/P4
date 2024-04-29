@@ -1,17 +1,13 @@
 package com.proj4.AST.nodes;
 
-public class ActionCall extends Statement implements Identifiable{
-    //Field
+public class ActionCall extends Expression {
     private String identifier;
 
-    //Constructor
     public ActionCall(String identifier){
         this.identifier = identifier;
     }
 
-    //Method
     public String getIdentifier(){
-        return identifier;
+        return this.identifier;
     }
-    
 }

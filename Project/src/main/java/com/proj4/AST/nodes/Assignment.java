@@ -2,24 +2,16 @@ package com.proj4.AST.nodes;
 
 //the difference between PrimitiveDecl and Assignment is that with assignments
 //we already know the type of the variable pointed to by the identifier
-public class Assignment extends Statement implements Identifiable{
+public class Assignment extends Statement {
     //Field
-    private String identifier;
     
     //Constructor
-    public Assignment(String identifier){
-        this.identifier = identifier;
-    }
-    public Assignment(Expression leftExpression){
-        this.identifier = null;
+    public Assignment(Expression leftExpression, Expression rightExpression){
         this.addChild(leftExpression);
+        this.addChild(rightExpression);
     }
     
     //Method
-    public String getIdentifier(){
-        return identifier;
-    }
-
     public Expression getNewValue(){
         return (Expression) getChildren().get(0);
     }

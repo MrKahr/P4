@@ -1,13 +1,13 @@
 package com.proj4.AST.nodes;
 
-public class UserDeclNode extends Declaration{
+public class UserDecl extends Declaration{
      //Field
     private String identifier;
     private String expectedType;    //the type this variable should have
     private String complexType;
 
     //Constructor
-    public UserDeclNode(String identifier, String expectedType){
+    public UserDecl(String identifier, String expectedType){
         this.identifier = identifier;
         this.expectedType = expectedType;
     }

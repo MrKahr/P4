@@ -1,14 +1,12 @@
 package com.proj4.AST.nodes;
 
 public class ForLoop extends Statement{
-    //Field
-
-
     //Constructor
-    public ForLoop(Identifiable iterator, Expression condition, Assignment iteratorAction){
+    public ForLoop(Identifiable iterator, Expression condition, Assignment iteratorAction, Body body){
         addChild((AST) iterator);    //first child is the iterator
         addChild(condition);        //second child is the condition
         addChild(iteratorAction);   //third child is what to do with the iterator every loop
+        addChild(body);
     }
 
     //Method
@@ -20,7 +18,11 @@ public class ForLoop extends Statement{
         return (Expression) getChildren().get(1);
     }
 
-    public AST getIteratorAction(){
-        return (AST) getChildren().get(2);
+    public Assignment getIteratorAction(){
+        return (Assignment) getChildren().get(2);
+    }
+
+    public Body getBody(){
+        return (Body) getChildren().get(3);
     }
 }

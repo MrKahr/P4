@@ -62,7 +62,7 @@ expr
     :   BRAC_START expr BRAC_END   # parExpr
     |   expr multOp expr           # multExpr
     |   expr addOp expr            # addExpr
-    |   expr DOT expr              # templateAccessExpr
+    |   expr DOT IDENTIFIER        # templateAccessExpr
     |   expr SQB_START expr SQB_END# arrayAccessExpr
     |   actionResult               # actionResultExpr
     |   actionCall                 # actionCallExpr     // Ensure action calls are the last of parser definitions
@@ -96,12 +96,11 @@ stringExpr
     ;
 
 assignment // Remember to add semicolon if relevant
-    :   (expr | IDENTIFIER) ASSIGN expr             # exprAssign
-    |   (expr | IDENTIFIER) ASSIGN boolExpr         # boolExprAssign
-    |   (expr | IDENTIFIER) ASSIGN stringExpr       # stringExprAssign
-    |   (expr | IDENTIFIER) ASSIGN arrayInit        # arrayInitAssign
-    |   (expr | IDENTIFIER) ASSIGN actionCall       # actionCallAssign
-    |   (expr | IDENTIFIER) ASSIGN IDENTIFIER       # idAssign
+    :   expr ASSIGN expr             # exprAssign
+    |   expr ASSIGN boolExpr         # boolExprAssign
+    |   expr ASSIGN stringExpr       # stringExprAssign
+    |   expr ASSIGN arrayInit        # arrayInitAssign
+    |   expr ASSIGN IDENTIFIER       # idAssign
     ;
 
 typePrimitive

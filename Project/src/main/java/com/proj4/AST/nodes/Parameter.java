@@ -1,13 +1,13 @@
 package com.proj4.AST.nodes;
 
-public class ParameterNode extends AST {
+public class Parameter extends AST {
 
     //Field
     private String type;
     private String identifier;
     
     //Constructor
-    public ParameterNode(String identifier, String type){
+    public Parameter(String identifier, String type){
         this.identifier = identifier;
         this.type = type;   //the type of the entries in this array. Controls how many bytes are needed per entry
     }
