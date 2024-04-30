@@ -42,12 +42,11 @@ public class ArrayInstanceTypeChecker extends TypeCheckVisitor{
         }
             // Check whether child is an array, if so increment nesting level
             if(TypeCheckVisitor.getFoundComplexType().equals("Array")){
-                TypeCheckVisitor.setNestingLevel(TypeCheckVisitor.getNestingLevel() + 1);
+                TypeCheckVisitor.setFoundType(expectedType, "Array", TypeCheckVisitor.getNestingLevel() + 1);
+
             } else {
                 TypeCheckVisitor.setNestingLevel(0);
+                TypeCheckVisitor.setFoundType(expectedType, "Array", 0);
             }
-        
-        //after passing the check, create instance
-        TypeCheckVisitor.setFoundType(expectedType, "Array");
     }
 }

@@ -44,7 +44,7 @@ public class ActionCallTypeChecker extends TypeCheckVisitor{
         }
 
         //arguments are all well typed and we pretend to have gotten a return value
-        TypeCheckVisitor.setFoundType(action.getType(), action.getComplexReturnType());
+        TypeCheckVisitor.setFoundType(action.getType(), action.getComplexReturnType(), action.getNestingLevel());
 
     }
 }

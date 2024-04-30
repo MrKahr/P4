@@ -10,6 +10,7 @@ import com.proj4.AST.visitors.TypeCheckVisitor;
 import com.proj4.AST.visitors.VisitorDecider;
 import com.proj4.exceptions.MismatchedTypeException;
 import com.proj4.symbolTable.Scope;
+import com.proj4.symbolTable.symbols.ArraySymbol;
 import com.proj4.symbolTable.symbols.SymbolTableEntry;
 import com.proj4.symbolTable.symbols.TemplateSymbol;
 import com.proj4.exceptions.UndefinedArrayExpection;
@@ -38,14 +39,14 @@ public class ExpressionTypeChecker extends TypeCheckVisitor {
                 if (!TypeCheckVisitor.getFoundType().equals("Integer")) {
                     throw new MismatchedTypeException();
                 }
-                TypeCheckVisitor.setFoundType("Integer", "Primitive");
+                TypeCheckVisitor.setFoundType("Integer", "Primitive", 0);
                 break;
             case NEGATE:
                 expression.visitChild(new CheckDecider(), expression.getFirstOperand());
                 if (!TypeCheckVisitor.getFoundType().equals("Integer")) {
                     throw new MismatchedTypeException();
                 }
-                TypeCheckVisitor.setFoundType("Integer", "Primitive");
+                TypeCheckVisitor.setFoundType("Integer", "Primitive", 0);
                 break;
             case LESS_THAN:
                 // falltrough
@@ -62,7 +63,7 @@ public class ExpressionTypeChecker extends TypeCheckVisitor {
                 if (!TypeCheckVisitor.getFoundType().equals("Integer")) {
                     throw new MismatchedTypeException();
                 }
-                TypeCheckVisitor.setFoundType("Boolean", "Primitive");
+                TypeCheckVisitor.setFoundType("Boolean", "Primitive", 0);
                 break;
             case EQUALS:
                 // fallthrough
@@ -73,7 +74,7 @@ public class ExpressionTypeChecker extends TypeCheckVisitor {
                 if (!firstType.equals(TypeCheckVisitor.getFoundType())) {
                     throw new MismatchedTypeException();
                 }
-                TypeCheckVisitor.setFoundType("Boolean", "Primitive");
+                TypeCheckVisitor.setFoundType("Boolean", "Primitive", 0);
                 break;
             case OR:
                 // falltrough
@@ -86,14 +87,14 @@ public class ExpressionTypeChecker extends TypeCheckVisitor {
                 if (!TypeCheckVisitor.getFoundType().equals("Boolean")) {
                     throw new MismatchedTypeException();
                 }
-                TypeCheckVisitor.setFoundType("Boolean", "Primitive");
+                TypeCheckVisitor.setFoundType("Boolean", "Primitive", 0);
                 break;
             case NOT:
                 expression.visitChild(new CheckDecider(), expression.getFirstOperand());
                 if (!TypeCheckVisitor.getFoundType().equals("Boolean")) {
                     throw new MismatchedTypeException();
                 }
-                TypeCheckVisitor.setFoundType("Boolean", "Primitive");
+                TypeCheckVisitor.setFoundType("Boolean", "Primitive", 0);
                 break;
             case CONCAT:
                 expression.visitChild(new CheckDecider(), expression.getFirstOperand());
@@ -104,13 +105,13 @@ public class ExpressionTypeChecker extends TypeCheckVisitor {
                 if (!TypeCheckVisitor.getFoundType().equals("String")) {
                     throw new MismatchedTypeException();
                 }
-                TypeCheckVisitor.setFoundType("String", "Primitive");
+                TypeCheckVisitor.setFoundType("String", "Primitive", 0);
                 break;
             case VARIABLE:
-                TypeCheckVisitor.setFoundType("String", "Primitive");
+                TypeCheckVisitor.setFoundType("String", "Primitive", 0);
                 break;
             case CONSTANT:
-                TypeCheckVisitor.setFoundType(expression.getConstant().getType(), "Primitive");
+                TypeCheckVisitor.setFoundType(expression.getConstant().getType(), "Primitive", 0);
                 break;
             case ACCESS:
                 //make sure the first operand is actually a template
@@ -134,8 +135,13 @@ public class ExpressionTypeChecker extends TypeCheckVisitor {
 
                 SymbolTableEntry fieldContent = blueprint.getContent().get(map.indexOf(fieldName));  //find the field we need with the map and get the content of the field
 
-                TypeCheckVisitor.setFoundType(fieldContent.getType(), fieldContent.getComplexType());
-
+                if (fieldContent.getComplexType().equals("Array")) {
+                    ArraySymbol fieldArray = (ArraySymbol) fieldContent;
+                    TypeCheckVisitor.setFoundType(fieldContent.getType(), "Array", fieldArray.getNestingLevel());
+                } else {
+                    TypeCheckVisitor.setFoundType(fieldContent.getType(), fieldContent.getComplexType(), 0);
+                }
+                
                 //TODO: When we finally get to interpreting the program, the process of getting the field will be quite similar, 
                 //TODO: the difference being that we use the TemplateSymbol returned by the first operand instead of using the blueprint for the template type
             case INDEX:
@@ -146,10 +152,28 @@ public class ExpressionTypeChecker extends TypeCheckVisitor {
                     throw new MismatchedTypeException(
                         "Error on indexing: Cannot index element that is not an array!");
                     }
-                
+                //remember array's type and nestinglevel
+                String arrayType = TypeCheckVisitor.getFoundType();
+                int nestingLevel = TypeCheckVisitor.getNestingLevel();
+
                 // Case 2: Check that index i.e. second operand is an integer
                 if (!(TypeCheckVisitor.getFoundType().equals("Integer") && TypeCheckVisitor.getFoundComplexType().equals("Primitive"))) {
                     throw new MismatchedTypeException("Index for array (or template) is not integer!");
+                }
+
+                if (TypeCheckVisitor.getNestingLevel() > 0) {   //if nestingLevel is 0, indexing will give us something that is not an array
+                    TypeCheckVisitor.setFoundType(arrayType, "Array", nestingLevel - 1);
+                } else {
+                    switch (arrayType) {
+                        case "Integer":
+                        case "Boolean":
+                        case "String":
+                            TypeCheckVisitor.setFoundType(arrayType, "Primitive", 0);
+                        break;
+                        default:
+                            TypeCheckVisitor.setFoundType(arrayType, "Template", 0);
+                            break;
+                    }
                 }
                 break;
             default:

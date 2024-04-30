@@ -23,7 +23,8 @@ public class ActionDeclTypeChecker extends TypeCheckVisitor{
                 new ActionSymbol(
                     actionDecl.getType(), 
                     actionDecl.getComplexReturnType(), 
-                    actionDecl.getBody()
+                    actionDecl.getBody(),
+                    actionDecl.getNestingLevel()
                     )
                 );
         //set the action body before checking children

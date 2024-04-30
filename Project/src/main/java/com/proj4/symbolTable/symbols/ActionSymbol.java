@@ -9,12 +9,14 @@ public class ActionSymbol extends ComplexSymbol{
     private ArrayList<SymbolTableEntry> params = new ArrayList<>();
     private AST body;
     private String complexReturnType;
+    private int nestingLevel;
 
     //Constructor
-    public ActionSymbol(String returnType, String complexReturnType, AST body){    //content list is created by default
+    public ActionSymbol(String returnType, String complexReturnType, AST body, int nestingLevel){    //content list is created by default
         setType(returnType);
         this.body = body;
         this.complexReturnType = complexReturnType;
+        this.nestingLevel = nestingLevel;
     }    
 
     //Method
@@ -40,5 +42,9 @@ public class ActionSymbol extends ComplexSymbol{
 
     public String getComplexType(){
         return "Action";
+    }
+
+    public int getNestingLevel(){
+        return nestingLevel;
     }
 }

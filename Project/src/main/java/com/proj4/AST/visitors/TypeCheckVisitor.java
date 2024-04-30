@@ -27,9 +27,10 @@ public abstract class TypeCheckVisitor implements NodeVisitor {
         return nestingLevel;
     }
 
-    public static void setFoundType(String type, String complexType){
+    public static void setFoundType(String type, String complexType, int nesting){
         foundType = type;
         foundComplexType = complexType;
+        nestingLevel = nesting;
     }
     
     public static void setCurrentAction(String actionName){

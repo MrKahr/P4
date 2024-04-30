@@ -20,7 +20,7 @@ public class DeclarationTypeChecker extends TypeCheckVisitor{
 
         //create a new variable with the given type
         //TODO: Check instantiate default 
-        declaration.getScope().declareVariable(declaration.getIdentifier(), SymbolTableEntry.instantiateDefault(declaration.getType(), declaration.getComplexType()));
+        declaration.getScope().declareVariable(declaration.getIdentifier(), SymbolTableEntry.instantiateDefault(declaration.getType(), declaration.getComplexType(), declaration.getNestingLevel()));
 
         if(declaration.getChildren().size() > 0){ //if this declaration also assigns a value, check that the type is ok
             // Visit child
@@ -30,7 +30,7 @@ public class DeclarationTypeChecker extends TypeCheckVisitor{
         }
 
         // Set the found type to that of the declaration
-        TypeCheckVisitor.setFoundType(declaration.getType(), declaration.getComplexType());
+        TypeCheckVisitor.setFoundType(declaration.getType(), declaration.getComplexType(), declaration.getNestingLevel());
 
         // New variable is added to parent scope 
         declaration.synthesizeScope();

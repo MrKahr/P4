@@ -9,10 +9,11 @@ public class ArraySymbol extends SymbolTableEntry{
     private ArrayList<SymbolTableEntry> content = new ArrayList<>();
     private Integer nestingLevel;   //if we're working with arrays, this will tell us how many layers of subarrays there are i.e. [a,b,c] has NL=0 and [[a,b],[c]] has NL=1. [a,b,[c]] is not allowed.
 
+    // TODO: Array symbol needs nesting level - CHECK
     //Constructor
-    public ArraySymbol(String type){    //content list is created by default
+    public ArraySymbol(String type, Integer nestingLevel){    //content list is created by default
         setType(type);
-        nestingLevel = 0;   //if we are not joining together subarrays, we know the array has nesting level 0
+        this.nestingLevel = nestingLevel;   //if we are not joining together subarrays, we know the array has nesting level 0
     }    
 
     public ArraySymbol(ArrayList<ArraySymbol> subArrays){

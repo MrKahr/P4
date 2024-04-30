@@ -7,12 +7,21 @@ public class Declaration extends Statement implements Identifiable, Typed{
     private String identifier;  //the identifier to bind this variable to
     private String type;    //the type this variable should have
     private String complexType; //the complex type of this variable i.e. Primitive, Array, or Template
+    private int nestingLevel;
 
     //Constructor
     public Declaration(String identifier, String type, String complexType){
         this.identifier = identifier;
         this.type = type;
         this.complexType = complexType;
+        this.nestingLevel = 0;
+    }
+
+    public Declaration(String identifier, String type, String complexType, int nestingLevel){
+        this.identifier = identifier;
+        this.type = type;
+        this.complexType = complexType;
+        this.nestingLevel = nestingLevel;
     }
 
     //Method
@@ -26,6 +35,10 @@ public class Declaration extends Statement implements Identifiable, Typed{
 
     public String getComplexType(){
         return complexType;
+    }
+
+    public int getNestingLevel(){
+        return nestingLevel;
     }
 
     public Assignment getInitialAssignment(){

@@ -13,8 +13,8 @@ public class TemplateInstanceTypeChecker extends TypeCheckVisitor{
 
         String templateType = templateInstance.getType();
 
-        SymbolTableEntry.instantiateDefault(templateType, "Template");
+        SymbolTableEntry.instantiateDefault(templateType, "Template", 0);
 
-        TypeCheckVisitor.setFoundType(templateType, "Template");
+        TypeCheckVisitor.setFoundType(templateType, "Template", 0);
     }
 }
