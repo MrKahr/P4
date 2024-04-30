@@ -1,10 +1,10 @@
 package com.proj4.AST.nodes;
 
-public class If extends Statement {
+public class IfElse extends Statement {
     //Field
 
     //Constructor
-    public If(){}
+    public IfElse(){}
 
     //Method
     public Expression getCondition(){

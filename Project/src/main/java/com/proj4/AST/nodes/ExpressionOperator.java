@@ -1,6 +1,7 @@
 package com.proj4.AST.nodes;
 
 public enum ExpressionOperator {
+//RETURNS PRIMITIVE
     //RETURNS INTEGER
     ADD,        //  a+b
     SUBTRACT,   //  a-b
@@ -21,8 +22,8 @@ public enum ExpressionOperator {
     CONCAT,     //  concatenate the string returned by the first child node with the string returned by the second
     //LITERAL,    //  print the string as it is stored in the expression's "constant"-field <- obsolete as CONSTANT exists
     VARIABLE,   //  return the value bound to the identifier in the "identifier"-field as a string
-    ACCESS,
-    INDEX,
-    //RETURNS ANY
+//RETURNS ANY
     CONSTANT,   //  return what's in the "constant"-field
+    INDEX,      //  a[b]    <- used to be ArrayAccess
+    ACCESS,     //  a.b     <- used to be TemplateAccess
 }

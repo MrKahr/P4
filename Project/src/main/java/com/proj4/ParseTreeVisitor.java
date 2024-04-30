@@ -215,7 +215,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         String identifier = ctx.getChild(3).getText();
         ArrayDecl node = new ArrayDecl(identifier, valueType);
         if(ctx.arrayInit() != null){
-            node.addChild((ArrayInit)visit(ctx.arrayInit()));
+            node.addChild((ArrayInstance)visit(ctx.arrayInit()));
         }
         return node;
     }
@@ -236,8 +236,8 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     }
 
     @Override
-    public ArrayInit visitArrayInit(DBLParser.ArrayInitContext ctx) {
-        ArrayInit node = new ArrayInit();
+    public ArrayInstance visitArrayInit(DBLParser.ArrayInitContext ctx) {
+        ArrayInstance node = new ArrayInstance();
         for (int i = 0; i < ctx.getChildCount(); i++){
             var childnode = (Expression) visit(ctx.getChild(i));
             if (childnode != null) {
@@ -318,7 +318,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     @Override
     public RuleDecl visitRuleDecl(DBLParser.RuleDeclContext ctx) {
         // Add if else block
-        RuleDecl node = new RuleDecl((If) visit(ctx.ifBlock()));
+        RuleDecl node = new RuleDecl((IfElse) visit(ctx.ifBlock()));
 
         // Add all actions
         for (ParseTree currentNode : ctx.identifierList().children) {
@@ -425,15 +425,15 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
 
     /*** If-statements ***/
     @Override
-    public If visitIfBlock(DBLParser.IfBlockContext ctx) {
-        If node = new If();
+    public IfElse visitIfBlock(DBLParser.IfBlockContext ctx) {
+        IfElse node = new IfElse();
         node.addChild((Expression) visit(ctx.boolExpr(0)));
         node.addChild((Body) visit(ctx.body(0)));
 
-        If tempNode = node;
+        IfElse tempNode = node;
         List<TerminalNode> elseif = ctx.ELSEIF();
         for (int i = 1; i <= elseif.size(); i++){
-            If eiNode = new If();
+            IfElse eiNode = new IfElse();
             eiNode.addChild((Expression) visit(ctx.boolExpr(i)));
             eiNode.addChild((Body) visit(ctx.body(i)));
 

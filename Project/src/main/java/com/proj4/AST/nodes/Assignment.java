@@ -12,11 +12,11 @@ public class Assignment extends Statement {
     }
     
     //Method
-    public Expression getNewValue(){
+    public Expression getSymbolExpression(){    //the expression that gives us the symbol whose value should be overwritten
         return (Expression) getChildren().get(0);
     }
 
-    //TODO: abstract syntax says a templateInstance (templateInit) can also be used in assignments.
-    //TODO: templateInstance is a declaration of a variable of some template type, not the template itself.
-    //TODO: this should be investigated further, as it must be possible to assign an existing instance of a template to an existing variable
+    public Expression getValueExpression(){     //the expression that gives us the value to overwrite with
+        return (Expression) getChildren().get(1);
+    }
 }

@@ -12,11 +12,21 @@ public class AssignmentTypeChecker extends TypeCheckVisitor{
         Assignment assignment = (Assignment) node;
         assignment.inheritScope();
 
-        String expectedType = assignment.getScope().getVTable().get(assignment.getIdentifier()).getType();
-        assignment.visitChild(new CheckDecider(), assignment.getNewValue());
+        assignment.visitChild(new CheckDecider(), assignment.getSymbolExpression());    //check the symbol to overwrite
+        
+        String expectedType = TypeCheckVisitor.getFoundType();
 
+        String expectedComplexType = TypeCheckVisitor.getFoundComplexType();
+
+        assignment.visitChild(new CheckDecider(), assignment.getValueExpression());    //check the value to overwrite with
+        
         if(!expectedType.equals(TypeCheckVisitor.getFoundType())){
-            throw new MismatchedTypeException();
+            throw new MismatchedTypeException("Cannot assign value of type \"" + TypeCheckVisitor.getFoundType() + "\" to variable of type \"" + expectedType + "\"!");
         }
+        if (!expectedComplexType.equals(TypeCheckVisitor.getFoundComplexType())) {
+            throw new MismatchedTypeException("Cannot assign value of complex type \"" + TypeCheckVisitor.getFoundComplexType() + "\" to variable of type \"" + expectedComplexType + "\"!");
+        }
+
+        assignment.synthesizeScope();
     }
 }
