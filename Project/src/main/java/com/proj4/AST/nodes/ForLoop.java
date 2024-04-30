@@ -5,8 +5,17 @@ public class ForLoop extends Statement{
 
 
     //Constructor
+    public ForLoop(Identifiable iterator, Expression condition, Statement iteratorAction, Body body){
+        addChild((AST) iterator);   //first child is the iterator
+        addChild(condition);        //second child is the condition
+        addChild(iteratorAction);   //third child is what to do with the iterator every loop
+        for (AST node : body.getChildren()) {   //add extra children from a potential body node.
+            addChild(node);                     //this is done to have an easier time converting from the parse tree
+        }
+    }
+
     public ForLoop(Identifiable iterator, Expression condition, Statement iteratorAction){
-        addChild((AST) iterator);    //first child is the iterator
+        addChild((AST) iterator);   //first child is the iterator
         addChild(condition);        //second child is the condition
         addChild(iteratorAction);   //third child is what to do with the iterator every loop
     }

@@ -37,9 +37,6 @@ public class ActionDeclTypeChecker extends TypeCheckVisitor{
         TypeCheckVisitor.setCurrentAction(null);
 
         // Check whether return is defined from possible types (check whether primitive or template type)
-        // Check whether action is already defined in scope 
-    
-  
-       
+        // Check whether action is already defined in scope
     }
 }
