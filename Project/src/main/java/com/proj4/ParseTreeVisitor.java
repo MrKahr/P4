@@ -2,6 +2,7 @@ package com.proj4;
 
 import com.proj4.antlrClass.DBLBaseVisitor;
 import com.proj4.antlrClass.DBLParser;
+import com.proj4.antlrClass.DBLParser.ResultsInContext;
 
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -85,8 +86,8 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
 
     @Override
     public ActionDecl visitReturnActionDecl(DBLParser.ReturnActionDeclContext ctx) {
-        String resultType = ctx.resultsIn().getChild(1).getText();
-        String identifier = ctx.getChild(1).getText();
+        String resultType = ctx.resultsIn().getChild(1).getText();  // TODO: resultsIn does not have a visitor
+        String identifier = ctx.typedefUser().getText();
         ActionDecl node = new ActionDecl(identifier, resultType);
 
         for (int i = 0; i < ctx.getChildCount(); i++) {
@@ -105,6 +106,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         }
         return node;
     }
+
     @Override
     public ActionDecl visitNoReturnActionDecl(DBLParser.NoReturnActionDeclContext ctx){
         String identifier = ctx.getChild(1).getText();
@@ -297,14 +299,20 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         UserDecl node = new UserDecl(typedef, expressionType);
         node.addChild((AST) visit(ctx.assignment()));
         return node;
-}
+    }
     /*** Return ***/
     @Override
     public Return visitReturn(DBLParser.ReturnContext ctx) {
-        Expression expression = (Expression) visit(ctx.children.get(1));
-        Return node = new Return(expression);
+        Return node = new Return((Expression) visit(ctx.children.get(1)));
         return node;
     }
+
+    /*** ResultsIn ***/
+    @Override
+    public Object visitResultsIn(ResultsInContext ctx) {
+        return "";  // TODO: Fix this when type checking is done
+    }
+
 
     /*** RuleDecl ***/
     @Override

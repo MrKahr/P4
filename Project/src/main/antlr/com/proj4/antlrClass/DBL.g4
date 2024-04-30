@@ -180,7 +180,7 @@ arrayDecl
     ;
 
 arrayInit
-    :   SQB_START ((stringExpr | expr) (COMMA (stringExpr | expr))*)? SQB_END
+    :   (SQB_START ((stringExpr | expr) (COMMA (stringExpr | expr))*)? SQB_END)+
     ;
 
 return
