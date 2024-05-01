@@ -9,14 +9,15 @@ public class ActionDecl extends AST implements Identifiable, Typed{
     private Integer nestingLevel = 0;
 
     //Constructor
-    public ActionDecl(String identifier, String returnType, String complexReturnType, AST body, int nestingLevel){
+    public ActionDecl(String identifier, String returnType, String complexReturnType, Body body, int nestingLevel){
         this.identifier = identifier;
         this.returnType = returnType;
         this.complexReturnType = complexReturnType;
         this.body = body;
         this.nestingLevel = nestingLevel;
     }
-    public ActionDecl(String identifier){
+
+    public ActionDecl(String identifier, Body body){
         this.identifier = identifier;
     }
 

@@ -50,7 +50,7 @@ stmt
     |   declaration
     |   assignment SEMICOLON
     |   actionCall SEMICOLON
-    |   templateInit
+    |   templateAssignment
     ;
 
 stmtList
@@ -103,6 +103,10 @@ assignment // Remember to add semicolon if relevant
     |   expr ASSIGN IDENTIFIER       # idAssign
     ;
 
+templateAssignment
+    :   typedefUser IDENTIFIER ASSIGN templateInit
+    ;
+
 typePrimitive
     :   TYPEDEF_PRIMITIVE
     ;
@@ -128,8 +132,7 @@ body
     ;
 
 forLoop
-    :   FOR BRAC_START typedefUser IDENTIFIER OF expr BRAC_END BODY_START body BODY_END         # forOF
-    |   FOR BRAC_START declaration boolExpr SEMICOLON assignment BRAC_END BODY_START body BODY_END  # forI
+    :   FOR BRAC_START declaration boolExpr SEMICOLON assignment BRAC_END BODY_START body BODY_END  # forI
     ;
 
 ifBlock
@@ -141,7 +144,7 @@ templateDecl
     ;
 
 templateInit
-    :   NEW typedefUser IDENTIFIER BODY_START (templateInit | (assignment SEMICOLON))* BODY_END
+    :   NEW typedefUser BODY_START (templateInit | (assignment SEMICOLON | templateAssignment))* BODY_END
     ;
 
 ruleDecl
@@ -168,7 +171,7 @@ stateDecl
     ;
 
 parameterList
-    :   ((typedefUser | typePrimitive | STATE) IDENTIFIER (COMMA (typedefUser | typePrimitive | STATE) IDENTIFIER)*)?
+    :   ((typedefUser | typePrimitive | STATE | arrayType) IDENTIFIER (COMMA (typedefUser | typePrimitive | STATE | arrayType) IDENTIFIER)*)?
     ;
 
 argumentList
@@ -177,6 +180,10 @@ argumentList
 
 arrayDecl
     :   (typedefUser | typePrimitive) SQB_START SQB_END IDENTIFIER (ASSIGN arrayInit)?
+    ;
+
+arrayType
+    :   (typedefUser | typePrimitive) (SQB_START SQB_END)+
     ;
 
 arrayInit
@@ -188,7 +195,9 @@ return
     ;
 
 resultsIn
-    :   RESULTS_IN (typedefUser | typePrimitive | STATE)    // The ActionDecl must return something of a specific type
+    :   RESULTS_IN (typedefUser | typePrimitive | STATE) # normalResultsIn
+    |   RESULTS_IN typedefUser (SQB_START SQB_END)+      # arrayUserResultsIn
+    |   RESULTS_IN typePrimitive (SQB_START SQB_END)+    # arrayPrimResultsIn
     ;
 
 multOp

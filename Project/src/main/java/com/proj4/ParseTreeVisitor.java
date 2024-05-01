@@ -2,7 +2,7 @@ package com.proj4;
 
 import com.proj4.antlrClass.DBLBaseVisitor;
 import com.proj4.antlrClass.DBLParser;
-import com.proj4.antlrClass.DBLParser.ResultsInContext;
+import com.proj4.antlrClass.DBLParser.ArrayTypeContext;
 
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -76,8 +76,8 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
      * └────────────────────────────────────────────────────────────┘
      */
     @Override
-    public PrimitiveDecl visitIdDeclPrim(DBLParser.IdDeclPrimContext ctx) {
-        PrimitiveDecl node = new PrimitiveDecl(ctx.typePrimitive().getText(), ctx.IDENTIFIER().getText());
+    public Declaration visitIdDeclPrim(DBLParser.IdDeclPrimContext ctx) {
+        Declaration node = new Declaration(ctx.IDENTIFIER().getText(),ctx.typePrimitive().getText(), "Primitive");
         return node;
 
     }
@@ -86,23 +86,14 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
 
     @Override
     public ActionDecl visitReturnActionDecl(DBLParser.ReturnActionDeclContext ctx) {
-        String resultType = ctx.resultsIn().getChild(1).getText();  // TODO: resultsIn does not have a visitor
+        Expression resultsIn = (Expression) visit(ctx.resultsIn());  // TODO: resultsIn does not have a visitor
+        Integer nestingLevel = 4;
         String identifier = ctx.typedefUser().getText();
-        ActionDecl node = new ActionDecl(identifier, resultType);
+        ActionDecl node = new ActionDecl(identifier, "resultType", "Action", (Body) visit(ctx.body()), nestingLevel);
 
-        for (int i = 0; i < ctx.getChildCount(); i++) {
-            var parseChild = ctx.getChild(i);
-            var childnode = visit(parseChild);
-            if (childnode != null) {
-                // index 3 contains the parameter list
-                if (i == 3) {
-                    for (UserDecl parameter : (ArrayList<UserDecl>) childnode) {
-                        node.addChild((AST) parameter);
-                    }
-                } else {
-                    node.addChild((AST) childnode);
-                }
-            }
+        ArrayList<Declaration> parameterList = (ArrayList<Declaration>) visit(ctx.parameterList());
+        for (Declaration parameter : (ArrayList<Declaration>) parameterList) {
+            node.addChild((AST) parameter);
         }
         return node;
     }
@@ -110,37 +101,38 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     @Override
     public ActionDecl visitNoReturnActionDecl(DBLParser.NoReturnActionDeclContext ctx){
         String identifier = ctx.getChild(1).getText();
-        ActionDecl node = new ActionDecl(identifier);
-        for (int i = 0; i < ctx.getChildCount(); i++) {
-            var parseChild = ctx.getChild(i);
-            var childnode = visit(parseChild);
-            if (childnode != null) {
-                // index 3 contains the parameter list
-                if (i == 3) {
-                    for (UserDecl parameter : (ArrayList<UserDecl>) childnode) {
-                        node.addChild((AST) parameter);
-                    }
-                } else {
-                    node.addChild((AST) childnode);
-                }
-            }
+        ActionDecl node = new ActionDecl(identifier, (Body) visit(ctx.body()));
+        ArrayList<Declaration> parameterList = (ArrayList<Declaration>) visit(ctx.parameterList());
+        for (Declaration parameter : (ArrayList<Declaration>) parameterList) {
+            node.addChild((AST) parameter);
         }
         return node;
     }
 
     @Override
-    public ArrayList<UserDecl> visitParameterList(DBLParser.ParameterListContext ctx) {
-        ArrayList<UserDecl> parameterNodes = new ArrayList< UserDecl>();
-        String identifier = new String();
-        String type = new String();
+    public ArrayList<Declaration> visitParameterList(DBLParser.ParameterListContext ctx) {
+        ArrayList<Declaration> parameterNodes = new ArrayList<Declaration>();
+        ParseTree type = null;
+        String complexType = null;
+        Integer nestingLevel = -1;
         //modulo expressions here separate parameters as each parameter is in the form: Type - Identifier - ,
         for (int i = 0; i < ctx.getChildCount(); i++){
-            if((i+1)%3 == 1){
-                type = ctx.getChild(i).getText();
+            if((i)%3 == 0){ // Get type
+                type = ctx.getChild(i);
+                if (type.getClass().getSimpleName().equals("TypedefUserContext")) {
+                    complexType = "Template";
+                }
+                else if(type.getText().contains("[")) {
+                    complexType = "Array";
+                    nestingLevel = (int) type.getText().chars().filter(ch -> ch == '[').count(); // Count number of "[" to find nestinglevel
+                } 
+                else {
+                    complexType = "Primitive";
+                }
             }
-            if((i+1)%3 == 2){
-                identifier = ctx.getChild(i).getText();
-                UserDecl node = new UserDecl(identifier, type);
+            if((i)%3 == 1){ // Get identifier of type
+                String identifier = ctx.getChild(i).getText();
+                Declaration node = nestingLevel > -1 ? new Declaration(identifier, type.getText(),complexType, nestingLevel) : new Declaration(identifier, type.getText(),complexType);
                 parameterNodes.add(node);
             }
         }
@@ -199,12 +191,18 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         return node;
     }
 
+    @Override
+    public Assignment visitTemplateAssignment(DBLParser.TemplateAssignmentContext ctx) {
+        Assignment node = new Assignment(new Variable(ctx.typedefUser().getText()), (Expression) visit(ctx.templateInit()));
+        return node;
+    }
+
     /*** ARRAY DECLARATION ***/
     @Override
     /**
      * Declaration of an array - can happen everywhere
      */
-    public ArrayDecl visitArrayDecl(DBLParser.ArrayDeclContext ctx) {
+    public Declaration visitArrayDecl(DBLParser.ArrayDeclContext ctx) {
         String valueType = null;
         if(ctx.typePrimitive() != null) {
             valueType = ctx.typePrimitive().getText();
@@ -213,9 +211,9 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
             valueType = ctx.typedefUser().getText();
         }
         String identifier = ctx.getChild(3).getText();
-        ArrayDecl node = new ArrayDecl(identifier, valueType);
+        Declaration node = new Declaration(identifier, valueType, "Array");
         if(ctx.arrayInit() != null){
-            node.addChild((ArrayInstance)visit(ctx.arrayInit()));
+            node.addChild((ArrayInstance) visit(ctx.arrayInit()));
         }
         return node;
     }
@@ -224,8 +222,8 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     /**
      * Declaration of an array - this instance is declared alone, i.e. on a line for itself
      */
-    public ArrayDecl visitDeclArrayDecl(DBLParser.DeclArrayDeclContext ctx) {
-        return (ArrayDecl) visit(ctx.arrayDecl());
+    public Declaration visitDeclArrayDecl(DBLParser.DeclArrayDeclContext ctx) {
+        return (Declaration) visit(ctx.arrayDecl());
     }
 
     /*** ARRAY Access ***/
@@ -277,27 +275,27 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     }
 
     /*** Declaration ***/
-    @Override public PrimitiveDecl visitAssignDeclPrim(DBLParser.AssignDeclPrimContext ctx) {
+    @Override public Declaration visitAssignDeclPrim(DBLParser.AssignDeclPrimContext ctx) {
         String typedef = ctx.typePrimitive().getText();
         String identifier = null;
-        PrimitiveDecl node = new PrimitiveDecl(identifier, typedef);
+        Declaration node = new Declaration(identifier, typedef, "Primitive");
         node.addChild((Assignment) visit(ctx.assignment()));
         return node;
     }
 
     @Override
-    public UserDecl visitIdDeclUser(DBLParser.IdDeclUserContext ctx) {
-        UserDecl node = new UserDecl(ctx.typedefUser().getText(), ctx.IDENTIFIER().getText());
+    public TemplateDecl visitIdDeclUser(DBLParser.IdDeclUserContext ctx) {
+        TemplateDecl node = new TemplateDecl(ctx.IDENTIFIER().getText());
         return node;
     }
 
     @Override
-    public UserDecl visitAssignDeclUser(DBLParser.AssignDeclUserContext ctx) {
+    public TemplateDecl visitAssignDeclUser(DBLParser.AssignDeclUserContext ctx) {
         String typedef = ctx.typedefUser().getText();
-        String expressionType = null;
+        Assignment assignment = (Assignment) visit(ctx.assignment());
 
-        UserDecl node = new UserDecl(typedef, expressionType);
-        node.addChild((AST) visit(ctx.assignment()));
+        TemplateDecl node = new TemplateDecl(typedef);
+        node.addChild(assignment);
         return node;
     }
     /*** Return ***/
@@ -308,10 +306,23 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     }
 
     /*** ResultsIn ***/
-    @Override
-    public Object visitResultsIn(ResultsInContext ctx) {
-        return "";  // TODO: Fix this when type checking is done
-    }
+    // @Override
+    // public Object visitNormalResultsIn(DBLParser.NormalResultsInContext ctx) {
+    //     return ctx.getChild(1).getText();
+    // }
+
+    // @Override
+    // public Object visitArrayPrimResultsIn(DBLParser.ArrayPrimResultsInContext ctx) {
+    //     ArrayList<String> output = new ArrayList<String>();
+    //     output.add(ctx.typePrimitive().getText());
+    //     output.add(Integer.toString(ctx.SQB_START().size())) ? ctx.SQB_START().size() > 0 : output.add(null);
+
+    // }
+
+    // @Override
+    // public Object visitArrayUserResultsIn(DBLParser.ArrayUserResultsInContext ctx) {
+        
+    // }
 
 
     /*** RuleDecl ***/
@@ -413,16 +424,6 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         return node;
     }
 
-    @Override
-    public ForOf visitForOF(DBLParser.ForOFContext ctx) {
-        ForOf node = new ForOf();
-        UserDecl declNode = new UserDecl(ctx.IDENTIFIER().getText(), ctx.typedefUser().getText());
-        node.addChild(declNode);
-        node.addChild((Expression) visit(ctx.expr()));
-        node.addChild((Body) visit(ctx.body()));
-        return node;
-    }
-
     /*** If-statements ***/
     @Override
     public IfElse visitIfBlock(DBLParser.IfBlockContext ctx) {
@@ -517,7 +518,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
 
     @Override
     public TemplateInstance visitTemplateInit(DBLParser.TemplateInitContext ctx) {
-        TemplateInstance node = new TemplateInstance(ctx.IDENTIFIER().getText(), ctx.typedefUser().getText());
+        TemplateInstance node = new TemplateInstance(ctx.typedefUser().getText());
         for (ParseTree treeNode : ctx.children) {
             if (treeNode instanceof DBLParser.TemplateInitContext || treeNode instanceof DBLParser.AssignmentContext) {
                 node.addChild((AST) visit(treeNode));
