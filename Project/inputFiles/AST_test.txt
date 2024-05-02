@@ -31,9 +31,9 @@ Action ChangeState(State state) RESULTS IN State {RESULT IN fisk;}
 
 Action GenerateMinions() RESULTS IN Deck {
     String[] names IS ["Yeti", "Gnome McGnomington", "Slime", "Blackrock Orc", "Tirion Fordring", "John MinionMan", "Fish", "Void Sphere", "Wizard", "Madman"];
-    NEW Deck generatedDeck{}
+    Deck generatedDeck IS NEW Deck{}
     FOR(Integer i IS 1; i LESS OR EQUALS names.size; i IS i + 1) {
-        NEW Card minion {
+        Card minion IS NEW Card {
             name IS names[i - 1];
             attack IS i;
             cost IS i;
@@ -43,43 +43,7 @@ Action GenerateMinions() RESULTS IN Deck {
     RESULT IN generatedDeck;
 }
 
-
-Action PrintBoardState() {
-    String s IS Board.activePlayer.name + "'s turn.\n Hand: \n";
-    Integer i IS 0;
-    FOR(Card card OF Board.activePlayer.hand) {
-        s IS s + "  card " + i + "[" + card.name + ", attack:" + card.attack + ", health:" + card.health + ", cost:" + card.cost + "]\n";
-        i IS i + 1;
-    }
-    s IS s + "\np1 health: " + Board.p1.currentHealth + "\np1 board:\n";
-    FOR(Card card OF Board.p1.board) {
-        s IS s + "  card " + i + "[" + card.name + ", attack:" + card.attack + ", health:" + card.health + ", cost:" + card.cost + "]\n";
-        i IS i + 1;
-    }
-    s IS s + "\np2 health: " + Board.p2.currentHealth + "\np2 board:\n";
-    FOR(Card card OF Board.p2.board) {
-        s IS s + "  card " + i + "[" + card.name + ", attack:" + card.attack + ", health:" + card.health + ", cost:" + card.cost + "]\n";
-        i IS i + 1;
-    }
-    s IS s + "Your current mana: " + Board.activePlayer.currentMana + "\n";
-    Print(s);
-}
-
-
-Action PrintMarket(LootBucket bucket) {
-    String s IS "Choose card bucket to add to your deck: \n";
-    Integer i IS 0;
-    FOR(Deck currentBucket OF bucket.options) {
-        s IS s + "Option " + i + "\n";
-        FOR(Card card OF currentBucket) {
-            s IS s + "card " + "[" + card.name + ", attack:" + card.attack + ", health:" + card.health + ", cost:" + card.cost + "]\n";
-        }
-        i IS i + 1;
-    }
-}
-
-
-Action Attack() { 
+Action Attack(Integer[][] test, String fisk, String fisk53453) { 
     // Prompt user based on printed board information, after they choose to attack
     Print("Pick an attacker by its number\n");
     String attacker IS ReadInput();
@@ -151,34 +115,34 @@ State GameHalt
 
 
 /*** Initialization ***/
-NEW Board board {
-    NEW Player p1 {
+Board board IS NEW Board {
+    Player p1 IS NEW Player {
         name IS "p1";
-        NEW Deck hand{}
-        NEW Deck playDeck{}
-        NEW Deck deck{}
-        NEW Deck board{}
+        Deck hand IS NEW Deck{}
+        Deck playDeck IS NEW Deck{}
+        Deck deck IS NEW Deck{}
+        Deck board IS NEW Deck{}
         currentHealth IS 30;
         maxHealth IS 30;
         currentMana IS 0;
-        NEW FatigueCard fatigueCard {
+        FatigueCard fatigueCard IS NEW FatigueCard {
             name IS "FatigueCard";
             health IS 1;
             attack IS 1;
             cost IS 0;
         }
     }
-    NEW Player p2 {
+    Player p2 IS NEW Player {
         name IS "p2";
-        NEW Deck hand{}
-        NEW Deck playDeck{}
-        NEW Deck deck{}
-        NEW Deck board{}
+        Deck hand IS NEW Deck{}
+        Deck playDeck IS NEW Deck{}
+        Deck deck IS NEW Deck{}
+        Deck board IS NEW Deck{}
         currentHealth IS 30;
         maxHealth IS 30;
         currentMana IS 0;
         maxMana IS 10;
-        NEW FatigueCard fatigueCard {
+        FatigueCard fatigueCard IS NEW FatigueCard{
             name IS "FatigueCard";
             health IS 1;
             attack IS 1;
@@ -191,7 +155,7 @@ NEW Board board {
     cardUniverse IS GenerateMinions();
     bucketCount IS 3;
     bucketSize IS 5;
-    NEW LootBucket buckets {options IS GenerateMarket(bucketCount, bucketSize);}
+    LootBucket buckets IS NEW LootBucket {options IS GenerateMarket(bucketCount, bucketSize);}
 }
 
 Board.p1.deck IS GeneratePlayerDeck();

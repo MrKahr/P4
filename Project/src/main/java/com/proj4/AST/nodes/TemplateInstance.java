@@ -1,21 +1,15 @@
 package com.proj4.AST.nodes;
 
-public class TemplateInstance extends Declaration {
+public class TemplateInstance extends Expression {
     //Field
-    private String identifier;  //what to bind to this instance in the symbol table
     private String instanceType;//what type of template this instance is
 
     //Constructor
-    public TemplateInstance(String identifier, String instanceType){
-        this.identifier = identifier;
+    public TemplateInstance(String instanceType){
         this.instanceType = instanceType;
     }
 
     //Method
-    public String getIdentifier(){
-        return identifier;
-    }
-
     public String getType(){
         return instanceType;
     }
@@ -24,3 +18,4 @@ public class TemplateInstance extends Declaration {
         return "Template";
     }
 }
+//TODO: Note: A template instance is something like "NEW card" where "card" is a template type. 

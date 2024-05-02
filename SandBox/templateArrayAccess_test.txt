@@ -1,0 +1,7 @@
+
+
+
+IF(TRUE){
+    String f IS fisk.a[3];
+    String f IS fisk.a.b[3];
+}

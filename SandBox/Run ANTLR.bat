@@ -1,5 +1,12 @@
 @ECHO OFF
 SET "CWD=%~dp0"
+
+:: Path stuff ::
+CD ..
+SET "GRAMMAR_PATH=%CD%\Project\src\main\antlr\com\proj4\antlrClass\DBL.g4"
+CD "%CWD%"
+::::::::::::::::
+
 SET OUTFOLDER=out
 SET "OUTPATH=%CWD%%OUTFOLDER%"
 SET DO_COMPILE=True
@@ -12,7 +19,6 @@ SET CLASSPATH=.;%CP_ANTLR%;%OUTPATH%
 :::::::::::::::::::::::::
 
 IF NOT EXIST "%OUTPATH%" (mkdir "%OUTPATH%")
-
 
 :INTRO
     echo:
@@ -43,22 +49,26 @@ IF NOT EXIST "%OUTPATH%" (mkdir "%OUTPATH%")
     echo:
     echo: ____Settings___________
     echo:  s1. Compile project: %DO_COMPILE%
+    echo:  s2. Change grammar
+    echo:      Current grammar is: %GRAMMAR_PATH%
     echo:
     set /p menuChoice="Select option: "
 
-    IF %menuChoice%==1 GOTO INPUTFILE
+    IF %menuChoice%==1 GOTO ANTLR
     IF %menuChoice%==s1 (
         SET DO_COMPILE=False
         CLS
         GOTO INTRO
     )
+    IF %menuChoice%==s2 GOTO CHANGE_GRAMMAR
     GOTO MENU
 
-
-:INPUTFILE
+:CHANGE_GRAMMAR
+    CLS
     echo:
     echo:  Please enter your grammar file   (format: filename.extention)
     echo:  NOTE: Only one dot (.) is allowed!
+    echo:        The path must be relative to '%CWD%'
     echo:  Example: hello.txt
     echo:
     set /p grammarfile="Enter file: "
@@ -73,14 +83,18 @@ IF NOT EXIST "%OUTPATH%" (mkdir "%OUTPATH%")
         echo:  Hint: place the grammar file in: %CWD%
         echo:  __________________________________________
         echo:
-        GOTO INPUTFILE
+        GOTO CHANGE_GRAMMAR
     )
+    SET GRAMMAR_PATH = %grammarfile%
+    GOTO MENU
 
-    for /f "tokens=1,2 delims=." %%a in ("%grammarfile%") do (
+:ANTLR
+    CLS
+    for /f "tokens=1,2 delims=." %%a in ('dir /B "%GRAMMAR_PATH%"') do (
         set FILENAME=%%a
         set FILEEXT=%%b
     )
-    CLS
+
     IF NOT EXIST %ANTLRJAVA% (
         echo:  __________________________________
         echo:
@@ -104,7 +118,7 @@ IF NOT EXIST "%OUTPATH%" (mkdir "%OUTPATH%")
     echo:
     echo: Generating java source files
     ::@ECHO ON
-    java -jar %ANTLRJAVA% -o "%OUTFOLDER%" %grammarfile%
+    java -jar %ANTLRJAVA% -o "%OUTFOLDER%" "%GRAMMAR_PATH%"
     ::@ECHO OFF
 
     echo: Compiling java sources files
@@ -156,7 +170,6 @@ IF NOT EXIST "%OUTPATH%" (mkdir "%OUTPATH%")
     @ECHO ON
     java -cp "%CLASSPATH%" org.antlr.v4.gui.TestRig %FILENAME% %rule% %testfile% -gui
     @ECHO OFF
-
 
 echo:
 echo: Reached end of the script!

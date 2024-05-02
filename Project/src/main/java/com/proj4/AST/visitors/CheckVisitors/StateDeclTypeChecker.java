@@ -24,16 +24,9 @@ public class StateDeclTypeChecker extends TypeCheckVisitor{
         for (String actionIdentifier : stateDecl.getActionList()) { 
             
             // Actions need to be in table for declaration to be valid - assumption: states contain identifiers of actions
-            if(!(Scope.getStateTable().contains(actionIdentifier))){
+            if(!(Scope.getATable().containsKey(actionIdentifier))){
                 throw new UndefinedActionExpection("Action " + actionIdentifier + " is not defined for state declaration" + ((StateDecl)node).getIdentifier());
             }
-        }
-
-        // If there is a body of action calls/statements, typecheck them!
-        CheckDecider typeCheckDecider = new CheckDecider();
-
-        for (AST ast : stateDecl.getChildren()) {
-            typeCheckDecider.decideVisitor(ast);
         }
 
         // Add finished declaration to scope and synthesize it to parent
