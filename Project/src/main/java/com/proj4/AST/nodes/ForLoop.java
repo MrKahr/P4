@@ -6,7 +6,7 @@ public class ForLoop extends Statement{
         addChild((AST) iterator);    //first child is the iterator
         addChild(condition);        //second child is the condition
         addChild(iteratorAction);   //third child is what to do with the iterator every loop
-        for (AST child : body.getChildren()){
+        for (AST child : body.getChildren()){   //add extra children from a potential body node
             addChild(child);
         }
     }

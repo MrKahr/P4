@@ -19,7 +19,7 @@ public abstract class SymbolTableEntry implements Typed{
         
                 switch (complexType) {
                     case "Array":
-                        return new ArraySymbol(type,0);
+                        return new ArraySymbol(type, 0);
                     case "Template":
                         return new TemplateSymbol(Scope.getBTable().get(type));
                     case "Action":
