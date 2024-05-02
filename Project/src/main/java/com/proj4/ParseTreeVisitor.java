@@ -318,26 +318,6 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         return node;
     }
 
-    /*** ResultsIn ***/
-    // @Override
-    // public Object visitNormalResultsIn(DBLParser.NormalResultsInContext ctx) {
-    //     return ctx.getChild(1).getText();
-    // }
-
-    // @Override
-    // public Object visitArrayPrimResultsIn(DBLParser.ArrayPrimResultsInContext ctx) {
-    //     ArrayList<String> output = new ArrayList<String>();
-    //     output.add(ctx.typePrimitive().getText());
-    //     output.add(Integer.toString(ctx.SQB_START().size())) ? ctx.SQB_START().size() > 0 : output.add(null);
-
-    // }
-
-    // @Override
-    // public Object visitArrayUserResultsIn(DBLParser.ArrayUserResultsInContext ctx) {
-        
-    // }
-
-
     /*** RuleDecl ***/
     @Override
     public RuleDecl visitRuleDecl(DBLParser.RuleDeclContext ctx) {
