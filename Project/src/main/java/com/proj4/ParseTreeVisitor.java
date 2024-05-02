@@ -86,10 +86,22 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
 
     @Override
     public ActionDecl visitReturnActionDecl(DBLParser.ReturnActionDeclContext ctx) {
-        Expression resultsIn = (Expression) visit(ctx.resultsIn());  // TODO: resultsIn does not have a visitor
-        Integer nestingLevel = 4;
+        ParseTree resultsIn = ctx.resultsIn();
+        String resultComplexType;
+        String resultType = resultsIn.getText();
+        Integer nestingLevel = 0;
+        if (resultsIn.getClass().getSimpleName().equals("TypedefUserContext")) {
+            resultComplexType = "Template";
+        }
+        else if(resultsIn.getText().contains("[")) {
+            resultComplexType = "Array";
+            nestingLevel = (int) resultsIn.getText().chars().filter(ch -> ch == '[').count(); // Count number of "[" to find nestinglevel
+        } 
+        else {
+            resultComplexType = "Primitive";
+        }
         String identifier = ctx.typedefUser().getText();
-        ActionDecl node = new ActionDecl(identifier, "resultType", "Action", (Body) visit(ctx.body()), nestingLevel);
+        ActionDecl node = new ActionDecl(identifier, resultType, resultComplexType, (Body) visit(ctx.body()), nestingLevel);
 
         ArrayList<Declaration> parameterList = (ArrayList<Declaration>) visit(ctx.parameterList());
         for (Declaration parameter : (ArrayList<Declaration>) parameterList) {

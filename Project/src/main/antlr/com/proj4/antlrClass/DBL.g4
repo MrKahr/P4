@@ -195,9 +195,7 @@ return
     ;
 
 resultsIn
-    :   RESULTS_IN (typedefUser | typePrimitive | STATE) # normalResultsIn
-    |   RESULTS_IN typedefUser (SQB_START SQB_END)+      # arrayUserResultsIn
-    |   RESULTS_IN typePrimitive (SQB_START SQB_END)+    # arrayPrimResultsIn
+    :   RESULTS_IN (typedefUser | typePrimitive | STATE | arrayType)
     ;
 
 multOp
