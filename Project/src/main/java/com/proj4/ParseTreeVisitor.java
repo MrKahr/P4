@@ -9,6 +9,7 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.lang.Math;
 
 import com.proj4.AST.nodes.*;
 import com.proj4.symbolTable.symbols.BooleanSymbol;
@@ -95,13 +96,13 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         }
         else if(resultsIn.getText().contains("[")) {
             resultComplexType = "Array";
-            nestingLevel = (int) resultsIn.getText().chars().filter(ch -> ch == '[').count(); // Count number of "[" to find nestinglevel
+            nestingLevel = (int) resultsIn.getText().chars().filter(ch -> ch == '[').count()-1; // Count number of "[" to find nestinglevel
         } 
         else {
             resultComplexType = "Primitive";
         }
         String identifier = ctx.typedefUser().getText();
-        ActionDecl node = new ActionDecl(identifier, resultType, resultComplexType, (Body) visit(ctx.body()), nestingLevel);
+        ActionDecl node = new ActionDecl(identifier, resultType, resultComplexType, (Body) visit(ctx.body()), Math.max(0, nestingLevel));
 
         ArrayList<Declaration> parameterList = (ArrayList<Declaration>) visit(ctx.parameterList());
         for (Declaration parameter : (ArrayList<Declaration>) parameterList) {
@@ -136,7 +137,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
                 }
                 else if(type.getText().contains("[")) {
                     complexType = "Array";
-                    nestingLevel = (int) type.getText().chars().filter(ch -> ch == '[').count(); // Count number of "[" to find nestinglevel
+                    nestingLevel = (int) type.getText().chars().filter(ch -> ch == '[').count()-1; // Count number of "[" to find nestinglevel
                 } 
                 else {
                     complexType = "Primitive";
@@ -144,7 +145,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
             }
             if((i)%3 == 1){ // Get identifier of type
                 String identifier = ctx.getChild(i).getText();
-                Declaration node = nestingLevel > -1 ? new Declaration(identifier, type.getText(),complexType, nestingLevel) : new Declaration(identifier, type.getText(),complexType);
+                Declaration node = nestingLevel > -1 ? new Declaration(identifier, type.getText(),complexType, Math.max(0, nestingLevel)) : new Declaration(identifier, type.getText(),complexType);
                 parameterNodes.add(node);
             }
         }
