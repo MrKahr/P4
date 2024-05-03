@@ -9,7 +9,6 @@ public class TemplateInstanceTypeChecker extends TypeCheckVisitor{
     
     public void visit(AST node){
         TemplateInstance templateInstance = (TemplateInstance) node;
-        templateInstance.inheritScope();
 
         String templateType = templateInstance.getType();
 

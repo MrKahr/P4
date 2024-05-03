@@ -17,7 +17,6 @@ public class ActionCallTypeChecker extends TypeCheckVisitor{
     
     public void visit(AST node){
         ActionCall actionCall = (ActionCall) node;
-        actionCall.inheritScope();
 
         ActionSymbol action = Scope.getATable().get(actionCall.getIdentifier());  //the action to call
 

@@ -4,23 +4,19 @@ import java.util.ArrayList;
 
 import com.proj4.AST.nodes.AST;
 import com.proj4.AST.nodes.Expression;
-import com.proj4.AST.nodes.Variable;
 import com.proj4.AST.visitors.CheckDecider;
 import com.proj4.AST.visitors.TypeCheckVisitor;
-import com.proj4.AST.visitors.VisitorDecider;
 import com.proj4.exceptions.MismatchedTypeException;
 import com.proj4.symbolTable.Scope;
 import com.proj4.symbolTable.symbols.ArraySymbol;
 import com.proj4.symbolTable.symbols.SymbolTableEntry;
 import com.proj4.symbolTable.symbols.TemplateSymbol;
-import com.proj4.exceptions.UndefinedArrayExpection;
-import com.proj4.symbolTable.Scope;
 
 public class ExpressionTypeChecker extends TypeCheckVisitor {
 
     public void visit(AST node) {
         Expression expression = (Expression) node;
-        expression.inheritScope();
+
         // Note: These operators always return primitive types
         // Note: Fallthrough for each operator type
         switch (expression.getOperator()) {

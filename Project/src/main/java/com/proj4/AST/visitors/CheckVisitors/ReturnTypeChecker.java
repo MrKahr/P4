@@ -13,7 +13,6 @@ public class ReturnTypeChecker extends TypeCheckVisitor{
     
     public void visit(AST node){
         Return returnNode = (Return) node;
-        returnNode.inheritScope();
         String actionIdentifier = TypeCheckVisitor.getCurrentAction();
         ActionSymbol action = Scope.getATable().get(actionIdentifier);
         if (action == null) {

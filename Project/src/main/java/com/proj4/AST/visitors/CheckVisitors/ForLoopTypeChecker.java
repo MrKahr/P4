@@ -13,7 +13,6 @@ public class ForLoopTypeChecker extends TypeCheckVisitor{
     
     public void visit(AST node){
         ForLoop forLoop = (ForLoop) node;
-        forLoop.inheritScope();
 
         try {
             Identifiable iterator = (Identifiable) forLoop.getIterator();       //the iterator should have an identifier

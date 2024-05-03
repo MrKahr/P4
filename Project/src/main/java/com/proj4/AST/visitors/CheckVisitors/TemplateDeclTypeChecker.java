@@ -6,7 +6,6 @@ import com.proj4.AST.nodes.AST;
 import com.proj4.AST.nodes.Declaration;
 import com.proj4.AST.nodes.TemplateDecl;
 import com.proj4.AST.visitors.TypeCheckVisitor;
-import com.proj4.exceptions.UndefinedTypeException;
 import com.proj4.exceptions.VariableAlreadyDefinedException;
 import com.proj4.symbolTable.Scope;
 import com.proj4.symbolTable.symbols.*;
@@ -15,7 +14,6 @@ public class TemplateDeclTypeChecker extends TypeCheckVisitor{
     
     public void visit(AST node){
         TemplateDecl templateDecl = (TemplateDecl) node;
-        templateDecl.inheritScope();
 
         //the blueprint
         TemplateSymbol blueprint = new TemplateSymbol();

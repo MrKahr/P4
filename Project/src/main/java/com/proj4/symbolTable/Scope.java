@@ -3,6 +3,7 @@ package com.proj4.symbolTable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Stack;
 
 import com.proj4.exceptions.StateAlreadyDefinedExpection;
 import com.proj4.exceptions.VariableAlreadyDefinedException;
@@ -13,6 +14,7 @@ import com.proj4.symbolTable.symbols.SymbolTableEntry;
 //this class represents a scope in the programming language
 public class Scope implements Cloneable{
     //Field
+    private static Stack<Scope> scopeStack = new Stack<>();
 
     //this table keeps track of template blueprints and their default values, to be used when instantiating them
     private static HashMap<String, TemplateSymbol> blueprintTable = new HashMap<>();
@@ -28,6 +30,7 @@ public class Scope implements Cloneable{
 
     private HashSet<String> declaredTable = new HashSet<>();   //this table keeps track of whether or not a variable or function has been declared in this scope
 
+    
     //Method
     public HashMap<String, SymbolTableEntry> getVTable(){
         return variableTable;
@@ -77,6 +80,7 @@ public class Scope implements Cloneable{
     //Copy all mappings from the specified scope to this scope, overwriting duplicates with mappings from the other scope
     public void putAll(Scope other){
         variableTable.putAll(other.getVTable());
+        //declaredTable.addAll(other.getDTable());  <- don't do this! Otherwise variables must have unique names always
     }
 
     //clones all the stuff from a scope except for the declaredTable(!)
@@ -108,5 +112,31 @@ public class Scope implements Cloneable{
     public static Scope open(Scope origin){
         Scope newScope = origin.clone();
         return newScope;
+    }
+
+    // Stack method wrappers 
+    public static void exit(){
+        scopeStack.pop();
+    }
+
+    public static void enter(){
+        scopeStack.push(new Scope());
+    }
+
+    // Scopes inherited are pushed unto the stack because the stack top models the current available scope. 
+    public static void inherit(){
+        if (scopeStack.empty()) {
+            throw new NullPointerException("Cannot inherit scope - Stack is empty");
+        }
+        scopeStack.push(scopeStack.peek().clone()); //clone the top scope and push it
+    }
+
+    public static void synthesize(){
+        Scope poppedScope = scopeStack.pop();
+        scopeStack.peek().putAll(poppedScope);
+    }
+
+    public static Stack<Scope> getScopeStack(){
+        return scopeStack;
     }
 }

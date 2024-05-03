@@ -12,7 +12,6 @@ public class RuleDeclTypeChecker extends TypeCheckVisitor{
     
     public void visit(AST node){
         RuleDecl ruleDecl = (RuleDecl) node;
-        ruleDecl.inheritScope();
 
         //make sure the triggering actions are defined
         for (String identifier : ruleDecl.getTriggerActions()) {

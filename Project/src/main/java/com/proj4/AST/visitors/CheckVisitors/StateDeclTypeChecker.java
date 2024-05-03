@@ -2,7 +2,6 @@ package com.proj4.AST.visitors.CheckVisitors;
 
 import com.proj4.AST.nodes.AST;
 import com.proj4.AST.nodes.StateDecl;
-import com.proj4.AST.visitors.CheckDecider;
 import com.proj4.AST.visitors.TypeCheckVisitor;
 import com.proj4.exceptions.*;
 import com.proj4.symbolTable.Scope;
@@ -12,7 +11,6 @@ public class StateDeclTypeChecker extends TypeCheckVisitor{
 
     public void visit(AST node){
         StateDecl stateDecl = (StateDecl) node;
-        stateDecl.inheritScope();
 
         // Check whether state decl is already defined in scope
         if(Scope.getStateTable().contains(stateDecl.getIdentifier())){

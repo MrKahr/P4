@@ -1,7 +1,6 @@
 package com.proj4.AST.visitors;
 
 import com.proj4.AST.nodes.*;
-import com.proj4.AST.visitors.CheckVisitors.*;
 import com.proj4.AST.visitors.InterpreterVisitors.*;
 
 public class InterpreterDecider implements VisitorDecider {

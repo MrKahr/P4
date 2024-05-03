@@ -14,7 +14,6 @@ public class ArrayInstanceTypeChecker extends TypeCheckVisitor{
     
     public void visit(AST node){
         ArrayInstance arrayInstance = (ArrayInstance) node;
-        arrayInstance.inheritScope();
 
         // Case 1: Array is empty!
         if(!(arrayInstance.getChildren().size() > 0)){
