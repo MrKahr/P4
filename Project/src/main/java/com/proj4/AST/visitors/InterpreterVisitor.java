@@ -8,19 +8,19 @@ public abstract class InterpreterVisitor implements NodeVisitor{
     private static SymbolTableEntry returnSymbol; //proof of concept for a tool for the interpreter: This field holds the most recently computed value
     private static Boolean allowInterpreting = true;   //this flag should block interpreting if false. Useful for action and rule declarations
 
-    public void setReturnSymbol(SymbolTableEntry symbol){
+    public static void setReturnSymbol(SymbolTableEntry symbol){
         returnSymbol = symbol;
     }
 
-    public void setAllowInterpreting(Boolean allow){
+    public static void setAllowInterpreting(Boolean allow){
         allowInterpreting = allow;
     }
 
-    public SymbolTableEntry getReturnSymbol(){
+    public static SymbolTableEntry getReturnSymbol(){
         return returnSymbol;
     }
 
-    public Boolean interpretingAllowed(){
+    public static Boolean interpretingAllowed(){
         return allowInterpreting;
     }
 }
