@@ -11,7 +11,7 @@ public class VariableTypeChecker extends TypeCheckVisitor{
 
     public void visit(AST node){
         Variable variable = (Variable) node;
-        SymbolTableEntry entry = variable.getScope().getVTable().get(variable.getIdentifier());
+        SymbolTableEntry entry = variable.getScope().getVariableTable().get(variable.getIdentifier());
         if (entry == null) {
             throw new UndefinedVariableException("Variable \"" + variable.getIdentifier() + "\" not defined in current scope!");
         } else {

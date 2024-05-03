@@ -21,7 +21,7 @@ public abstract class SymbolTableEntry implements Typed{
                     case "Array":
                         return new ArraySymbol(type, 0);
                     case "Template":
-                        return new TemplateSymbol(Scope.getBTable().get(type));
+                        return new TemplateSymbol(Scope.getBlueprintTable().get(type));
                     case "Action":
                         System.err.println("WARNING: INSTANTIATING DEFAULT ACTION");
                         return new ActionSymbol(null, null, null, nestingLevel);

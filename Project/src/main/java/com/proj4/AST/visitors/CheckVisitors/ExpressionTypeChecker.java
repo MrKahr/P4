@@ -126,8 +126,8 @@ public class ExpressionTypeChecker extends TypeCheckVisitor {
                 //remember the field to find in the template
                 String fieldName = TypeCheckVisitor.getFoundType();  //TODO: USING THIS AS A PLACEHOLDER UNTIL THE SECOND OPERAND GETS IMPLEMENTED PROPERLY!
 
-                ArrayList<String> map = Scope.getTTable().get(templateType);    //get the arraylist with the chosen template's fields
-                TemplateSymbol blueprint = Scope.getBTable().get(templateType); //get the blueprint for the chosen template
+                ArrayList<String> map = Scope.getTemplateMapTable().get(templateType);    //get the arraylist with the chosen template's fields
+                TemplateSymbol blueprint = Scope.getBlueprintTable().get(templateType); //get the blueprint for the chosen template
 
                 SymbolTableEntry fieldContent = blueprint.getContent().get(map.indexOf(fieldName));  //find the field we need with the map and get the content of the field
 

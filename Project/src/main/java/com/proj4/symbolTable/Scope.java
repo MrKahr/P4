@@ -19,7 +19,7 @@ public class Scope implements Cloneable{
     //this table keeps track of template blueprints and their default values, to be used when instantiating them
     private static HashMap<String, TemplateSymbol> blueprintTable = new HashMap<>();
     //this table keeps a map of every declared template in order to properly index them
-    private static HashMap<String, ArrayList<String>> templateTable = new HashMap<>();
+    private static HashMap<String, ArrayList<String>> templateMapTable = new HashMap<>();
     //this table keeps track of actions
     private static HashMap<String, ActionSymbol> actionTable = new HashMap<>();
     //this table keeps track of which states have been declared in the current scope
@@ -32,23 +32,23 @@ public class Scope implements Cloneable{
 
     
     //Method
-    public HashMap<String, SymbolTableEntry> getVTable(){
+    public HashMap<String, SymbolTableEntry> getVariableTable(){
         return variableTable;
     }
 
-    public static HashMap<String, ActionSymbol> getATable(){
+    public static HashMap<String, ActionSymbol> getActionTable(){
         return actionTable;
     }
 
-    public static HashMap<String, TemplateSymbol> getBTable(){
+    public static HashMap<String, TemplateSymbol> getBlueprintTable(){
         return blueprintTable;
     }
 
-    public static HashMap<String, ArrayList<String>> getTTable(){
-        return templateTable;
+    public static HashMap<String, ArrayList<String>> getTemplateMapTable(){
+        return templateMapTable;
     }
 
-    public HashSet<String> getDTable(){
+    public HashSet<String> getDeclaredTable(){
         return declaredTable;
     }
 
@@ -56,19 +56,19 @@ public class Scope implements Cloneable{
         return stateTable;
     }
 
-    public void setVTable(HashMap<String, SymbolTableEntry> table){
+    public void setVariableTable(HashMap<String, SymbolTableEntry> table){
         variableTable = table;
     }
 
-    public static void setATable(HashMap<String, ActionSymbol> table){
+    public static void setActionTable(HashMap<String, ActionSymbol> table){
         actionTable = table;
     }
     
-    public static void setBTable(HashMap<String, TemplateSymbol> table){
+    public static void setBlueprintTable(HashMap<String, TemplateSymbol> table){
         blueprintTable = table;
     }
 
-    public void setDTable(HashSet<String> table){
+    public void setDeclaredTable(HashSet<String> table){
         declaredTable = table;
     }
 
@@ -79,7 +79,7 @@ public class Scope implements Cloneable{
 
     //Copy all mappings from the specified scope to this scope, overwriting duplicates with mappings from the other scope
     public void putAll(Scope other){
-        variableTable.putAll(other.getVTable());
+        variableTable.putAll(other.getVariableTable());
         //declaredTable.addAll(other.getDTable());  <- don't do this! Otherwise variables must have unique names always
     }
 

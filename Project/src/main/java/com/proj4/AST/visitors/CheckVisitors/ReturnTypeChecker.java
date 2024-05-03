@@ -14,7 +14,7 @@ public class ReturnTypeChecker extends TypeCheckVisitor{
     public void visit(AST node){
         Return returnNode = (Return) node;
         String actionIdentifier = TypeCheckVisitor.getCurrentAction();
-        ActionSymbol action = Scope.getATable().get(actionIdentifier);
+        ActionSymbol action = Scope.getActionTable().get(actionIdentifier);
         if (action == null) {
             throw new MalformedAstException("Return-node with undeclared action found!");
         }

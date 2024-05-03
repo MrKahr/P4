@@ -15,7 +15,7 @@ public class RuleDeclTypeChecker extends TypeCheckVisitor{
 
         //make sure the triggering actions are defined
         for (String identifier : ruleDecl.getTriggerActions()) {
-            ActionSymbol action = Scope.getATable().get(identifier);
+            ActionSymbol action = Scope.getActionTable().get(identifier);
             if (action == null) {
                 throw new UndefinedActionExpection("Undeclared action in rule declaration: Could not find \"" + identifier + "\"!");
             }

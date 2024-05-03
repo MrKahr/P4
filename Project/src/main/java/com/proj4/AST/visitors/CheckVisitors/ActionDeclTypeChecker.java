@@ -12,12 +12,12 @@ public class ActionDeclTypeChecker extends TypeCheckVisitor{
     
     public void visit(AST node){
         ActionDecl actionDecl = (ActionDecl) node;
-        if(Scope.getATable().containsKey(actionDecl.getIdentifier())){
+        if(Scope.getActionTable().containsKey(actionDecl.getIdentifier())){
             throw new VariableAlreadyDefinedException("Action \"" + actionDecl.getIdentifier() + "\" is already defined!");
         }
 
         // Add declared function to action table 
-            Scope.getATable().put(
+            Scope.getActionTable().put(
                 actionDecl.getIdentifier(), 
                 new ActionSymbol(
                     actionDecl.getType(), 

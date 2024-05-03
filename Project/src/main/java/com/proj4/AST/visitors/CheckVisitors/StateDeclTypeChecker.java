@@ -22,7 +22,7 @@ public class StateDeclTypeChecker extends TypeCheckVisitor{
         for (String actionIdentifier : stateDecl.getActionList()) { 
             
             // Actions need to be in table for declaration to be valid - assumption: states contain identifiers of actions
-            if(!(Scope.getATable().containsKey(actionIdentifier))){
+            if(!(Scope.getActionTable().containsKey(actionIdentifier))){
                 throw new UndefinedActionExpection("Action " + actionIdentifier + " is not defined for state declaration" + ((StateDecl)node).getIdentifier());
             }
         }

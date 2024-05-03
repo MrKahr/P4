@@ -33,9 +33,9 @@ public class TemplateDeclTypeChecker extends TypeCheckVisitor{
 
         }
         String identifier = templateDecl.getIdentifier();
-        if (Scope.getTTable().get(identifier) == null && Scope.getBTable().get(identifier) == null) {
-            Scope.getTTable().put(identifier, map);
-            Scope.getBTable().put(identifier, blueprint);
+        if (Scope.getTemplateMapTable().get(identifier) == null && Scope.getBlueprintTable().get(identifier) == null) {
+            Scope.getTemplateMapTable().put(identifier, map);
+            Scope.getBlueprintTable().put(identifier, blueprint);
         } else {
             throw new VariableAlreadyDefinedException("Template \"" + identifier + "\" is already defined!");
         }
