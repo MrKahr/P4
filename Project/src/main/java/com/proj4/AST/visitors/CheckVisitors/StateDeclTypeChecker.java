@@ -2,7 +2,6 @@ package com.proj4.AST.visitors.CheckVisitors;
 
 import com.proj4.AST.nodes.AST;
 import com.proj4.AST.nodes.StateDecl;
-import com.proj4.AST.visitors.CheckDecider;
 import com.proj4.AST.visitors.TypeCheckVisitor;
 import com.proj4.exceptions.*;
 import com.proj4.symbolTable.Scope;
@@ -12,7 +11,6 @@ public class StateDeclTypeChecker extends TypeCheckVisitor{
 
     public void visit(AST node){
         StateDecl stateDecl = (StateDecl) node;
-        stateDecl.inheritScope();
 
         // Check whether state decl is already defined in scope
         if(Scope.getStateTable().contains(stateDecl.getIdentifier())){
@@ -24,7 +22,7 @@ public class StateDeclTypeChecker extends TypeCheckVisitor{
         for (String actionIdentifier : stateDecl.getActionList()) { 
             
             // Actions need to be in table for declaration to be valid - assumption: states contain identifiers of actions
-            if(!(Scope.getATable().containsKey(actionIdentifier))){
+            if(!(Scope.getActionTable().containsKey(actionIdentifier))){
                 throw new UndefinedActionExpection("Action " + actionIdentifier + " is not defined for state declaration" + ((StateDecl)node).getIdentifier());
             }
         }

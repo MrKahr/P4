@@ -11,10 +11,9 @@ public class DeclarationTypeChecker extends TypeCheckVisitor{
 
     public void visit(AST node){
         Declaration declaration = (Declaration) node;
-        declaration.inheritScope();
 
         // Check variable does not exist in Dtable
-        if (declaration.getScope().getDTable().contains(declaration.getIdentifier())) {
+        if (declaration.getScope().getDeclaredTable().contains(declaration.getIdentifier())) {
             throw new VariableAlreadyDefinedException();
         } 
 
@@ -30,8 +29,5 @@ public class DeclarationTypeChecker extends TypeCheckVisitor{
 
         // Set the found type to that of the declaration
         TypeCheckVisitor.setFoundType(declaration.getType(), declaration.getComplexType(), declaration.getNestingLevel());
-
-        // New variable is added to parent scope 
-        declaration.synthesizeScope();
     }
 }

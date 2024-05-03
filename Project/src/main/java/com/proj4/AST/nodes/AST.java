@@ -11,7 +11,6 @@ public abstract class AST {
     //Field
     private ArrayList<AST> children = new ArrayList<AST>();
     private AST parent;
-    private Scope scope;
 
     //Method
     public ArrayList<AST> getChildren() {
@@ -27,7 +26,7 @@ public abstract class AST {
     }
     
     public Scope getScope(){
-        return scope;
+        return Scope.getScopeStack().peek();
     }
 
     //put a new child on the list of children
@@ -39,11 +38,11 @@ public abstract class AST {
     // public void setParent(AST parent){
     //     this.parent = parent;
     // }
-
+/*
     public void setScope(Scope scope){
         this.scope = scope;
     }
-
+*/
     public void printTree(){
         Integer currentLevel = 0;
         List<List<AST>> result = new ArrayList<>();
@@ -116,20 +115,8 @@ public abstract class AST {
         }
     }
 
-    //call this to set the symbol tables of this node's scope to those of its parent's scope
-    public void inheritScope(){
-        scope = Scope.open(parent.getScope());
-        //we're specifically not just doing scope = parent.getScope()
-        //because Scope.open() makes sure to not clone the set of variables declared in the parent scope
-    }
-
-    //call this to set the parent's scope to this node's scope
-    public void synthesizeScope(){
-        //we get the parent's scope and copy all mappings from the current scope to that one
-        //but we leave the set of declared variables alone!
-        parent.getScope().putAll(scope);
-    }
-
+    //TODO: these two are currently not functional because of the changes to how scopes work
+    /*
     //call this to set the parent scope's value of the variable bound to the given identifier to the value it has in this scope
     public void synthesizeVariable(String identifier){
         parent.getScope().getVTable().put(identifier, scope.getVTable().get(identifier));
@@ -143,4 +130,5 @@ public abstract class AST {
             }
         }
     }
+     */
 }

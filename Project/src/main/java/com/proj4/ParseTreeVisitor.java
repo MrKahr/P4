@@ -2,7 +2,6 @@ package com.proj4;
 
 import com.proj4.antlrClass.DBLBaseVisitor;
 import com.proj4.antlrClass.DBLParser;
-import com.proj4.antlrClass.DBLParser.ArrayTypeContext;
 
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;

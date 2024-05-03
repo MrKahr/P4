@@ -17,9 +17,8 @@ public class ActionCallTypeChecker extends TypeCheckVisitor{
     
     public void visit(AST node){
         ActionCall actionCall = (ActionCall) node;
-        actionCall.inheritScope();
 
-        ActionSymbol action = Scope.getATable().get(actionCall.getIdentifier());  //the action to call
+        ActionSymbol action = Scope.getActionTable().get(actionCall.getIdentifier());  //the action to call
 
         if (action == null) {
             throw new UndefinedActionExpection("Could not find action \"" + actionCall.getIdentifier() + "\"!");

@@ -11,7 +11,6 @@ public class IfElseTypeChecker extends TypeCheckVisitor{
 
     public void visit(AST node){
         IfElse ifElse = (IfElse) node;
-        ifElse.inheritScope();
 
         // Get the current type of the condition from the check decider 
         ifElse.visitChild(new CheckDecider(), ifElse.getCondition());

@@ -10,8 +10,7 @@ public class AssignmentTypeChecker extends TypeCheckVisitor{
     
     public void visit(AST node){
         Assignment assignment = (Assignment) node;
-        assignment.inheritScope();
-
+        
         assignment.visitChild(new CheckDecider(), assignment.getSymbolExpression());    //check the symbol to overwrite
         
         String expectedType = TypeCheckVisitor.getFoundType();
@@ -26,7 +25,5 @@ public class AssignmentTypeChecker extends TypeCheckVisitor{
         if (!expectedComplexType.equals(TypeCheckVisitor.getFoundComplexType())) {
             throw new MismatchedTypeException("Cannot assign value of complex type \"" + TypeCheckVisitor.getFoundComplexType() + "\" to variable of type \"" + expectedComplexType + "\"!");
         }
-
-        assignment.synthesizeScope();
     }
 }

@@ -10,8 +10,9 @@ public class ProgramTypeChecker extends TypeCheckVisitor{
     public void visit(AST program){
 
         // Start of traversing the AST requires new scope 
-        program.setScope(new Scope());
+        Scope.enter();
         program.visitChildren(new CheckDecider());
-        
+        Scope.exit();
+        //...which we exit when we're done
     }
 }
