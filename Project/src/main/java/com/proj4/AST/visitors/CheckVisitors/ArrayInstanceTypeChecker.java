@@ -2,13 +2,10 @@ package com.proj4.AST.visitors.CheckVisitors;
 
 import com.proj4.AST.nodes.AST;
 import com.proj4.AST.nodes.ArrayInstance;
-import com.proj4.AST.nodes.Expression;
 import com.proj4.AST.visitors.CheckDecider;
 import com.proj4.AST.visitors.TypeCheckVisitor;
 import com.proj4.exceptions.MismatchedTypeException;
 import com.proj4.exceptions.UndefinedTypeException;
-import com.proj4.symbolTable.Scope;
-import com.proj4.symbolTable.symbols.*;
 
 public class ArrayInstanceTypeChecker extends TypeCheckVisitor{
     

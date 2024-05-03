@@ -1,7 +1,5 @@
 package com.proj4.AST.visitors;
 
-import com.proj4.symbolTable.symbols.SymbolTableEntry;
-
 public abstract class TypeCheckVisitor implements NodeVisitor {
 
     //Field
