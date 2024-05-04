@@ -139,4 +139,8 @@ public class Scope implements Cloneable{
     public static Stack<Scope> getScopeStack(){
         return scopeStack;
     }
+
+    public static Scope getCurrent(){
+        return scopeStack.peek();
+    }
 }
