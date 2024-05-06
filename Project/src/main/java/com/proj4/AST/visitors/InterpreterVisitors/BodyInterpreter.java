@@ -1,12 +1,12 @@
 package com.proj4.AST.visitors.InterpreterVisitors;
 
 import com.proj4.AST.nodes.AST;
+import com.proj4.AST.visitors.InterpreterDecider;
 import com.proj4.AST.visitors.InterpreterVisitor;
 
 public class BodyInterpreter extends InterpreterVisitor {
 
     public void visit(AST node) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'visit'");
+        node.visitChildren(new InterpreterDecider());
     }
 }

@@ -52,6 +52,9 @@ public class CheckDecider implements VisitorDecider {
             case "Body":
                 node.acceptVisitor(new BodyTypeChecker());
                 break;
+            case "Variable":
+                node.acceptVisitor(new VariableTypeChecker());
+                break;
             default:
                 System.err.println("UNRECOGNIZED NODE TYPE!\nGOT " + node.getClass().getSimpleName());
                 break;

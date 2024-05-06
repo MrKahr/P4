@@ -288,13 +288,15 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
 
     /*** Declaration ***/
     @Override public Declaration visitAssignDeclPrim(DBLParser.AssignDeclPrimContext ctx) {
-        String typedef = ctx.typePrimitive().getText();
-        String identifier = null;
-        Declaration node = new Declaration(identifier, typedef, "Primitive");
-        node.addChild((Assignment) visit(ctx.assignment()));
+        Assignment assignNode = (Assignment) visit(ctx.assignment());
+        Variable variableNode = (Variable) assignNode.getSymbolExpression(); // Get left side of assign
+
+        String typePrim = ctx.typePrimitive().getText();
+        Declaration node = new Declaration(variableNode.getIdentifier(), typePrim, "Primitive");
+        node.addChild(assignNode);
         return node;
     }
-
+    
     @Override
     public TemplateDecl visitIdDeclUser(DBLParser.IdDeclUserContext ctx) {
         TemplateDecl node = new TemplateDecl(ctx.IDENTIFIER().getText());
