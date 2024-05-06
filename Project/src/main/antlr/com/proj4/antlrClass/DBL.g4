@@ -50,7 +50,6 @@ stmt
     |   declaration
     |   assignment SEMICOLON
     |   actionCall SEMICOLON
-    |   templateAssignment
     ;
 
 stmtList
@@ -120,6 +119,7 @@ declaration
     |   typePrimitive assignment SEMICOLON     # assignDeclPrim
     |   typedefUser IDENTIFIER SEMICOLON       # idDeclUser
     |   typedefUser assignment SEMICOLON       # assignDeclUser
+    |   templateAssignment                     # templateInitDecl
     |   arrayDecl SEMICOLON                    # declArrayDecl
     ;
 
@@ -144,7 +144,7 @@ templateDecl
     ;
 
 templateInit
-    :   NEW typedefUser BODY_START (templateInit | (assignment SEMICOLON | templateAssignment))* BODY_END
+    :   NEW typedefUser BODY_START ((assignment SEMICOLON | templateAssignment))* BODY_END
     ;
 
 ruleDecl
