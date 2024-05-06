@@ -1,0 +1,34 @@
+/* TEST 1
+Expression
+*/
+Integer a;
+a IS 3;
+
+
+/* TEST 2
+Boolean expression
+*/
+Boolean b;
+b IS TRUE;
+
+
+/* TEST 3
+String expression
+*/
+String c;
+c IS "fish_1";
+
+
+/* TEST 4
+Array instance
+*/
+Integer[] d;
+d IS [1, 2, 3];
+
+
+/* TEST 5
+Variable
+*/
+String e IS "fish_2";
+String f;
+f IS e;

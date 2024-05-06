@@ -29,7 +29,6 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
      * │     Set up Root Node of AST     │
      * └─────────────────────────────────┘
      */
-
     @Override
     public Object visitProgram(DBLParser.ProgramContext ctx) {
         this.root = new Program();
@@ -83,7 +82,6 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     }
 
     /*** ACTION DECLARATION ***/
-
     @Override
     public ActionDecl visitReturnActionDecl(DBLParser.ReturnActionDeclContext ctx) {
         ParseTree resultsIn = ctx.resultsIn();
@@ -96,7 +94,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         else if(resultsIn.getText().contains("[")) {
             resultComplexType = "Array";
             nestingLevel = (int) resultsIn.getText().chars().filter(ch -> ch == '[').count()-1; // Count number of "[" to find nestinglevel
-        } 
+        }
         else {
             resultComplexType = "Primitive";
         }
@@ -137,7 +135,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
                 else if(type.getText().contains("[")) {
                     complexType = "Array";
                     nestingLevel = (int) type.getText().chars().filter(ch -> ch == '[').count()-1; // Count number of "[" to find nestinglevel
-                } 
+                }
                 else {
                     complexType = "Primitive";
                 }
@@ -204,8 +202,14 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     }
 
     @Override
-    public Assignment visitTemplateAssignment(DBLParser.TemplateAssignmentContext ctx) {
-        Assignment node = new Assignment(new Variable(ctx.typedefUser().getText()), (Expression) visit(ctx.templateInit()));
+    public Assignment visitTemplateInitAssign(DBLParser.TemplateInitAssignContext ctx) {
+        Assignment node = new Assignment(new Variable(ctx.IDENTIFIER().getText()), (Expression) visit(ctx.templateInit()));
+        return node;
+    }
+
+    @Override
+    public Assignment visitTemplateExprAssign(DBLParser.TemplateExprAssignContext ctx) {
+        Assignment node = new Assignment(new Variable(ctx.IDENTIFIER().getText()), (Expression) visit(ctx.expr()));
         return node;
     }
 
@@ -288,10 +292,12 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
 
     /*** Declaration ***/
     @Override public Declaration visitAssignDeclPrim(DBLParser.AssignDeclPrimContext ctx) {
-        String typedef = ctx.typePrimitive().getText();
-        String identifier = null;
-        Declaration node = new Declaration(identifier, typedef, "Primitive");
-        node.addChild((Assignment) visit(ctx.assignment()));
+        Assignment assignNode = (Assignment) visit(ctx.assignment());
+        Variable variableNode = (Variable) assignNode.getSymbolExpression(); // Get left side of assign
+
+        String typePrim = ctx.typePrimitive().getText();
+        Declaration node = new Declaration(variableNode.getIdentifier(), typePrim, "Primitive");
+        node.addChild(assignNode);
         return node;
     }
 
@@ -302,14 +308,16 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     }
 
     @Override
-    public TemplateDecl visitAssignDeclUser(DBLParser.AssignDeclUserContext ctx) {
-        String typedef = ctx.typedefUser().getText();
-        Assignment assignment = (Assignment) visit(ctx.assignment());
+    public Declaration visitDeclAssignTemplate(DBLParser.DeclAssignTemplateContext ctx) {
+        Assignment assignment = (Assignment) visit(ctx.templateAssignment());
+        Variable variableNode = (Variable) assignment.getSymbolExpression(); // Get left side of assign
 
-        TemplateDecl node = new TemplateDecl(typedef);
+        String typeDef = ctx.typedefUser().getText();
+        Declaration node = new Declaration(variableNode.getIdentifier(), typeDef, "Template");
         node.addChild(assignment);
         return node;
     }
+
     /*** Return ***/
     @Override
     public Return visitReturn(DBLParser.ReturnContext ctx) {

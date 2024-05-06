@@ -50,7 +50,6 @@ stmt
     |   declaration
     |   assignment SEMICOLON
     |   actionCall SEMICOLON
-    |   templateAssignment
     ;
 
 stmtList
@@ -77,7 +76,7 @@ boolExpr
     |   expr GTOE expr                      # exprGTOEBool
     |   expr LT expr                        # exprLTBool
     |   expr LTOE expr                      # exprLTOEBool
-    |   expr (NOTEQUALS | EQUALS) expr      # exprEqualBool            
+    |   expr (NOTEQUALS | EQUALS) expr      # exprEqualBool
     |   stringExpr (NOTEQUALS | EQUALS) stringExpr  # stringEqualBool
     |   NOT boolExpr                        # negateBool
     |   boolExpr AND boolExpr               # andBool
@@ -96,15 +95,12 @@ stringExpr
     ;
 
 assignment // Remember to add semicolon if relevant
-    :   expr ASSIGN expr             # exprAssign
-    |   expr ASSIGN boolExpr         # boolExprAssign
-    |   expr ASSIGN stringExpr       # stringExprAssign
-    |   expr ASSIGN arrayInit        # arrayInitAssign
-    |   expr ASSIGN IDENTIFIER       # idAssign
-    ;
-
-templateAssignment
-    :   typedefUser IDENTIFIER ASSIGN templateInit
+    :   expr ASSIGN expr          # exprAssign
+    |   expr ASSIGN boolExpr      # boolExprAssign
+    |   expr ASSIGN stringExpr    # stringExprAssign
+    |   expr ASSIGN arrayInit     # arrayInitAssign
+    |   expr ASSIGN templateInit  # templateInitAssign
+    |   expr ASSIGN IDENTIFIER    # idAssign
     ;
 
 typePrimitive
@@ -119,7 +115,7 @@ declaration
     :   typePrimitive IDENTIFIER SEMICOLON     # idDeclPrim
     |   typePrimitive assignment SEMICOLON     # assignDeclPrim
     |   typedefUser IDENTIFIER SEMICOLON       # idDeclUser
-    |   typedefUser assignment SEMICOLON       # assignDeclUser
+    |   typedefUser assignment SEMICOLON       # DecltypedefUser
     |   arrayDecl SEMICOLON                    # declArrayDecl
     ;
 
@@ -144,7 +140,7 @@ templateDecl
     ;
 
 templateInit
-    :   NEW typedefUser BODY_START (templateInit | (assignment SEMICOLON | templateAssignment))* BODY_END
+    :   NEW typedefUser BODY_START (templateInit | (assignment SEMICOLON))* BODY_END
     ;
 
 ruleDecl
@@ -187,11 +183,11 @@ arrayType
     ;
 
 arrayInit
-    :   (SQB_START ((stringExpr | expr) (COMMA (stringExpr | expr))*)? SQB_END)+
+    :   (SQB_START ((stringExpr | expr | arrayInit) (COMMA (stringExpr | expr | arrayInit))*)? SQB_END)+
     ;
 
 return
-    :   RESULT_IN (expr | boolExpr | stringExpr) SEMICOLON  // The ActionDecl will return 3
+    :   RESULT_IN (expr | boolExpr | stringExpr) SEMICOLON
     ;
 
 resultsIn
@@ -235,13 +231,11 @@ ACTION      : 'Action';
 STATE       : 'State';
 RULE        : 'Rule';
 FOR         : 'FOR';
-OF          : 'OF';
 RESULT      : 'RESULT';     // Get result of a specific action call. Used in Rule
 RESULT_IN   : 'RESULT IN';  // Return from action
 RESULTS_IN  : 'RESULTS IN'; // Declare return type for action
 TEMPLATE    : 'Template';
 ALLOWS      : 'ALLOWS';
-WITH        : 'WITH';
 WITH_LOOP   : 'WITH LOOP';
 DOT         : '.';
 NEW         : 'NEW';
