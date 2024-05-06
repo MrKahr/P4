@@ -24,6 +24,7 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 Integer sum = operandOne + operandTwo;
                 System.out.println("Result of " + operandOne + " + " + operandTwo + " is " + sum);
                 InterpreterVisitor.setReturnSymbol(new IntSymbol(sum));
+                System.out.println("Calculated sum of " + operandOne + " and " + operandTwo + ": It's " + sum + ".");
                 break;
             case SUBTRACT:
 

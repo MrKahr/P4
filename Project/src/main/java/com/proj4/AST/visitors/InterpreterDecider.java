@@ -52,6 +52,9 @@ public class InterpreterDecider implements VisitorDecider {
             case "Body":
                 node.acceptVisitor(new BodyInterpreter());
                 break;
+            case "Variable":
+                node.acceptVisitor(new VariableInterpreter());
+                break;
             default:
                 System.err.println("UNRECOGNIZED NODE TYPE!\nGOT " + node.getClass().getSimpleName());
                 break;

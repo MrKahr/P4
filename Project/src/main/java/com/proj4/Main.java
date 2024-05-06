@@ -4,6 +4,9 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
+import com.proj4.AST.nodes.AST;
+import com.proj4.AST.visitors.CheckDecider;
+import com.proj4.AST.visitors.InterpreterDecider;
 import com.proj4.antlrClass.DBLLexer;
 import com.proj4.antlrClass.DBLParser;
 
@@ -13,8 +16,8 @@ public class Main {
         Boolean isFile = false;
 
         if (args.length == 0) {
-            // args = new String[]{"Integer Fisk; String Fisk2;"};
-            args = new String[]{
+            args = new String[]{"Integer x IS 1; Integer y IS 2; Integer z IS x + y; x IS x + y; z IS x;"};
+           /*  args = new String[]{
             "FOR(Card card OF Shuffle(cardUniverse)) {\n"
             +"    IF(i LESS THAN bucketCount) {\n"
             +"    NEW Deck market {}\n"
@@ -24,7 +27,7 @@ public class Main {
             +"options IS market;\n"
             +"}\n"
             +"i IS i + 1;\n"
-            +"}"};
+            +"}"}; */
         } else {isFile = true;}
 
         System.out.println("Parsing: " + args[0] + "\n");
@@ -54,21 +57,20 @@ public class Main {
         
         // We need to implement this:
         parseVisitor.visit(tree);
-        // visitor.getAST(); - use this pattern to get tree
 
-        parseVisitor.getRoot().printTree();
+        // Assign AST 
+        AST abstractSyntaxTree = parseVisitor.getRoot();
 
-        // Sketch test of visitors - REMOVE 
-        // Program pn = new Program(null);
-        // pn.addChild(new PrimitiveDecl("Integer", "fisk1"));
-        // pn.addChild(new PrimitiveDecl("Booleoolean", "fisk2"));
-        // //pn.addChild(new MathExp(MathExpOperator.ADD, "fisk", 0));
-        // //pn.addChild(new ActionDeclNode("Action", "fisk3"));
-        // pn.getChildren().get(0).addChild(new PrimitiveDecl("String", "fisk4"));
-        // new TestDecider().decideVisitor(pn);
-        // pn.walk(pn);
-        // // Sketch test of print parse tree 
-        // pn.printTree();
+        // Print tree 
+        abstractSyntaxTree.printTree();
+
+        // Typecheck AST 
+        CheckDecider checkDecider = new CheckDecider();
+        checkDecider.decideVisitor(abstractSyntaxTree);
+
+        // Interpret AST 
+        InterpreterDecider interpreterDecider = new InterpreterDecider();
+        interpreterDecider.decideVisitor(abstractSyntaxTree);
  
     }
 }

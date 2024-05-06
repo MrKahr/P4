@@ -22,6 +22,7 @@ public class AssignmentInterpreter extends InterpreterVisitor {
                     case "Integer":
                         IntSymbol intValue = (IntSymbol) value;
                         ((IntSymbol) symbol).setValue(intValue.getValue());
+                        System.out.println("Assigning value \"" + intValue.getValue() + "\".");
                         break;
                     case "Boolean":
                         BooleanSymbol boolValue = (BooleanSymbol) value;
@@ -46,5 +47,6 @@ public class AssignmentInterpreter extends InterpreterVisitor {
             default:
                 throw new RuntimeException("Interpreter failed. Read invalid complex type \"" + value.getComplexType() + "\"!");
         }
+        
     }
 }
