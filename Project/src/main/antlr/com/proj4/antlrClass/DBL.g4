@@ -103,6 +103,10 @@ assignment // Remember to add semicolon if relevant
     |   expr ASSIGN IDENTIFIER    # idAssign
     ;
 
+templateAssignment
+    :   typedefUser IDENTIFIER ASSIGN templateInit
+    ;
+
 typePrimitive
     :   TYPEDEF_PRIMITIVE
     ;
