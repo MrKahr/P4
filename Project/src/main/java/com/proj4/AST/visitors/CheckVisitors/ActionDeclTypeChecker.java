@@ -12,6 +12,7 @@ public class ActionDeclTypeChecker extends TypeCheckVisitor{
     
     public void visit(AST node){
         ActionDecl actionDecl = (ActionDecl) node;
+        Scope.inherit();
         if(Scope.getActionTable().containsKey(actionDecl.getIdentifier())){
             throw new VariableAlreadyDefinedException("Action \"" + actionDecl.getIdentifier() + "\" is already defined!");
         }
@@ -37,5 +38,7 @@ public class ActionDeclTypeChecker extends TypeCheckVisitor{
 
         // Check whether return is defined from possible types (check whether primitive or template type)
         // Check whether action is already defined in scope
+        
+        Scope.exit();
     }
 }

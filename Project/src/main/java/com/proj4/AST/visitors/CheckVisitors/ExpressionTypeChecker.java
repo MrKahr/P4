@@ -64,6 +64,7 @@ public class ExpressionTypeChecker extends TypeCheckVisitor {
             case EQUALS:
                 // fallthrough
             case NOT_EQUALS: // all above consume two identical types and return booleans
+                //TODO: make sure this uses complex types and nesting level!!!
                 expression.visitChild(new CheckDecider(), expression.getFirstOperand());
                 String firstType = TypeCheckVisitor.getFoundType();
                 expression.visitChild(new CheckDecider(), expression.getSecondOperand());

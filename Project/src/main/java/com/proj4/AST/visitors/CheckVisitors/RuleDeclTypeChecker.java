@@ -12,7 +12,7 @@ public class RuleDeclTypeChecker extends TypeCheckVisitor{
     
     public void visit(AST node){
         RuleDecl ruleDecl = (RuleDecl) node;
-
+        Scope.inherit();
         //make sure the triggering actions are defined
         for (String identifier : ruleDecl.getTriggerActions()) {
             ActionSymbol action = Scope.getActionTable().get(identifier);
@@ -23,5 +23,6 @@ public class RuleDeclTypeChecker extends TypeCheckVisitor{
 
         //make sure everything that happens in the rule is well typed
         ruleDecl.visitChild(new CheckDecider(), ruleDecl.getRuleBody());
+        Scope.exit();
     }
 }

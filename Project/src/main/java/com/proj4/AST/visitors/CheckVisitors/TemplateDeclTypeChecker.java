@@ -14,7 +14,7 @@ public class TemplateDeclTypeChecker extends TypeCheckVisitor{
     
     public void visit(AST node){
         TemplateDecl templateDecl = (TemplateDecl) node;
-
+        Scope.enter();
         //the blueprint
         TemplateSymbol blueprint = new TemplateSymbol();
         //the map
@@ -39,52 +39,9 @@ public class TemplateDeclTypeChecker extends TypeCheckVisitor{
         } else {
             throw new VariableAlreadyDefinedException("Template \"" + identifier + "\" is already defined!");
         }
-        // Add to blueprint 
-        // Add to map
-
-        //how to typecheck:
-
-        //typecheck a child
-        //add child as field in blueprint
-        //repeat for all children
-
-        //if child is another template
-        //create an instance of that template as a field
+        Scope.exit();
     }
 
-    //TODO: Note: templateDecls do NOT synthesize their scope. They only modify the global BTable and TTable.
-    //TODO: Thus, all declarations in the the templateDecl's VTable should be fields in that template
-
- 
-    /*
-            switch (child.getClass().getSimpleName()) {
-                case "PrimitiveDecl":
-                    //get the type, identifier, and value
-                    //create instance of that type, mapped to that identifier
-                        switch (TypeCheckVisitor.getFoundType()) {  //declarations don't change the foundType, so the type of their expression propagates up to us here
-                            case "Integer":
-                                entry = new IntSymbol(0);
-                                break;
-                            case "Boolean":
-                                entry = new BooleanSymbol(false);
-                                break;
-                            case "String":
-                                entry = new StringSymbol("");
-                                break;
-                            default:
-                                throw new UndefinedTypeException("Primitive type \"" + TypeCheckVisitor.getFoundType() + "\" not defined!");
-                        }
-                    break;
-                case "ArrayDecl":
-                    //get the type, identifier, and value
-                    //create instance of that type, mapped to that identifier
-                    break;
-                case "TemplateInstance":
-                    //get the type and identifier
-                    //create instance of that type, mapped to that identifier
-                    break;
-                default:
-                    throw new UndefinedTypeException("Unrecognized declaration in template \"" + templateDecl.getIdentifier() + "\"!");
-            }
-     */
+    //Note: templateDecls do NOT synthesize their scope. They only modify the global BTable and TTable.
+    //Thus, all declarations in the the templateDecl's VTable should be fields in that template
 }

@@ -11,7 +11,7 @@ public class StateDeclTypeChecker extends TypeCheckVisitor{
 
     public void visit(AST node){
         StateDecl stateDecl = (StateDecl) node;
-
+        Scope.inherit();
         // Check whether state decl is already defined in scope
         if(Scope.getStateTable().contains(stateDecl.getIdentifier())){
             throw new StateAlreadyDefinedExpection("State " + stateDecl.getIdentifier() + " is already defined in state table");
@@ -29,5 +29,6 @@ public class StateDeclTypeChecker extends TypeCheckVisitor{
 
         // Add finished declaration to scope and synthesize it to parent
         stateDecl.getScope().declareState(stateDecl.getIdentifier());
+        Scope.exit();
     }
 }
