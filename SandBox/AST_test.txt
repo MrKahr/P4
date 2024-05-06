@@ -31,7 +31,7 @@ Action ChangeState(State state) RESULTS IN State {RESULT IN fisk;}
 
 Action GenerateMinions() RESULTS IN Deck {
     String[] names IS ["Yeti", "Gnome McGnomington", "Slime", "Blackrock Orc", "Tirion Fordring", "John MinionMan", "Fish", "Void Sphere", "Wizard", "Madman"];
-    Deck generatedDeck IS NEW Deck{};
+    Deck d1 IS NEW Deck{}
     FOR(Integer i IS 1; i LESS OR EQUALS names.size; i IS i + 1) {
         Card minion IS NEW Card {
             name IS names[i - 1];
@@ -118,10 +118,10 @@ State GameHalt
 Board board IS NEW Board {
     Player p1 IS NEW Player {
         name IS "p1";
-        Deck hand IS NEW Deck{};
-        Deck playDeck IS NEW Deck{};
-        Deck deck IS NEW Deck{};
-        Deck board IS NEW Deck{};
+        Deck hand IS NEW Deck{}
+        Deck playDeck IS NEW Deck{}
+        Deck deck IS NEW Deck{}
+        Deck board IS NEW Deck{}
         currentHealth IS 30;
         maxHealth IS 30;
         currentMana IS 0;
@@ -130,14 +130,14 @@ Board board IS NEW Board {
             health IS 1;
             attack IS 1;
             cost IS 0;
-        };
-    };
+        }
+    }
     Player p2 IS NEW Player {
         name IS "p2";
-        Deck hand IS NEW Deck{};
-        Deck playDeck IS NEW Deck{};
-        Deck deck IS NEW Deck{};
-        Deck board IS NEW Deck{};
+        Deck hand IS NEW Deck{}
+        Deck playDeck IS NEW Deck{}
+        Deck deck IS NEW Deck{}
+        Deck board IS NEW Deck{}
         currentHealth IS 30;
         maxHealth IS 30;
         currentMana IS 0;
@@ -155,8 +155,8 @@ Board board IS NEW Board {
     cardUniverse IS GenerateMinions();
     bucketCount IS 3;
     bucketSize IS 5;
-    LootBucket buckets IS NEW LootBucket {options IS GenerateMarket(bucketCount, bucketSize);};
-};
+    LootBucket buckets IS NEW LootBucket {options IS GenerateMarket(bucketCount, bucketSize);}
+}
 
 Board.p1.deck IS GeneratePlayerDeck();
 Board.p1.playDeck IS Shuffle(Board.p1.deck); // Players start with the same 10 cards in a random order
