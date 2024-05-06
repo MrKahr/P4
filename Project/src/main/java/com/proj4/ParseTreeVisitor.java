@@ -2,6 +2,7 @@ package com.proj4;
 
 import com.proj4.antlrClass.DBLBaseVisitor;
 import com.proj4.antlrClass.DBLParser;
+import com.proj4.antlrClass.DBLParser.TemplateAssignmentContext;
 
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -201,18 +202,6 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         return node;
     }
 
-    @Override
-    public Assignment visitTemplateInitAssign(DBLParser.TemplateInitAssignContext ctx) {
-        Assignment node = new Assignment(new Variable(ctx.IDENTIFIER().getText()), (Expression) visit(ctx.templateInit()));
-        return node;
-    }
-
-    @Override
-    public Assignment visitTemplateExprAssign(DBLParser.TemplateExprAssignContext ctx) {
-        Assignment node = new Assignment(new Variable(ctx.IDENTIFIER().getText()), (Expression) visit(ctx.expr()));
-        return node;
-    }
-
     /*** ARRAY DECLARATION ***/
     @Override
     /**
@@ -308,15 +297,21 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     }
 
     @Override
-    public Declaration visitDeclAssignTemplate(DBLParser.DeclAssignTemplateContext ctx) {
-        Assignment assignment = (Assignment) visit(ctx.templateAssignment());
-        Variable variableNode = (Variable) assignment.getSymbolExpression(); // Get left side of assign
+    public Declaration visitTemplateInitDecl(DBLParser.TemplateInitDeclContext ctx) {
+        return (Declaration) visit(ctx.templateAssignment());
+    }
 
-        String typeDef = ctx.typedefUser().getText();
-        Declaration node = new Declaration(variableNode.getIdentifier(), typeDef, "Template");
-        node.addChild(assignment);
+    @Override
+    public Declaration visitTemplateAssignment(DBLParser.TemplateAssignmentContext ctx) {
+        String type = ctx.typedefUser().getText();
+        String id = ctx.IDENTIFIER().getText();
+
+        Assignment assignNode = new Assignment(new Variable(id), (TemplateInstance) visit(ctx.templateInit()));
+        Declaration node = new Declaration(id, type, "Template");
+        node.addChild(assignNode);
         return node;
     }
+
 
     /*** Return ***/
     @Override

@@ -99,7 +99,6 @@ assignment // Remember to add semicolon if relevant
     |   expr ASSIGN boolExpr      # boolExprAssign
     |   expr ASSIGN stringExpr    # stringExprAssign
     |   expr ASSIGN arrayInit     # arrayInitAssign
-    |   expr ASSIGN templateInit  # templateInitAssign
     |   expr ASSIGN IDENTIFIER    # idAssign
     ;
 
