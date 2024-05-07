@@ -6,7 +6,7 @@ import com.proj4.AST.visitors.InterpreterVisitor;
 public class RuleDeclInterpreter extends InterpreterVisitor {
 
     public void visit(AST node) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'visit'");
+        //there's nothing to interpret in a rule declaration. The type checker handles the bindings
+        //TODO: consider if the bindings should be handled in the interpreter
     }
 }

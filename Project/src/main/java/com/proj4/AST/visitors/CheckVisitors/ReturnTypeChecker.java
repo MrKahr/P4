@@ -21,8 +21,8 @@ public class ReturnTypeChecker extends TypeCheckVisitor{
 
         returnNode.visitChild(new CheckDecider(), returnNode.getReturnValue());
 
-        if (!TypeCheckVisitor.getFoundType().equals(action.getType())){
-            throw new MismatchedTypeException("Error for \""+ actionIdentifier + "\" Mismatched return type! Expected \"" + action.getType() + "\"" + "but got \"" + TypeCheckVisitor.getFoundType());                 
+        if (!TypeCheckVisitor.getFoundType().equals(action.getReturnType())){
+            throw new MismatchedTypeException("Error for \""+ actionIdentifier + "\" Mismatched return type! Expected \"" + action.getReturnType() + "\"" + "but got \"" + TypeCheckVisitor.getFoundType());                 
         }
         if (!TypeCheckVisitor.getFoundComplexType().equals(action.getComplexReturnType())) {
             throw new MismatchedTypeException("Error for \"" + actionIdentifier + "\" + Expected complex return type \"" + action.getComplexReturnType() + "\" but got \"" + TypeCheckVisitor.getFoundComplexType() + "\"!");

@@ -4,9 +4,10 @@ import java.util.ArrayList;
 
 import com.proj4.AST.nodes.AST;
 import com.proj4.AST.nodes.Expression;
+import com.proj4.AST.nodes.TField;
 import com.proj4.AST.visitors.CheckDecider;
 import com.proj4.AST.visitors.TypeCheckVisitor;
-import com.proj4.exceptions.MismatchedTypeException;
+import com.proj4.exceptions.*;
 import com.proj4.symbolTable.Scope;
 import com.proj4.symbolTable.symbols.ArraySymbol;
 import com.proj4.symbolTable.symbols.SymbolTableEntry;
@@ -120,12 +121,15 @@ public class ExpressionTypeChecker extends TypeCheckVisitor {
                 String templateType = TypeCheckVisitor.getFoundType();
 
                 //make sure the second operand specifies a field to index
-                expression.visitChild(new CheckDecider(), expression.getSecondOperand());   //TODO: find out how exactly to handle the second operand
-                if (!TypeCheckVisitor.getFoundType().equals("String")) {           //TODO: it's supposed to tell us which field of the template we should index
-                    throw new MismatchedTypeException();
+                TField templateField = null;
+                try {
+                    templateField  = (TField) expression.getSecondOperand();
+                } catch (ClassCastException cce) {
+                    throw new MalformedAstException("Invalid template field provided.");
                 }
+
                 //remember the field to find in the template
-                String fieldName = TypeCheckVisitor.getFoundType();  //TODO: USING THIS AS A PLACEHOLDER UNTIL THE SECOND OPERAND GETS IMPLEMENTED PROPERLY!
+                String fieldName = templateField.getFieldName();
 
                 ArrayList<String> map = Scope.getTemplateMapTable().get(templateType);    //get the arraylist with the chosen template's fields
                 TemplateSymbol blueprint = Scope.getBlueprintTable().get(templateType); //get the blueprint for the chosen template

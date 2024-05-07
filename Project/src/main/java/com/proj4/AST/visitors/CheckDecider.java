@@ -6,6 +6,7 @@ import com.proj4.AST.visitors.CheckVisitors.*;
 public class CheckDecider implements VisitorDecider {
      //decide which visitor class to use for the given node
      public void decideVisitor(AST node){
+        System.out.println("Type checking " + node.getClass().getSimpleName() + ".");
         switch (node.getClass().getSimpleName()) {
             case "ActionCall":
                 node.acceptVisitor(new ActionCallTypeChecker());

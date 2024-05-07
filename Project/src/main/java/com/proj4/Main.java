@@ -16,7 +16,7 @@ public class Main {
         Boolean isFile = false;
 
         if (args.length == 0) {
-            args = new String[]{"Integer x IS 1; Integer y IS 2; Integer z IS x + y; x IS x + y; z IS x;"};
+            args = new String[]{"Integer x IS 1; Integer y IS 2; Boolean z IS x EQUALS y"};
            /*  args = new String[]{
             "FOR(Card card OF Shuffle(cardUniverse)) {\n"
             +"    IF(i LESS THAN bucketCount) {\n"

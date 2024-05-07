@@ -6,6 +6,7 @@ import com.proj4.AST.visitors.InterpreterVisitors.*;
 public class InterpreterDecider implements VisitorDecider {
      //decide which visitor class to use for the given node
      public void decideVisitor(AST node){
+        System.out.println("Interpreting " + node.getClass().getSimpleName() + ".");
         switch (node.getClass().getSimpleName()) {
             case "ActionCall":
                 node.acceptVisitor(new ActionCallInterpreter());

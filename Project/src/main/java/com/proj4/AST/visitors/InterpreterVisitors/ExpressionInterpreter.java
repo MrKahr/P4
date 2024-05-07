@@ -4,8 +4,10 @@ import java.util.ArrayList;
 
 import com.proj4.AST.nodes.AST;
 import com.proj4.AST.nodes.Expression;
+import com.proj4.AST.nodes.TField;
 import com.proj4.AST.visitors.InterpreterDecider;
 import com.proj4.AST.visitors.InterpreterVisitor;
+import com.proj4.exceptions.*;
 import com.proj4.symbolTable.Scope;
 import com.proj4.symbolTable.symbols.*;
 
@@ -53,6 +55,7 @@ public class ExpressionInterpreter extends InterpreterVisitor {
             case NEGATE:
                 expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
                 integerResult = -((IntSymbol)InterpreterVisitor.getReturnSymbol()).getValue();
+                System.out.println("Result of -" + -integerResult + " is " + integerResult);    //funky, but it works
                 InterpreterVisitor.setReturnSymbol(new IntSymbol(integerResult));
                 break;
             case LESS_THAN:
@@ -81,19 +84,28 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 break;
             case EQUALS:
                 expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
-                if(InterpreterVisitor.getReturnSymbol().getType().equals("Integer")){   //if it's not an integer, it must be a boolean
-                    Integer equalsIntegerOne = ((IntSymbol)InterpreterVisitor.getReturnSymbol()).getValue();
-                    expression.visitChild(new InterpreterDecider(), expression.getSecondOperand());
-                    Integer equalsIntegerTwo = ((IntSymbol)InterpreterVisitor.getReturnSymbol()).getValue();
-                    
-                } else {
-                    Boolean equalsIntegerOne = ((BooleanSymbol)InterpreterVisitor.getReturnSymbol()).getValue();
-                    expression.visitChild(new InterpreterDecider(), expression.getSecondOperand());
-                    Boolean equalsIntegerTwo = ((BooleanSymbol)InterpreterVisitor.getReturnSymbol()).getValue();
-                    
-                }
+                
+                PrimitiveSymbol firstEq = ((PrimitiveSymbol)InterpreterVisitor.getReturnSymbol());
+
+                expression.visitChild(new InterpreterDecider(), expression.getSecondOperand());
+
+                PrimitiveSymbol secondEq = ((PrimitiveSymbol)InterpreterVisitor.getReturnSymbol());
+
+                booleanResult = secondEq.getValue().equals(firstEq.getValue());
+                
+                InterpreterVisitor.setReturnSymbol(new BooleanSymbol(booleanResult));
+                System.out.println("Result of " + firstEq.getValue() + " EQUALS " + secondEq.getValue() + " is " + booleanResult + ".");
                 break;
             case NOT_EQUALS:
+            expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
+                
+                PrimitiveSymbol firstNeq = ((PrimitiveSymbol)InterpreterVisitor.getReturnSymbol());
+
+                expression.visitChild(new InterpreterDecider(), expression.getSecondOperand());
+
+                PrimitiveSymbol secondNeq = ((PrimitiveSymbol)InterpreterVisitor.getReturnSymbol());
+
+                booleanResult = !(secondNeq.getValue().equals(firstNeq.getValue()));
                 break;
             case OR:
                 expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
@@ -121,6 +133,7 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 break;
             case NOT:
                 expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
+                System.out.println("Negating boolean.");
                 InterpreterVisitor.setReturnSymbol(new BooleanSymbol(!((BooleanSymbol)InterpreterVisitor.getReturnSymbol()).getValue()));
                 break;
             case CONCAT:
@@ -128,27 +141,31 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 String stringOne = ((StringSymbol)InterpreterVisitor.getReturnSymbol()).getValue();
                 expression.visitChild(new InterpreterDecider(), expression.getSecondOperand());
                 String stringTwo = ((StringSymbol)InterpreterVisitor.getReturnSymbol()).getValue();
+                System.out.println("Concatenating \"" + stringOne + "\" with \"" + stringOne + "\".");
                 InterpreterVisitor.setReturnSymbol(new StringSymbol(stringOne + stringTwo));
                 break;
             case VARIABLE:
-                //TODO: figure out how to handle this in the interpreter and typechecker!!!
+                //TODO: WARNING:THIS OPERATOR IS UNSUPPORTED
+                //TODO: figure out how to handle this in the interpreter!
+                //at the time of writing, there is no syntactic support for this operator
+                System.out.println("Converting variable to string.");
                 break;
             case CONSTANT:
                 //this operator always returns a primitive!
+                System.out.println("Fetching constant.");
                 InterpreterVisitor.setReturnSymbol(expression.getConstant());
                 break;
             case ACCESS:
                 expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
                 TemplateSymbol template = (TemplateSymbol)InterpreterVisitor.getReturnSymbol();
 
-                expression.visitChild(new InterpreterDecider(), expression.getSecondOperand());      //TODO: find out how exactly to handle the second operand
                 //remember the field to find in the template
-                String fieldName = ((StringSymbol)InterpreterVisitor.getReturnSymbol()).getValue();  //TODO: USING THIS AS A PLACEHOLDER UNTIL THE SECOND OPERAND GETS IMPLEMENTED PROPERLY!
+                String fieldName = ((TField) expression.getSecondOperand()).getFieldName();
 
                 ArrayList<String> map = Scope.getTemplateMapTable().get(template.getType());         //get the arraylist with the chosen template's fields
 
                 SymbolTableEntry fieldContent = template.getContent().get(map.indexOf(fieldName));   //find the field we need with the map and get the content of the field
-
+                System.out.println("Accessing template with \"" + fieldName + "\".");
                 InterpreterVisitor.setReturnSymbol(fieldContent);
 
                 break;
