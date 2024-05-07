@@ -8,12 +8,13 @@ import com.proj4.AST.visitors.CheckDecider;
 import com.proj4.AST.visitors.TypeCheckVisitor;
 import com.proj4.exceptions.MalformedAstException;
 import com.proj4.exceptions.MismatchedTypeException;
+import com.proj4.symbolTable.Scope;
 
 public class ForLoopTypeChecker extends TypeCheckVisitor{
     
     public void visit(AST node){
         ForLoop forLoop = (ForLoop) node;
-
+        Scope.inherit();
         try {
             Identifiable iterator = (Identifiable) forLoop.getIterator();       //the iterator should have an identifier
             Statement iteratorAction = (Statement) forLoop.getIteratorAction(); //what we do with the iterator after the loop should be a statement of some kind 
@@ -31,5 +32,6 @@ public class ForLoopTypeChecker extends TypeCheckVisitor{
         
         //Make sure everything in the loop is well typed
         forLoop.visitChildren(new CheckDecider());
+        Scope.synthesize();
     }
 }

@@ -2,8 +2,6 @@ package com.proj4;
 
 import com.proj4.antlrClass.DBLBaseVisitor;
 import com.proj4.antlrClass.DBLParser;
-import com.proj4.antlrClass.DBLParser.ExprEqualBoolContext;
-import com.proj4.antlrClass.DBLParser.TemplateAssignmentContext;
 
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -41,7 +39,6 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
                 this.root.addChild((AST) childnode);
             }
             System.out.println("Program Children: " + root.getChildren());
-            return root;
         } catch (Exception e) {
             if(DEBUG_MODE){
                 System.out.println("Something exploded. Too bad :(\n");
@@ -294,8 +291,10 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     }
 
     @Override
-    public TemplateDecl visitIdDeclUser(DBLParser.IdDeclUserContext ctx) {
-        TemplateDecl node = new TemplateDecl(ctx.IDENTIFIER().getText());
+    public Declaration visitIdDeclUser(DBLParser.IdDeclUserContext ctx) {
+        Declaration node = new Declaration(ctx.IDENTIFIER().getText(), ctx.typedefUser().getText(), "Template");
+        TemplateInstance ti = new TemplateInstance(ctx.typedefUser().getText());
+        node.addChild(ti);
         return node;
     }
 
@@ -369,7 +368,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     }
 
     @Override
-    public Expression visitExprEqualBool(ExprEqualBoolContext ctx) {
+    public Expression visitExprEqualBool(DBLParser.ExprEqualBoolContext ctx) {
         ExpressionOperator op = ctx.EQUALS() == null ? ExpressionOperator.NOT_EQUALS : ExpressionOperator.EQUALS;
         Expression node = new Expression(op, (Expression) visit(ctx.children.get(0)), (Expression) visit(ctx.children.get(2)));
         return node;

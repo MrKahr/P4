@@ -26,6 +26,9 @@ public class Declaration extends Statement implements Identifiable, Typed{
 
     //Method
     public String getIdentifier(){
+        if (identifier == null) {
+            throw new MalformedAstException("Null identifier passed to declaration - cannot declare variable in symbol table.");
+        }
         return identifier;
     }
 

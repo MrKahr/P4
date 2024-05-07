@@ -19,10 +19,14 @@ public class AssignmentTypeChecker extends TypeCheckVisitor{
 
         assignment.visitChild(new CheckDecider(), assignment.getValueExpression());    //check the value to overwrite with
         
-        if(!expectedType.equals(TypeCheckVisitor.getFoundType())){
+        String valueType = TypeCheckVisitor.getFoundType();
+
+        String valueComplexType = TypeCheckVisitor.getFoundComplexType();
+
+        if(!expectedType.equals(valueType)){
             throw new MismatchedTypeException("Cannot assign value of type \"" + TypeCheckVisitor.getFoundType() + "\" to variable of type \"" + expectedType + "\"!");
         }
-        if (!expectedComplexType.equals(TypeCheckVisitor.getFoundComplexType())) {
+        if (!expectedComplexType.equals(valueComplexType)) {
             throw new MismatchedTypeException("Cannot assign value of complex type \"" + TypeCheckVisitor.getFoundComplexType() + "\" to variable of type \"" + expectedComplexType + "\"!");
         }
     }

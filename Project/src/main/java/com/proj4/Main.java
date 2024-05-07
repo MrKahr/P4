@@ -4,6 +4,9 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
+import com.proj4.AST.nodes.AST;
+import com.proj4.AST.visitors.CheckDecider;
+import com.proj4.AST.visitors.InterpreterDecider;
 import com.proj4.antlrClass.DBLLexer;
 import com.proj4.antlrClass.DBLParser;
 
@@ -13,7 +16,8 @@ public class Main {
         Boolean isFile = false;
 
         if (args.length == 0) {
-            args = new String[]{
+            args = new String[]{"Integer x IS 1; Integer y IS 2; Boolean z IS x EQUALS y"};
+           /*  args = new String[]{
             "FOR(Card card OF Shuffle(cardUniverse)) {\n"
             +"    IF(i LESS THAN bucketCount) {\n"
             +"    NEW Deck market {}\n"
@@ -23,7 +27,7 @@ public class Main {
             +"options IS market;\n"
             +"}\n"
             +"i IS i + 1;\n"
-            +"}"};
+            +"}"}; */
         } else {isFile = true;}
 
         System.out.println("Parsing: " + args[0] + "\n");
@@ -43,17 +47,29 @@ public class Main {
 
         // Set the lexed file as input to our parser
         DBLParser parser = new DBLParser(new CommonTokenStream(lexer));
-        
+
         // Create a parse tree. The starting rule is "program"
         ParseTree tree = parser.program();
-        
+
         // Our custom visitor (does the actions as tree is traversed)
         ParseTreeVisitor parseVisitor = new ParseTreeVisitor();
-        
+
         // Generate the AST
         parseVisitor.visit(tree);
 
-        // Print the AST
-        parseVisitor.getRoot().printTree();
+        // Assign AST
+        AST abstractSyntaxTree = parseVisitor.getRoot();
+
+        // Print tree
+        abstractSyntaxTree.printTree();
+
+        // Typecheck AST
+        CheckDecider checkDecider = new CheckDecider();
+        checkDecider.decideVisitor(abstractSyntaxTree);
+
+        // Interpret AST
+        InterpreterDecider interpreterDecider = new InterpreterDecider();
+        interpreterDecider.decideVisitor(abstractSyntaxTree);
+
     }
 }
