@@ -1,15 +1,28 @@
 /* TEST 1
-
-
-
-
-/* TEST 1
-3-level nested Integer array - correct type
+Flat Integer array
 */
-Integer[] a IS [[1], [2, [3]], 4];
+Integer[] a IS [1, 2, 3];
 
 
 /* TEST 2
+Flat String Array
+*/
+String[] b IS ["John", "Userman", "is", "a", "user"];
+
+
+/* TEST 3
+Flat Boolean array
+*/
+Boolean[] c IS [TRUE, FALSE, TRUE];
+
+
+/* TEST 3
+3-level nested Integer array - correct type
+*/
+Integer[] d IS [[1], [2, [3]], 4];
+
+
+/* TEST 4
 3-level nested Integer array - incorrect type
 */
-Integer[] b IS [[1], ["fish", [3]], 4];
+Integer[] e IS [[1], ["fish", [3]], 4];

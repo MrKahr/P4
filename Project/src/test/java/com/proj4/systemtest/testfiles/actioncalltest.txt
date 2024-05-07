@@ -1,0 +1,16 @@
+/* TEST 1
+Action call with return
+*/
+ACTION ta() RESULTS IN Integer {
+    RESULT IN 3;
+}
+Integer a IS ta();
+
+
+/* TEST 2
+Action call without return
+*/
+ACTION tb() {
+    Integer a IS 4;
+}
+Integer b IS tb();

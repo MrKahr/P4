@@ -79,9 +79,9 @@ boolExpr
     |   expr (NOTEQUALS | EQUALS) expr      # exprEqualBool
     |   stringExpr (NOTEQUALS | EQUALS) stringExpr  # stringEqualBool
     |   NOT boolExpr                        # negateBool
+    |   boolExpr EQUALS boolExpr            # equalBool
     |   boolExpr AND boolExpr               # andBool
     |   boolExpr OR  boolExpr               # orBool
-    |   boolExpr EQUALS boolExpr            # equalBool
     |   BOOLEAN                             # litteralBool
     |   IDENTIFIER                          # idBool
     ;
@@ -102,7 +102,7 @@ assignment // Remember to add semicolon if relevant
     |   expr ASSIGN IDENTIFIER    # idAssign
     ;
 
-templateAssignment
+templateAssignment // TemplateInitAssign
     :   typedefUser IDENTIFIER ASSIGN templateInit
     ;
 

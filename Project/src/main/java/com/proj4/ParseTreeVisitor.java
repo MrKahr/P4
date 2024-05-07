@@ -2,6 +2,7 @@ package com.proj4;
 
 import com.proj4.antlrClass.DBLBaseVisitor;
 import com.proj4.antlrClass.DBLParser;
+import com.proj4.antlrClass.DBLParser.ExprEqualBoolContext;
 import com.proj4.antlrClass.DBLParser.TemplateAssignmentContext;
 
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -99,8 +100,10 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         else {
             resultComplexType = "Primitive";
         }
+        Body body = (Body) visit(ctx.body());
+        body.addChild((Return) visit(ctx.return_()));
         String identifier = ctx.typedefUser().getText();
-        ActionDecl node = new ActionDecl(identifier, resultType, resultComplexType, (Body) visit(ctx.body()), Math.max(0, nestingLevel));
+        ActionDecl node = new ActionDecl(identifier, resultType, resultComplexType, body, Math.max(0, nestingLevel));
 
         ArrayList<Declaration> parameterList = (ArrayList<Declaration>) visit(ctx.parameterList());
         for (Declaration parameter : (ArrayList<Declaration>) parameterList) {
@@ -360,6 +363,13 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
 
     @Override
     public Expression visitStringEqualBool(DBLParser.StringEqualBoolContext ctx) {
+        ExpressionOperator op = ctx.EQUALS() == null ? ExpressionOperator.NOT_EQUALS : ExpressionOperator.EQUALS;
+        Expression node = new Expression(op, (Expression) visit(ctx.children.get(0)), (Expression) visit(ctx.children.get(2)));
+        return node;
+    }
+
+    @Override
+    public Expression visitExprEqualBool(ExprEqualBoolContext ctx) {
         ExpressionOperator op = ctx.EQUALS() == null ? ExpressionOperator.NOT_EQUALS : ExpressionOperator.EQUALS;
         Expression node = new Expression(op, (Expression) visit(ctx.children.get(0)), (Expression) visit(ctx.children.get(2)));
         return node;

@@ -1,0 +1,30 @@
+1. Declaration test                 // DONE
+2. Assignment test                  // DONE
+3. Expression tests                 // DONE
+4. String tests                     // DONE
+5. Boolean tests                    // DONE
+6. Action Declation tests
+7. Action Call tests
+8. Array tests
+9. If-else tests
+10. For-loop tests
+11. Template Decl tests
+12. Template Initialization tests
+13. Rule tests
+14. State tests
+
+
+
+Test cases:
+ - Intended behaviour (e.g. 3+3 = 6, TRUE OR FALSE = TRUE)
+ - Illegal operations (e.g. 3/0)
+ - Mixing incompatible types
+ - Access data structures out of bounds
+ - Emojis
+
+
+
+Questions:
+ - Should float division be floor, ceiling, or round?
+ - What happens when you assign the result of an actionCall that doesn't return anything to a variable?
+ - Should we allow negative integers?

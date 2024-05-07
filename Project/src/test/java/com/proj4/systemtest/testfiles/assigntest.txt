@@ -1,34 +1,36 @@
 /* TEST 1
 Expression
 */
-Integer a;
-a IS 3;
+Integer ia IS 3;
 
 
 /* TEST 2
 Boolean expression
 */
-Boolean b;
-b IS TRUE;
+Boolean ba IS TRUE;
 
 
 /* TEST 3
 String expression
 */
-String c;
-c IS "fish_1";
+String sa IS "fish_1";
 
 
 /* TEST 4
 Array instance
 */
-Integer[] d;
-d IS [1, 2, 3];
+Integer[] aa IS [1, 2, 3];
 
 
 /* TEST 5
 Variable
 */
-String e IS "fish_2";
-String f;
-f IS e;
+String va IS "fish_2";
+String vb IS va;
+
+
+/* TEST 6
+Variable overwrite
+*/
+Integer voa IS 3;
+voa IS voa + 3;

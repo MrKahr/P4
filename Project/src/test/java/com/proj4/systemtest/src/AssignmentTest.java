@@ -1,4 +1,4 @@
-package com.proj4.systemtest;
+package com.proj4.systemtest.src;
 
 import java.io.IOException;
 
@@ -32,7 +32,7 @@ public class AssignmentTest {
 
     @Test
     public void exprAssignTest(){
-        
+
         assertTrue(true);
     }
 
