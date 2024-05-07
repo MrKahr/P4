@@ -15,7 +15,7 @@ public class TField extends Expression{
     }
 
     //Method
-    public String getfieldName(){
+    public String getFieldName(){
         return fieldName;
     }
 

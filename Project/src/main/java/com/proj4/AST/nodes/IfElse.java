@@ -16,6 +16,10 @@ public class IfElse extends Statement {
     }
 
     public Statement getElseBlock(){
-        return (Statement) getChildren().get(2);
+        try {
+            return (Statement) getChildren().get(2);
+        } catch (IndexOutOfBoundsException ioobe) { //there might not be an else-block, so we return null if this makes an exception
+            return null;
+        }
     }
 }

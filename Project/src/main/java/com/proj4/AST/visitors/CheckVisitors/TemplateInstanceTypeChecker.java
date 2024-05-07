@@ -12,6 +12,7 @@ public class TemplateInstanceTypeChecker extends TypeCheckVisitor{
 
         String templateType = templateInstance.getType();
 
+        //TODO: This line is probably not needed. Look into it
         SymbolTableEntry.instantiateDefault(templateType, "Template", 0);
 
         TypeCheckVisitor.setFoundType(templateType, "Template", 0);

@@ -18,6 +18,6 @@ public class BodyTypeChecker extends TypeCheckVisitor{
         body.visitChildren(new CheckDecider());
         //make sure to remove any effect of the body before continuing
         //this shouldn't be done when interpreting!
-        Scope.exit();
+        Scope.synthesize();
     }
 }

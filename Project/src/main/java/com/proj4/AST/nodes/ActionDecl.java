@@ -5,7 +5,7 @@ public class ActionDecl extends AST implements Identifiable, Typed{
     private String complexReturnType;
     private String returnType;
     private String identifier;
-    private AST body;
+    private Body body;
     private Integer nestingLevel = 0;
 
     //Constructor
@@ -34,7 +34,7 @@ public class ActionDecl extends AST implements Identifiable, Typed{
         return complexReturnType;
     }
 
-    public AST getBody(){
+    public Body getBody(){
         return body;
     }
 
