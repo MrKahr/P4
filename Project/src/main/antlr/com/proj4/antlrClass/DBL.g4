@@ -30,18 +30,14 @@ Uppercase = Lexer rule (ANTLR book, p. 80)
 Lowercase = Parser rule (ANTLR book p. 80)
 */
 
-grammar DBL;
-
-// TODO: Consider whether statements should be ended by '\n' <--- They will not, as that's too much of a hassle
 // TODO: Check om vi skal have statement/declarations/ruleDeclartions etc. i en bestemt rækkefølge.
 // TODO: Fjern left-recursion til CFG i den endelige rapport
-// TODO: Check wether we allow e.g.: Action ReadAction() RESULTS IN String
-
+grammar DBL;
 ////////////
 // PARSER //
 ////////////
 program
-    :   (templateDecl)* (actionDecl)* (ruleDecl)* (stateDecl)* stmtList EOF
+    :   templateDecl* actionDecl* ruleDecl* stateDecl* stmtList EOF
     ;
 
 stmt
@@ -53,10 +49,9 @@ stmt
     ;
 
 stmtList
-    :   (stmt)*
+    :   stmt*
     ;
 
-// This is very much left-recursive - FIND WAY TO REMOVE IN CFG!
 expr
     :   BRAC_START expr BRAC_END   # parExpr
     |   expr multOp expr           # multExpr
@@ -69,7 +64,6 @@ expr
     |   IDENTIFIER                 # idExpr
     ;
 
-// This is very much left-recursive - FIND WAY TO REMOVE IN CFG!
 boolExpr
     :   BRAC_START boolExpr BRAC_END        # parBool
     |   expr GT expr                        # exprGTBool
@@ -87,7 +81,7 @@ boolExpr
     ;
 
 stringExpr
-    :   stringExpr ADD stringExpr  # addString      // Doing it this way means implicit type conversion from int to string! Also, ensure types are correct! (int, str)
+    :   stringExpr ADD stringExpr  # addString
     |   stringExpr ADD expr        #addStringexpr1
     |   expr ADD stringExpr        #addStringexpr2
     |   string                     # litteralString
@@ -124,7 +118,7 @@ declaration
     ;
 
 declarationList
-    :   (declaration)+
+    :   declaration+
     ;
 
 body
@@ -160,7 +154,7 @@ actionCall
     :   typedefUser BRAC_START argumentList BRAC_END
     ;
 
-actionResult   // NOTICE: currently action_result is an expr, which means it's allowed almost everywhere! The only valid use of it is in the "IF()" of an if_block in Rule. Semantic Analysis should handle this
+actionResult
     :   typedefUser DOT RESULT (DOT IDENTIFIER)*
     ;
 
@@ -219,7 +213,6 @@ identifierList
 ///////////
 // LEXER //
 ///////////
-
 /*** Non-tokens ***/
 LINE_COMMENT : '//' .*? '\r'? '\n' -> skip ; // ANTLR book p. 77
 COMMENT : '/*' .*? '*/' -> skip ;            // ANTLR book p. 77
@@ -316,4 +309,3 @@ SEMICOLON
 IDENTIFIER
     : [A-Za-z]+[0-9A-Za-z]*
     ;
-// NOTE: ANTLR recognizes UPPERCASE as lexer and lowercase as parser!!!s
