@@ -17,9 +17,9 @@ public class StateDecl extends AST implements Identifiable{
         this.stateBody = body;
     }
 
-    public StateDecl(String identifier, Body body, ArrayList<String> actioList){
+    public StateDecl(String identifier, Body body, ArrayList<String> actionList){
         this.identifier = identifier;
-        this.actionList = actioList;
+        this.actionList = actionList;
         this.stateBody = body;
     }
 

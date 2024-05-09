@@ -9,6 +9,7 @@ import com.proj4.exceptions.VariableAlreadyDefinedException;
 import com.proj4.symbolTable.symbols.TemplateSymbol;
 import com.proj4.symbolTable.symbols.ActionSymbol;
 import com.proj4.symbolTable.symbols.RuleSymbol;
+import com.proj4.symbolTable.symbols.StateSymbol;
 import com.proj4.symbolTable.symbols.SymbolTableEntry;
 
 //this class represents a scope in the programming language
@@ -23,7 +24,7 @@ public class Scope implements Cloneable{
     //this table keeps track of actions
     private static HashMap<String, ActionSymbol> actionTable = new HashMap<>();
     //this table keeps track of which states have been declared in the current scope
-    private static HashMap<String, RuleSymbol> stateTable = new HashMap<>();    //TODO: stateTable contains rulesymbols for now 
+    private static HashMap<String, StateSymbol> stateTable = new HashMap<>();    //TODO: stateTable contains rulesymbols for now 
     // this table keeps track of which rules have been declared 
     private static HashMap<String, ArrayList<RuleSymbol>> ruleTable = new HashMap<>();
 
@@ -58,7 +59,7 @@ public class Scope implements Cloneable{
         return declaredTable;
     }
 
-    public static HashMap<String, RuleSymbol> getStateTable(){
+    public static HashMap<String, StateSymbol> getStateTable(){
         return stateTable;
     }
 
@@ -82,7 +83,7 @@ public class Scope implements Cloneable{
         declaredTable = table;
     }
 
-    public static void setStateTable(HashMap<String, RuleSymbol> table){
+    public static void setStateTable(HashMap<String, StateSymbol> table){
         stateTable = table;
     }
 
@@ -123,14 +124,8 @@ public class Scope implements Cloneable{
         }
     }
 // TODO: states are unimplemented right now
-    public void declareState(String identifier){
-        /*
-        if(stateTable.contains(identifier)){
-            throw new StateAlreadyDefinedExpection();
-        } else {
-            stateTable.add(identifier);
-        }
-        */
+    public static void declareState(String identifier, StateSymbol stateSymbol){
+        stateTable.put(identifier, stateSymbol);
     }
     //creates a new scope with all the mappings of the origin scope, but with the declaredTable reset so variables can be overwritten by new declarations
     public static Scope open(Scope origin){
