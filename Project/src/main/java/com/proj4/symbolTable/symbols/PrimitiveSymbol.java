@@ -9,7 +9,7 @@ public abstract class PrimitiveSymbol<T> extends SymbolTableEntry{
     public T getValue(){
         return value;
     }
-    
+
     public void setValue(T value){
         this.value = value;
     }
@@ -18,13 +18,13 @@ public abstract class PrimitiveSymbol<T> extends SymbolTableEntry{
         return "Primitive";
     }
 
-    @Override 
+    @Override
     public boolean equals(Object other){
         if (other == this) {
             return true;
         }
 
-        if (!(other instanceof IntSymbol || other instanceof BooleanSymbol || other instanceof StringSymbol)) {
+        if (!(other instanceof IntegerSymbol || other instanceof BooleanSymbol || other instanceof StringSymbol)) {
             return false;
         }
 
@@ -34,13 +34,13 @@ public abstract class PrimitiveSymbol<T> extends SymbolTableEntry{
 
         switch (this.getType()) {
             case "Integer":
-                return this.getValue().equals(((IntSymbol)other).getValue());
+                return this.getValue().equals(((IntegerSymbol)other).getValue());
             case "Boolean":
                 return this.getValue().equals(((BooleanSymbol)other).getValue());
             case "String":
                 return this.getValue().equals(((StringSymbol)other).getValue());
             default:
-                throw new UnexpectedTypeException("Expected a primitive type. Recieved " + this.getType()); 
+                throw new UnexpectedTypeException("Expected a primitive type. Recieved " + this.getType());
         }
     }
 }
