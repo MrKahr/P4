@@ -2,9 +2,11 @@ package com.proj4.AST.visitors.CheckVisitors;
 
 import com.proj4.AST.nodes.AST;
 import com.proj4.AST.nodes.StateDecl;
+import com.proj4.AST.visitors.CheckDecider;
 import com.proj4.AST.visitors.TypeCheckVisitor;
 import com.proj4.exceptions.*;
 import com.proj4.symbolTable.Scope;
+import com.proj4.symbolTable.symbols.StateSymbol;
 
 public class StateDeclTypeChecker extends TypeCheckVisitor{
 
@@ -27,8 +29,13 @@ public class StateDeclTypeChecker extends TypeCheckVisitor{
             }
         }
 
-        // Add finished declaration to scope and synthesize it to parent
-        stateDecl.getScope().declareState(stateDecl.getIdentifier());
+        // Check the body of the state if it exists
+        if (stateDecl.getBody() != null) {
+            stateDecl.visitChild(new CheckDecider(), stateDecl.getBody());
+        }
+
+        // Create a StateSymbol and add it to the state table
+        Scope.declareState(stateDecl.getIdentifier(), new StateSymbol(stateDecl.getBody(), stateDecl.getActionList()));
         Scope.exit();
     }
 }

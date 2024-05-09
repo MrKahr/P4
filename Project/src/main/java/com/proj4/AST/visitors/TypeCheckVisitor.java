@@ -3,9 +3,9 @@ package com.proj4.AST.visitors;
 public abstract class TypeCheckVisitor implements NodeVisitor {
 
     //Field
-    private static String foundType;    //this holds the most recent type we have found. Used to circumvent visitors not being able to return anything
-    private static String foundComplexType;  //this holds the most recent complex type we have found. Used for differentiating between arrays, templates, and primitives
-    private static String currentAction;//if we're inside an action body, this will hold the action's name
+    private static String foundType;        //this holds the most recent type we have found. Used to circumvent visitors not being able to return anything
+    private static String foundComplexType; //this holds the most recent complex type we have found. Used for differentiating between arrays, templates, and primitives
+    private static String currentAction;    //if we're inside an action body, this will hold the action's name
     private static Integer nestingLevel = 0;
 
     //Method

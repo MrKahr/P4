@@ -19,6 +19,10 @@ public class ActionDecl extends AST implements Identifiable, Typed{
 
     public ActionDecl(String identifier, Body body){
         this.identifier = identifier;
+        this.body = body;
+        this.returnType = "Null";   //setting these to prevent nullpointerexceptions from calling .equals
+        this.complexReturnType = "Null";
+        this.nestingLevel = 0;
     }
 
     //Method

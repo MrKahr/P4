@@ -22,7 +22,6 @@ public class ExpressionInterpreter extends InterpreterVisitor {
         Integer operands[];
         Boolean booleanOperands[];
         // Note: These operators always return primitive types
-        // Note: Fallthrough for each operator type
         switch (expression.getOperator()) {
             case ADD:
                 operands = getIntegerOperands(expression);
@@ -83,29 +82,50 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 InterpreterVisitor.setReturnSymbol(new BooleanSymbol(booleanResult));
                 break;
             case EQUALS:
-                expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
-                
-                PrimitiveSymbol firstEq = ((PrimitiveSymbol)InterpreterVisitor.getReturnSymbol());
+                SymbolTableEntry firstElement;
+                SymbolTableEntry secondElement;
 
+                // Visit first element 
+                expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
+
+                if(InterpreterVisitor.getReturnSymbol().getType().equals("Primtive")){
+                    firstElement =  ((PrimitiveSymbol)InterpreterVisitor.getReturnSymbol());
+                } else if(InterpreterVisitor.getReturnSymbol().getType().equals("Complex")) {
+                    firstElement =  ((ComplexSymbol)InterpreterVisitor.getReturnSymbol());
+                } else {
+                    throw new UnexpectedTypeException("Recieved unexpected type for equals operation: " + InterpreterVisitor.getReturnSymbol().getType() +  "");
+                }
                 expression.visitChild(new InterpreterDecider(), expression.getSecondOperand());
 
-                PrimitiveSymbol secondEq = ((PrimitiveSymbol)InterpreterVisitor.getReturnSymbol());
-
-                booleanResult = secondEq.getValue().equals(firstEq.getValue());
+                secondElement = InterpreterVisitor.getReturnSymbol();
+                
+                booleanResult = firstElement.equals(secondElement);
                 
                 InterpreterVisitor.setReturnSymbol(new BooleanSymbol(booleanResult));
-                System.out.println("Result of " + firstEq.getValue() + " EQUALS " + secondEq.getValue() + " is " + booleanResult + ".");
+
+                //System.out.println("Result of " + firstElement.getValue() + " EQUALS " + secondEq.getValue() + " is " + booleanResult + ".");
                 break;
             case NOT_EQUALS:
-            expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
-                
-                PrimitiveSymbol firstNeq = ((PrimitiveSymbol)InterpreterVisitor.getReturnSymbol());
+                SymbolTableEntry NeqfirstElement;
+                SymbolTableEntry NeqsecondElement;
 
+                // Visit first element 
+                expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
+
+                if(InterpreterVisitor.getReturnSymbol().getType().equals("Primtive")){
+                    NeqfirstElement =  ((PrimitiveSymbol)InterpreterVisitor.getReturnSymbol());
+                } else if(InterpreterVisitor.getReturnSymbol().getType().equals("Complex")) {
+                    NeqfirstElement =  ((ComplexSymbol)InterpreterVisitor.getReturnSymbol());
+                } else {
+                    throw new UnexpectedTypeException("Recieved unexpected type for equals operation: " + InterpreterVisitor.getReturnSymbol().getType() +  "");
+                }
                 expression.visitChild(new InterpreterDecider(), expression.getSecondOperand());
 
-                PrimitiveSymbol secondNeq = ((PrimitiveSymbol)InterpreterVisitor.getReturnSymbol());
-
-                booleanResult = !(secondNeq.getValue().equals(firstNeq.getValue()));
+                NeqsecondElement = InterpreterVisitor.getReturnSymbol();
+                
+                booleanResult = !(NeqfirstElement.equals(NeqsecondElement));
+                
+                InterpreterVisitor.setReturnSymbol(new BooleanSymbol(booleanResult));
                 break;
             case OR:
                 expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
