@@ -7,12 +7,20 @@ import java.util.ArrayList;
 public class StateDecl extends AST implements Identifiable{
     //Field
     private String identifier;
-    private ArrayList<String> actionList; 
+    private ArrayList<String> actionList; //a list of actions the user may choose to start while in this state
+    private Body stateBody; //code that executes every time the user is prompted for input
 
     //Constructor
-    public StateDecl(String identifier){
+    public StateDecl(String identifier, Body body){
         this.identifier = identifier;
         this.actionList = new ArrayList<String>();
+        this.stateBody = body;
+    }
+
+    public StateDecl(String identifier, Body body, ArrayList<String> actioList){
+        this.identifier = identifier;
+        this.actionList = actioList;
+        this.stateBody = body;
     }
 
     //Method
@@ -22,5 +30,13 @@ public class StateDecl extends AST implements Identifiable{
 
     public ArrayList<String> getActionList(){
         return this.actionList;
-    };
+    }
+
+    public Body getBody(){
+        return this.stateBody;
+    }
+
+    public void addAction(String actionIdentifier){
+        actionList.add(actionIdentifier);
+    }
 }
