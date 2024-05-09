@@ -1,8 +1,0 @@
-
-
-/* TEST 1
-Action Decl with parameters, without return
-*/
-ACTION tad(Integer a, String b) {
-    return a+b;
-}

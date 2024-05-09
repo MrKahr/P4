@@ -23,12 +23,12 @@ public class ActionCallInterpreter extends InterpreterVisitor {
             actionCall.visitChild(new InterpreterDecider(), index);
             String name = action.getParameterNames().get(index);
             SymbolTableEntry symbol = InterpreterVisitor.getReturnSymbol();
-            
+
             switch (symbol.getComplexType()) {
                 case "Primitive":
                     switch (symbol.getType()) {
                         case "Integer":
-                            action.getInitialScope().getVariableTable().put(name, new IntSymbol((IntSymbol) symbol));
+                            action.getInitialScope().getVariableTable().put(name, new IntegerSymbol((IntegerSymbol) symbol));
                             break;
                         case "Boolean":
                             action.getInitialScope().getVariableTable().put(name, new BooleanSymbol((BooleanSymbol) symbol));

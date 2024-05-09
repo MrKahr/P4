@@ -159,9 +159,8 @@ actionResult
     ;
 
 stateDecl
-    :   STATE typedefUser ALLOWS SQB_START identifierList SQB_END WITH_LOOP SQB_START actionCall+ SQB_END    # idActionState
-    |   STATE typedefUser ALLOWS SQB_START identifierList SQB_END                                            # idState
-    |   STATE typedefUser                                                                                    # idStateDecl
+    :   STATE typedefUser ALLOWS SQB_START identifierList SQB_END WITH_LOOP BODY_START body BODY_END    # idActionStateLoop
+    |   STATE typedefUser ALLOWS SQB_START identifierList SQB_END                                       # idActionState
     ;
 
 parameterList
@@ -173,7 +172,7 @@ argumentList
     ;
 
 arrayDecl
-    :   (typedefUser | typePrimitive) SQB_START SQB_END IDENTIFIER (ASSIGN arrayInit)?
+    :   arrayType IDENTIFIER (ASSIGN arrayInit)?
     ;
 
 arrayType

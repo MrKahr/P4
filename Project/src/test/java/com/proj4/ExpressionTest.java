@@ -1,4 +1,4 @@
-package com.proj4.systemtest.src;
+package com.proj4;
 
 public class ExpressionTest {
 

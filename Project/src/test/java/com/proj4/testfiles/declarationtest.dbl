@@ -14,3 +14,13 @@ String b;
 Primitive declaration - Boolean
 */
 Boolean c;
+
+/* TEST 4
+PrimitiveArray declaration - Integer
+*/
+Integer[] c;
+
+/* TEST 5
+PrimitiveNestedArray declaration - Integer
+*/
+Integer[][] c;

@@ -21,7 +21,7 @@ public class TemplateSymbol extends SymbolTableEntry{
             //use the type to figure out which symbol type we're dealing with and create a copy of that type
             switch (entry.getType()) {
                 case "Integer": //IntSymbol
-                    content.add(new IntSymbol((IntSymbol) entry));
+                    content.add(new IntegerSymbol((IntegerSymbol) entry));
                     break;
                 case "Boolean": //BooleanSymbol
                     content.add(new BooleanSymbol((BooleanSymbol) entry));
@@ -35,7 +35,7 @@ public class TemplateSymbol extends SymbolTableEntry{
                             content.add(new ArraySymbol((ArraySymbol) entry));
                             break;
                         case "Template":    //TemplateSymbol
-                            content.add(new TemplateSymbol((TemplateSymbol) entry)); 
+                            content.add(new TemplateSymbol((TemplateSymbol) entry));
                             break;
                         default:
                             throw new UndefinedTypeException("Type \"" + entry.getType() + "\" is not defined!");

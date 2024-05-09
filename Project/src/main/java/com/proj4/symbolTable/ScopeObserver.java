@@ -3,14 +3,18 @@ package com.proj4.symbolTable;
 import java.util.Stack;
 
 public class ScopeObserver implements InterpreterObserver {
-    // Field 
+    // Field
     private Stack<Scope> currentScope;
-    
-    // Constructor 
 
-    // Method 
-    @Override 
+    // Constructor
+
+    // Method
+    @Override
     public void setCurrentScope(Stack<Scope> stackToCopy){
         this.currentScope = stackToCopy;
+    }
+
+    public Stack<Scope> getCurrentScope(){
+        return this.currentScope;
     }
 }

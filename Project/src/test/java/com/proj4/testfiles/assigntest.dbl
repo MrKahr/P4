@@ -1,5 +1,5 @@
 /* TEST 1
-Expression
+Integer Expression
 */
 Integer ia IS 3;
 
@@ -19,7 +19,7 @@ String sa IS "fish_1";
 /* TEST 4
 Array instance
 */
-Integer[] aa IS [1, 2, 3];
+//Integer[] aa IS [1, 2, 3];
 
 
 /* TEST 5

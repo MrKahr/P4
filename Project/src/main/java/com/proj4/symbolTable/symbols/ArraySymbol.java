@@ -16,13 +16,13 @@ public class ArraySymbol extends SymbolTableEntry{
             addContent(new ArraySymbol(type, nestingLevel - 1));
         }
     }
-    
+
     public ArraySymbol(ArraySymbol other){  //create a copy of a given ComplexSymbol{
             //use the type to figure out which symbol type we're dealing with and create a copy of that type
             switch (getType()) {
                 case "Integer": //IntSymbol
                     for (SymbolTableEntry entry : other.getContent()) {
-                        content.add(new IntSymbol((IntSymbol) entry));
+                        content.add(new IntegerSymbol((IntegerSymbol) entry));
                     }
                     break;
                 case "Boolean": //BooleanSymbol
@@ -45,7 +45,7 @@ public class ArraySymbol extends SymbolTableEntry{
                         case "Template":    //TemplateSymbol
                             for (SymbolTableEntry entry : other.getContent()) {
                                 content.add(new TemplateSymbol((TemplateSymbol) entry));
-                            }   
+                            }
                             break;
                         default:
                             throw new UndefinedTypeException("Type \"" + getType() + "\" is not defined!");
@@ -54,7 +54,7 @@ public class ArraySymbol extends SymbolTableEntry{
             }
             this.nestingLevel = other.getNestingLevel();
         }
-    
+
 
     //Method
     public ArrayList<SymbolTableEntry> getContent(){
@@ -92,7 +92,7 @@ public class ArraySymbol extends SymbolTableEntry{
     //returns true if the types, complex types, and nesting levels of two arrays are equal. Otherwise returns false
     public boolean compareTypes(ArraySymbol other){
         return (
-            getType().equals(other.getType()) 
+            getType().equals(other.getType())
             && getComplexType().equals(other.getComplexType())
             && nestingLevel.equals(other.getNestingLevel())
         );
