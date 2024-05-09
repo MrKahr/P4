@@ -51,10 +51,13 @@ public class ActionCallInterpreter extends InterpreterVisitor {
             }
         }
 
-        //set the scope and interpret the action
+        //set the scope and interpret the action. Also set the current action so return nodes target the right places
+        String thisAction = InterpreterVisitor.getCurrentActionIdentifier();
+        InterpreterVisitor.setCurrentAction(actionCall.getIdentifier());
         Scope.getScopeStack().push(action.getInitialScope());
         actionCall.visitChild(new InterpreterDecider(), action.getBody());
         Scope.exit();
+        InterpreterVisitor.setCurrentAction(thisAction);
 
         //finally, trigger any rules bound to his action
         ArrayList<RuleSymbol> rules = Scope.getRuleTable().get(actionCall.getIdentifier());
