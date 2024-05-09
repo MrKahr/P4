@@ -1,0 +1,116 @@
+/* TEST 1
+Multiplication with positive integers
+*/
+Integer ma IS 2*2;
+
+
+/* TEST 3
+Multiplication with 0
+*/
+Integer mb IS 2*0;
+
+
+/* TEST 4
+Multiplication with 1
+Integer mc IS 2*1;
+
+
+/* TEST 5
+Multiplication with single negative integer
+*/
+Integer md IS -2*2;
+
+
+/* TEST 6
+Multiplication with double negative integers
+*/
+Integer me IS -2*-2;
+
+
+/* TEST 7
+Division
+*/
+Integer da IS 9/3;
+
+
+/* TEST 8
+Division with single negative integer
+*/
+Integer db IS -9/3;
+
+
+/* TEST 9
+Division with double negative integers
+*/
+Integer dc IS -9/-3;
+
+
+/* TEST 10
+Divide by zero
+*/
+Integer dd IS 2/0;
+
+
+/* TEST 11
+Division resulting a float (expect WHAT? of result)
+*/
+Integer de IS 9/5;
+
+
+/* TEST 12
+Addition with positive integers
+*/
+Integer aa IS 2+2;
+
+
+/* TEST 13
+Addition with single negative integer
+*/
+Integer ab IS -2+2;
+
+
+/* TEST 14
+Addition with double negative integers
+*/
+Integer ac IS -2+-2;
+
+
+/* TEST 15
+Subtraction with positive integers
+*/
+Integer sa IS 2-2;
+
+
+/* TEST 16
+Subtraction with single negative integer
+*/
+Integer sb IS -2-2;
+
+
+/* TEST 17
+Subtraction with double negative integers
+*/
+Integer sc IS -2--2;
+
+
+/* TEST 18
+Operator precedence - multiplication (should equal 6)
+*/
+Integer oa IS 2*2+2;
+
+
+/* TEST 19
+Operator precedence - division (should equal 3)
+*/
+Integer ob IS 2/2+2;
+
+
+/* TEST 20
+Operator precedence - all (should equal 5)
+*/
+Integer oc IS 2*2+2-6/6;
+
+
+/* TEST 21
+Parenthesis precedence (should equal 4) (equals 9 without parenthesis precedence)
+Integer pa IS (2+2)*(4-2)/2;

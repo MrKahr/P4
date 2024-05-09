@@ -1,0 +1,26 @@
+/* TEST 1
+Primitive declaration - Integer
+*/
+Integer a;
+
+
+/* TEST 2
+Primitive declaration - String
+*/
+String b;
+
+
+/* TEST 3
+Primitive declaration - Boolean
+*/
+Boolean c;
+
+/* TEST 4
+PrimitiveArray declaration - Integer
+*/
+Integer[] c;
+
+/* TEST 5
+PrimitiveNestedArray declaration - Integer
+*/
+Integer[][] c;

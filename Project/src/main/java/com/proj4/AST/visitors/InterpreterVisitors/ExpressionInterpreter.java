@@ -15,7 +15,7 @@ public class ExpressionInterpreter extends InterpreterVisitor {
 
     @SuppressWarnings("unchecked")  //typecasting without respecting generics is ok here, because we've already typechecked the program at this point
     public void visit(AST node) {
-        // Expression: primitive symbol + expression operator left operand, right operand. 
+        // Expression: primitive symbol + expression operator left operand, right operand.
         Expression expression = (Expression) node;
         Integer integerResult;
         Boolean booleanResult;
@@ -27,35 +27,35 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 operands = getIntegerOperands(expression);
                 integerResult = operands[0] + operands[1];
                 System.out.println("Result of " + operands[0] + " + " + operands[1] + " is " + integerResult);
-                InterpreterVisitor.setReturnSymbol(new IntSymbol(integerResult));
+                InterpreterVisitor.setReturnSymbol(new IntegerSymbol(integerResult));
                 break;
             case SUBTRACT:
                 operands = getIntegerOperands(expression);
                 integerResult = operands[0] + operands[1];
                 System.out.println("Result of " + operands[0] + " - " + operands[1] + " is " + integerResult);
-                InterpreterVisitor.setReturnSymbol(new IntSymbol(integerResult));
+                InterpreterVisitor.setReturnSymbol(new IntegerSymbol(integerResult));
                 break;
             case DIVIDE:
                 operands = getIntegerOperands(expression);
-                
+
                 if(operands[1] == 0){
                     throw new ArithmeticException("Division by zero!");
                 }
                 integerResult = operands[0] / operands[1];
                 System.out.println("Result of " + operands[0] + " / " + operands[1] + " is " + integerResult);
-                InterpreterVisitor.setReturnSymbol(new IntSymbol(integerResult));
+                InterpreterVisitor.setReturnSymbol(new IntegerSymbol(integerResult));
                 break;
-            case MULTIPLY: 
+            case MULTIPLY:
                 operands = getIntegerOperands(expression);
                 integerResult = operands[0] * operands[1];
                 System.out.println("Result of " + operands[0] + " * " + operands[1] + " is " + integerResult);
-                InterpreterVisitor.setReturnSymbol(new IntSymbol(integerResult));
+                InterpreterVisitor.setReturnSymbol(new IntegerSymbol(integerResult));
                 break;
             case NEGATE:
                 expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
-                integerResult = -((IntSymbol)InterpreterVisitor.getReturnSymbol()).getValue();
+                integerResult = -((IntegerSymbol)InterpreterVisitor.getReturnSymbol()).getValue();
                 System.out.println("Result of -" + -integerResult + " is " + integerResult);    //funky, but it works
-                InterpreterVisitor.setReturnSymbol(new IntSymbol(integerResult));
+                InterpreterVisitor.setReturnSymbol(new IntegerSymbol(integerResult));
                 break;
             case LESS_THAN:
                 operands = getIntegerOperands(expression);
@@ -75,7 +75,7 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 System.out.println("Result of " + operands[0] + " > " + operands[1] + " is " + booleanResult);
                 InterpreterVisitor.setReturnSymbol(new BooleanSymbol(booleanResult));
                 break;
-            case GREATER_OR_EQUALS: 
+            case GREATER_OR_EQUALS:
                 operands = getIntegerOperands(expression);
                 booleanResult = operands[0] >= operands[1];
                 System.out.println("Result of " + operands[0] + " >= " + operands[1] + " is " + booleanResult);
@@ -193,7 +193,7 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
                 ArrayList<SymbolTableEntry> content = ((ArraySymbol)InterpreterVisitor.getReturnSymbol()).getContent();
                 expression.visitChild(new InterpreterDecider(), expression.getSecondOperand());
-                Integer index = ((IntSymbol)InterpreterVisitor.getReturnSymbol()).getValue();
+                Integer index = ((IntegerSymbol)InterpreterVisitor.getReturnSymbol()).getValue();
                 InterpreterVisitor.setReturnSymbol(content.get(index));
                 System.out.println("Indexing array with \"" + index + "\".");
                 break;
@@ -222,4 +222,4 @@ public class ExpressionInterpreter extends InterpreterVisitor {
         return operands;
     }
 
-} 
+}

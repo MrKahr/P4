@@ -1,0 +1,36 @@
+/* TEST 1
+Integer Expression
+*/
+Integer ia IS 3;
+
+
+/* TEST 2
+Boolean expression
+*/
+Boolean ba IS TRUE;
+
+
+/* TEST 3
+String expression
+*/
+String sa IS "fish_1";
+
+
+/* TEST 4
+Array instance
+*/
+//Integer[] aa IS [1, 2, 3];
+
+
+/* TEST 5
+Variable
+*/
+String va IS "fish_2";
+String vb IS va;
+
+
+/* TEST 6
+Variable overwrite
+*/
+Integer voa IS 3;
+voa IS voa + 3;

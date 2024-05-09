@@ -11,13 +11,13 @@ public class StateDecl extends AST implements Identifiable{
     private Body stateBody; //code that executes every time the user is prompted for input
 
     //Constructor
-    public StateDecl(String identifier, Body body){
+
+    public StateDecl(String identifier, ArrayList<String> actionList){
         this.identifier = identifier;
-        this.actionList = new ArrayList<String>();
-        this.stateBody = body;
+        this.actionList = actionList;
     }
 
-    public StateDecl(String identifier, Body body, ArrayList<String> actionList){
+    public StateDecl(String identifier, ArrayList<String> actionList, Body body){
         this.identifier = identifier;
         this.actionList = actionList;
         this.stateBody = body;
@@ -40,3 +40,4 @@ public class StateDecl extends AST implements Identifiable{
         actionList.add(actionIdentifier);
     }
 }
+

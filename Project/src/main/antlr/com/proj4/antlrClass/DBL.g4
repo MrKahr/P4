@@ -30,18 +30,14 @@ Uppercase = Lexer rule (ANTLR book, p. 80)
 Lowercase = Parser rule (ANTLR book p. 80)
 */
 
-grammar DBL;
-
-// TODO: Consider whether statements should be ended by '\n' <--- They will not, as that's too much of a hassle
 // TODO: Check om vi skal have statement/declarations/ruleDeclartions etc. i en bestemt rækkefølge.
 // TODO: Fjern left-recursion til CFG i den endelige rapport
-// TODO: Check wether we allow e.g.: Action ReadAction() RESULTS IN String
-
+grammar DBL;
 ////////////
 // PARSER //
 ////////////
 program
-    :   (templateDecl)* (actionDecl)* (ruleDecl)* (stateDecl)* stmtList EOF
+    :   templateDecl* actionDecl* ruleDecl* stateDecl* stmtList EOF
     ;
 
 stmt
@@ -50,14 +46,12 @@ stmt
     |   declaration
     |   assignment SEMICOLON
     |   actionCall SEMICOLON
-    |   templateAssignment
     ;
 
 stmtList
-    :   (stmt)*
+    :   stmt*
     ;
 
-// This is very much left-recursive - FIND WAY TO REMOVE IN CFG!
 expr
     :   BRAC_START expr BRAC_END   # parExpr
     |   expr multOp expr           # multExpr
@@ -70,25 +64,24 @@ expr
     |   IDENTIFIER                 # idExpr
     ;
 
-// This is very much left-recursive - FIND WAY TO REMOVE IN CFG!
 boolExpr
     :   BRAC_START boolExpr BRAC_END        # parBool
     |   expr GT expr                        # exprGTBool
     |   expr GTOE expr                      # exprGTOEBool
     |   expr LT expr                        # exprLTBool
     |   expr LTOE expr                      # exprLTOEBool
-    |   expr (NOTEQUALS | EQUALS) expr      # exprEqualBool            
+    |   expr (NOTEQUALS | EQUALS) expr      # exprEqualBool
     |   stringExpr (NOTEQUALS | EQUALS) stringExpr  # stringEqualBool
     |   NOT boolExpr                        # negateBool
+    |   boolExpr EQUALS boolExpr            # equalBool
     |   boolExpr AND boolExpr               # andBool
     |   boolExpr OR  boolExpr               # orBool
-    |   boolExpr EQUALS boolExpr            # equalBool
     |   BOOLEAN                             # litteralBool
     |   IDENTIFIER                          # idBool
     ;
 
 stringExpr
-    :   stringExpr ADD stringExpr  # addString      // Doing it this way means implicit type conversion from int to string! Also, ensure types are correct! (int, str)
+    :   stringExpr ADD stringExpr  # addString
     |   stringExpr ADD expr        #addStringexpr1
     |   expr ADD stringExpr        #addStringexpr2
     |   string                     # litteralString
@@ -96,14 +89,14 @@ stringExpr
     ;
 
 assignment // Remember to add semicolon if relevant
-    :   expr ASSIGN expr             # exprAssign
-    |   expr ASSIGN boolExpr         # boolExprAssign
-    |   expr ASSIGN stringExpr       # stringExprAssign
-    |   expr ASSIGN arrayInit        # arrayInitAssign
-    |   expr ASSIGN IDENTIFIER       # idAssign
+    :   expr ASSIGN expr          # exprAssign
+    |   expr ASSIGN boolExpr      # boolExprAssign
+    |   expr ASSIGN stringExpr    # stringExprAssign
+    |   expr ASSIGN arrayInit     # arrayInitAssign
+    |   expr ASSIGN IDENTIFIER    # idAssign
     ;
 
-templateAssignment
+templateAssignment // TemplateInitAssign
     :   typedefUser IDENTIFIER ASSIGN templateInit
     ;
 
@@ -120,11 +113,12 @@ declaration
     |   typePrimitive assignment SEMICOLON     # assignDeclPrim
     |   typedefUser IDENTIFIER SEMICOLON       # idDeclUser
     |   typedefUser assignment SEMICOLON       # assignDeclUser
+    |   templateAssignment                     # templateInitDecl
     |   arrayDecl SEMICOLON                    # declArrayDecl
     ;
 
 declarationList
-    :   (declaration)+
+    :   declaration+
     ;
 
 body
@@ -144,7 +138,7 @@ templateDecl
     ;
 
 templateInit
-    :   NEW typedefUser BODY_START (templateInit | (assignment SEMICOLON | templateAssignment))* BODY_END
+    :   NEW typedefUser BODY_START ((assignment SEMICOLON | templateAssignment))* BODY_END
     ;
 
 ruleDecl
@@ -160,14 +154,13 @@ actionCall
     :   typedefUser BRAC_START argumentList BRAC_END
     ;
 
-actionResult   // NOTICE: currently action_result is an expr, which means it's allowed almost everywhere! The only valid use of it is in the "IF()" of an if_block in Rule. Semantic Analysis should handle this
+actionResult
     :   typedefUser DOT RESULT (DOT IDENTIFIER)*
     ;
 
 stateDecl
-    :   STATE typedefUser ALLOWS SQB_START identifierList SQB_END WITH_LOOP SQB_START actionCall+ SQB_END    # idActionState
-    |   STATE typedefUser ALLOWS SQB_START identifierList SQB_END                                            # idState
-    |   STATE typedefUser                                                                                    # idStateDecl
+    :   STATE typedefUser ALLOWS SQB_START identifierList SQB_END WITH_LOOP BODY_START body BODY_END    # idActionStateLoop
+    |   STATE typedefUser ALLOWS SQB_START identifierList SQB_END                                       # idActionState
     ;
 
 parameterList
@@ -179,7 +172,7 @@ argumentList
     ;
 
 arrayDecl
-    :   (typedefUser | typePrimitive) SQB_START SQB_END IDENTIFIER (ASSIGN arrayInit)?
+    :   arrayType IDENTIFIER (ASSIGN arrayInit)?
     ;
 
 arrayType
@@ -187,11 +180,11 @@ arrayType
     ;
 
 arrayInit
-    :   (SQB_START ((stringExpr | expr) (COMMA (stringExpr | expr))*)? SQB_END)+
+    :   (SQB_START ((stringExpr | expr | arrayInit) (COMMA (stringExpr | expr | arrayInit))*)? SQB_END)+
     ;
 
 return
-    :   RESULT_IN (expr | boolExpr | stringExpr) SEMICOLON  // The ActionDecl will return 3
+    :   RESULT_IN (expr | boolExpr | stringExpr) SEMICOLON
     ;
 
 resultsIn
@@ -219,7 +212,6 @@ identifierList
 ///////////
 // LEXER //
 ///////////
-
 /*** Non-tokens ***/
 LINE_COMMENT : '//' .*? '\r'? '\n' -> skip ; // ANTLR book p. 77
 COMMENT : '/*' .*? '*/' -> skip ;            // ANTLR book p. 77
@@ -235,13 +227,11 @@ ACTION      : 'Action';
 STATE       : 'State';
 RULE        : 'Rule';
 FOR         : 'FOR';
-OF          : 'OF';
 RESULT      : 'RESULT';     // Get result of a specific action call. Used in Rule
 RESULT_IN   : 'RESULT IN';  // Return from action
 RESULTS_IN  : 'RESULTS IN'; // Declare return type for action
 TEMPLATE    : 'Template';
 ALLOWS      : 'ALLOWS';
-WITH        : 'WITH';
 WITH_LOOP   : 'WITH LOOP';
 DOT         : '.';
 NEW         : 'NEW';
@@ -318,4 +308,3 @@ SEMICOLON
 IDENTIFIER
     : [A-Za-z]+[0-9A-Za-z]*
     ;
-// NOTE: ANTLR recognizes UPPERCASE as lexer and lowercase as parser!!!s

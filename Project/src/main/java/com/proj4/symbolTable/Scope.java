@@ -19,19 +19,24 @@ public class Scope implements Cloneable{
 
     //this table keeps track of template blueprints and their default values, to be used when instantiating them
     private static HashMap<String, TemplateSymbol> blueprintTable = new HashMap<>();
+
     //this table keeps a map of every declared template in order to properly index them
     private static HashMap<String, ArrayList<String>> templateMapTable = new HashMap<>();
+
     //this table keeps track of actions
     private static HashMap<String, ActionSymbol> actionTable = new HashMap<>();
+
     //this table keeps track of which states have been declared in the current scope
     private static HashMap<String, StateSymbol> stateTable = new HashMap<>();    //TODO: stateTable contains rulesymbols for now 
+  
     // this table keeps track of which rules have been declared 
     private static HashMap<String, ArrayList<RuleSymbol>> ruleTable = new HashMap<>();
 
     //this table keeps track of variables
     private HashMap<String, SymbolTableEntry> variableTable = new HashMap<>();
 
-    private HashSet<String> declaredTable = new HashSet<>();   //this table keeps track of whether or not a variable or function has been declared in this scope
+    //this table keeps track of whether or not a variable or function has been declared in this scope
+    private HashSet<String> declaredTable = new HashSet<>();
 
     // TODO: create hashmap of observers instead of arrayList
     private static ArrayList<InterpreterObserver> currentObservers = new ArrayList<InterpreterObserver>();
@@ -74,7 +79,7 @@ public class Scope implements Cloneable{
     public static void setActionTable(HashMap<String, ActionSymbol> table){
         actionTable = table;
     }
-    
+
     public static void setBlueprintTable(HashMap<String, TemplateSymbol> table){
         blueprintTable = table;
     }
@@ -133,34 +138,33 @@ public class Scope implements Cloneable{
         return newScope;
     }
 
-    // Stack method wrappers 
+    // Stack method wrappers
     public static void exit(){
-        // We save the current scope if we want to use the scope in testing or debugging 
+        // We save the current scope if we want to use the scope in testing or debugging
         if(inDebugMode){
-            notifyObservers(Scope.getScopeStack());
+            notifyObservers(Scope.copyStack());
         }
         scopeStack.pop();
-        
     }
 
     public static void enter(){
         scopeStack.push(new Scope());
-            // We save the current scope if we want to use the scope in testing or debugging 
+            // We save the current scope if we want to use the scope in testing or debugging
             if(inDebugMode){
-                notifyObservers(Scope.getScopeStack());
+                notifyObservers(Scope.copyStack());
             }
     }
 
-    // Scopes inherited are pushed unto the stack because the stack top models the current available scope. 
+    // Scopes inherited are pushed unto the stack because the stack top models the current available scope.
     public static void inherit(){
         if (scopeStack.empty()) {
             throw new NullPointerException("Cannot inherit scope - Stack is empty");
         }
         scopeStack.push(scopeStack.peek().clone()); //clone the top scope and push it
 
-            // We save the current scope if we want to use the scope in testing or debugging 
+            // We save the current scope if we want to use the scope in testing or debugging
             if(inDebugMode){
-                notifyObservers(Scope.getScopeStack());
+                notifyObservers(Scope.copyStack());
             }
     }
 
@@ -168,9 +172,9 @@ public class Scope implements Cloneable{
         Scope poppedScope = scopeStack.pop();
         Scope currentScope = scopeStack.peek();
 
-        // We save the current scope if we want to use the scope in testing or debugging 
+        // We save the current scope if we want to use the scope in testing or debugging
         if(inDebugMode){
-            notifyObservers(Scope.getScopeStack());
+            notifyObservers(Scope.copyStack());
         }
 
         for (String identifier : poppedScope.getVariableTable().keySet()) {
@@ -188,22 +192,28 @@ public class Scope implements Cloneable{
         return scopeStack.peek();
     }
 
-    // OBSERVER PART 
-    private static void addObserver(InterpreterObserver interpreterObserver){
+    // OBSERVER PART
+    public static void addObserver(InterpreterObserver interpreterObserver){
         currentObservers.add(interpreterObserver);
     }
 
-    private static void removeObserver(){
+    public static void removeObserver(){
         currentObservers.remove(-1);
     }
 
-    private static void notifyObservers(Stack<Scope> currentScope){
+    public static void notifyObservers(Stack<Scope> currentScope){
         for (InterpreterObserver interpreterObserver : currentObservers) {
             interpreterObserver.setCurrentScope(currentScope);
         }
     }
 
-    private static void setDebugStatus(Boolean truthValue){
+    public static void setDebugStatus(Boolean truthValue){
         inDebugMode = truthValue;
+    }
+
+    public static Stack<Scope> copyStack(){
+        Stack <Scope> stackCopy = new Stack<Scope>();
+        stackCopy.addAll(scopeStack);
+        return stackCopy;
     }
 }

@@ -1,12 +1,12 @@
-/*** Current Gameplay Loop 
-- The game has 2 players, p1 is the "real" player, where p2 is a human controlled representation of the NPC. 
+/*** Current Gameplay Loop
+- The game has 2 players, p1 is the "real" player, where p2 is a human controlled representation of the NPC.
 - Each player starts with the same 10 card deck, containing minions like "1 mana 1/1, 2 mana 2/2" etc.
 ***/
 
 // Board is a special, global Template, that the developer can overwrite the attributes of
 Template Board CONTAINS {
     Player p1;  // This the player
-    Player p2;  
+    Player p2;
     Integer maxDeckSize;
     Integer maxBoardSize;
     Player activePlayer;
@@ -22,7 +22,7 @@ Template LootBucket CONTAINS {
 }
 
 
-Action NextState(){}
+//Action NextState(){}
 Action ChangeActivePlayer(Player playerTarget, State startingState){}
 Action ChangeState(State state) RESULTS IN State {RESULT IN fisk;}
 
@@ -43,7 +43,7 @@ Action GenerateMinions() RESULTS IN Deck {
     RESULT IN generatedDeck;
 }
 
-Action Attack(Integer[][] test, String fisk, String fisk53453) { 
+Action Attack(Integer[][] test, String fisk, String fisk53453) {
     // Prompt user based on printed board information, after they choose to attack
     Print("Pick an attacker by its number\n");
     String attacker IS ReadInput();
@@ -81,7 +81,7 @@ Rule cardPlayValid WHEN [PlayCard] IF (Board.activePlayer.currentMana GREATER OR
 
 Rule minionDies WHEN [AttackMinion] IF (AttackMinion.RESULT.health LESS THAN 1) {RemoveCard(attacked);}
 
-  
+
 Rule playerDies WHEN [AttackPlayer] IF (AttackPlayer.RESULT.currentHealth LESS THAN 1 AND AttackPlayer.RESULT EQUALS Board.p1) {
     print("You lose!");
     changeState(GameHalt);
