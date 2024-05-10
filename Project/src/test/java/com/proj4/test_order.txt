@@ -1,3 +1,6 @@
+┌────────────────────────────┐
+│     Specify test files     │
+└────────────────────────────┘
 1. Declaration test                 // DONE
 2. Assignment test                  // DONE
 3. Expression tests                 // DONE
@@ -14,8 +17,29 @@
 14. State tests
 
 
+┌──────────────────────────┐
+│     Testing progress     │
+└──────────────────────────┘
+1. Declaration test                 // DONE, FAILURES
+2. Assignment test                  // DONE, FAILURES
+3. Expression tests                 // DONE
+4. String tests
+5. Boolean tests
+6. Action Declation tests
+7. Action Call tests
+8. Array tests
+9. If-else tests
+10. For-loop tests
+11. Template Decl tests
+12. Template Initialization tests
+13. Rule tests
+14. State tests
 
-Test cases:
+
+
+┌────────────────────────────┐
+│     Specify test cases     │
+└────────────────────────────┘
  - Intended behaviour (e.g. 3+3 = 6, TRUE OR FALSE = TRUE)
  - Illegal operations (e.g. 3/0)
  - Mixing incompatible types
@@ -23,8 +47,37 @@ Test cases:
  - Emojis
 
 
-
-Questions:
+┌─────────────┐
+│     Q&A     │
+└─────────────┘
  - Should float division be floor, ceiling, or round?
+    - A: float division is floor
  - What happens when you assign the result of an actionCall that doesn't return anything to a variable?
  - Should we allow negative integers?
+
+
+┌──────────────────────────┐
+│     TESTING FAILURES     │
+└──────────────────────────┘
+   * Assign Test
+        - Test 2
+            - Boolean b IS TRUE     (got: FALSE, expected: TRUE)
+        - Test 3
+            - String s IS "fisk"    (got: ""fisk"", expected: "fisk")
+        Test 4
+            - Integer[] arr IS [1, 2, 3]    (got: NullPointerException on getNestingLevel(), expected: the nestingLevel)
+                EXCEPTIONS:
+                    - NullPointerException:
+                        Cannot invoke "java.lang.Integer.intValue()" because the return value of "com.proj4.symbolTable.symbols.ArraySymbol.getNestingLevel()" is null
+                            at com.proj4.AST.visitors.CheckVisitors.VariableTypeChecker.visit(VariableTypeChecker.java:20)
+                            at com.proj4.AST.nodes.AST.acceptVisitor(AST.java:89)
+                            at com.proj4.AST.visitors.CheckDecider.decideVisitor(CheckDecider.java:57)
+                            at com.proj4.AST.nodes.AST.visitChild(AST.java:105)
+                            at com.proj4.AST.visitors.CheckVisitors.AssignmentTypeChecker.visit(AssignmentTypeChecker.java:14)
+                            at com.proj4.AST.nodes.AST.acceptVisitor(AST.java:89)
+                            at com.proj4.AST.visitors.CheckDecider.decideVisitor(CheckDecider.java:21)
+                            at com.proj4.AST.nodes.AST.visitChild(AST.java:105)
+                            at com.proj4.AST.visitors.CheckVisitors.DeclarationTypeChecker.visit(DeclarationTypeChecker.java:26)
+    * Expression Test
+    |   - Test 14
+    |   |   - Integer sa IS 2-2;    (got: 4, expected: 0);

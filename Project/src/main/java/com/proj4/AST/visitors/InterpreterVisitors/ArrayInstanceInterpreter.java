@@ -12,7 +12,7 @@ public class ArrayInstanceInterpreter extends InterpreterVisitor {
     public void visit(AST node) {
         ArrayInstance arrayInstance = (ArrayInstance) node;
 
-        //use the first child to decide the type and nesting levl
+        //use the first child to decide the type and nesting level
         arrayInstance.visitChild(new InterpreterDecider(), 0);
         SymbolTableEntry child = InterpreterVisitor.getReturnSymbol();
         ArraySymbol array;
@@ -27,7 +27,7 @@ public class ArrayInstanceInterpreter extends InterpreterVisitor {
         //now add the rest of the children if there are any
         for (int i = 1; i < arrayInstance.getChildren().size(); i++) {
             arrayInstance.visitChild(new InterpreterDecider(), i);
-            array.addContent(InterpreterVisitor.getReturnSymbol());    
+            array.addContent(InterpreterVisitor.getReturnSymbol());
         }
 
         //return the array

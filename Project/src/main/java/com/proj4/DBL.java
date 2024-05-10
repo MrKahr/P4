@@ -2,7 +2,6 @@ package com.proj4;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileSystems;
 
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -15,9 +14,24 @@ import com.proj4.antlrClass.DBLLexer;
 import com.proj4.antlrClass.DBLParser;
 
 public class DBL {
+    private Boolean debugMode = false;
 
     // Constructor
     public DBL(){}
+
+    public DBL(Boolean debugMode){
+        this.debugMode = debugMode;
+    }
+
+    // Methods
+    public void setDebugMode(Boolean debugMode){
+        this.debugMode = debugMode;
+    }
+
+    public Boolean getDebugMode(){
+        return this.debugMode;
+    }
+
 
     /**
      * <b> The interpreter for DBL </b>
@@ -71,8 +85,10 @@ public class DBL {
             // Assign AST
             AST abstractSyntaxTree = parseVisitor.getRoot();
 
-            // Print tree
-            abstractSyntaxTree.printTree();
+            if(this.debugMode){
+                // Print tree
+                abstractSyntaxTree.printTree();
+            }
 
             // Typecheck AST
             CheckDecider checkDecider = new CheckDecider();

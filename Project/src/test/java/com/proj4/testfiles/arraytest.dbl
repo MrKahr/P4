@@ -13,7 +13,7 @@ String[] b IS ["John", "Userman", "is", "a", "user"];
 /* TEST 3
 Flat Boolean array
 */
-Boolean[] c IS [TRUE, FALSE, TRUE];
+Boolean[] c IS [true, true, true];
 
 
 /* TEST 3

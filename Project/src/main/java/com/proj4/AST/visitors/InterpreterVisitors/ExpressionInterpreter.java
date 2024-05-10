@@ -85,12 +85,12 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 SymbolTableEntry firstElement;
                 SymbolTableEntry secondElement;
 
-                // Visit first element 
+                // Visit first element
                 expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
 
-                if(InterpreterVisitor.getReturnSymbol().getType().equals("Primtive")){
+                if(InterpreterVisitor.getReturnSymbol().getComplexType().equals("Primitive")){
                     firstElement =  ((PrimitiveSymbol)InterpreterVisitor.getReturnSymbol());
-                } else if(InterpreterVisitor.getReturnSymbol().getType().equals("Complex")) {
+                } else if(InterpreterVisitor.getReturnSymbol().getComplexType().equals("Complex")) {
                     firstElement =  ((ComplexSymbol)InterpreterVisitor.getReturnSymbol());
                 } else {
                     throw new UnexpectedTypeException("Recieved unexpected type for equals operation: " + InterpreterVisitor.getReturnSymbol().getType() +  "");
@@ -98,9 +98,9 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 expression.visitChild(new InterpreterDecider(), expression.getSecondOperand());
 
                 secondElement = InterpreterVisitor.getReturnSymbol();
-                
+
                 booleanResult = firstElement.equals(secondElement);
-                
+
                 InterpreterVisitor.setReturnSymbol(new BooleanSymbol(booleanResult));
 
                 //System.out.println("Result of " + firstElement.getValue() + " EQUALS " + secondEq.getValue() + " is " + booleanResult + ".");
@@ -109,12 +109,12 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 SymbolTableEntry NeqfirstElement;
                 SymbolTableEntry NeqsecondElement;
 
-                // Visit first element 
+                // Visit first element
                 expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
 
-                if(InterpreterVisitor.getReturnSymbol().getType().equals("Primtive")){
+                if(InterpreterVisitor.getReturnSymbol().getComplexType().equals("Primitive")){
                     NeqfirstElement =  ((PrimitiveSymbol)InterpreterVisitor.getReturnSymbol());
-                } else if(InterpreterVisitor.getReturnSymbol().getType().equals("Complex")) {
+                } else if(InterpreterVisitor.getReturnSymbol().getComplexType().equals("Complex")) {
                     NeqfirstElement =  ((ComplexSymbol)InterpreterVisitor.getReturnSymbol());
                 } else {
                     throw new UnexpectedTypeException("Recieved unexpected type for equals operation: " + InterpreterVisitor.getReturnSymbol().getType() +  "");
@@ -122,9 +122,9 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 expression.visitChild(new InterpreterDecider(), expression.getSecondOperand());
 
                 NeqsecondElement = InterpreterVisitor.getReturnSymbol();
-                
+
                 booleanResult = !(NeqfirstElement.equals(NeqsecondElement));
-                
+
                 InterpreterVisitor.setReturnSymbol(new BooleanSymbol(booleanResult));
                 break;
             case OR:
@@ -132,7 +132,7 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 Boolean orOne = ((BooleanSymbol)InterpreterVisitor.getReturnSymbol()).getValue();
                 Boolean orTwo = true;
                 if(!orOne){     //only evaluating the second expression if this one is true to implement short-circuiting!
-                    expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
+                    expression.visitChild(new InterpreterDecider(), expression.getSecondOperand());
                     orTwo = ((BooleanSymbol)InterpreterVisitor.getReturnSymbol()).getValue();
                 }
                 InterpreterVisitor.setReturnSymbol(new BooleanSymbol(orOne || orTwo));
@@ -144,7 +144,7 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 Boolean andOne = ((BooleanSymbol)InterpreterVisitor.getReturnSymbol()).getValue();
                 Boolean andTwo  = false;;
                 if(andOne){     //only evaluating the second expression if this one is true to implement short-circuiting!
-                    expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
+                    expression.visitChild(new InterpreterDecider(), expression.getSecondOperand());
                     andTwo = ((BooleanSymbol)InterpreterVisitor.getReturnSymbol()).getValue();
                 }
                 InterpreterVisitor.setReturnSymbol(new BooleanSymbol(andOne && andTwo));

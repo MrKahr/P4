@@ -18,9 +18,9 @@ Boolean c;
 /* TEST 4
 PrimitiveArray declaration - Integer
 */
-Integer[] c;
+Integer[] d;
 
 /* TEST 5
 PrimitiveNestedArray declaration - Integer
 */
-Integer[][] c;
+Integer[][] e;

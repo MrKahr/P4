@@ -265,8 +265,8 @@ STRING
     ;
 
 BOOLEAN
-    : 'TRUE'
-    | 'FALSE'
+    : 'true'
+    | 'false'
     ;
 
 BODY_START

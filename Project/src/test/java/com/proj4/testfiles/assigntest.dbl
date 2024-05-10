@@ -7,7 +7,7 @@ Integer ia IS 3;
 /* TEST 2
 Boolean expression
 */
-Boolean ba IS TRUE;
+Boolean ba IS true;
 
 
 /* TEST 3
