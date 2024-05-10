@@ -2,7 +2,6 @@ package com.proj4;
 
 import com.proj4.antlrClass.DBLBaseVisitor;
 import com.proj4.antlrClass.DBLParser;
-import com.proj4.antlrClass.DBLParser.ArrayTypeContext;
 
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -18,9 +17,6 @@ import com.proj4.symbolTable.symbols.StringSymbol;
 
 
 /* TODO: Visit:
-      - resultsIn
-      - arrayType
-
 */
 
 
@@ -116,6 +112,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         }
         return node;
     }
+
 
     @Override
     public ActionDecl visitNoReturnActionDecl(DBLParser.NoReturnActionDeclContext ctx){
@@ -283,13 +280,15 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
 
     @Override
     public Expression visitMultExpr(DBLParser.MultExprContext ctx) {
-        Expression node = new Expression(ExpressionOperator.MULTIPLY, (Expression) visit(ctx.expr(0)),(Expression)visit(ctx.expr(1)));
+        ExpressionOperator op = ctx.multOp().MULT() == null ? ExpressionOperator.DIVIDE : ExpressionOperator.MULTIPLY;
+        Expression node = new Expression(op, (Expression) visit(ctx.expr(0)),(Expression)visit(ctx.expr(1)));
         return node;
     }
 
     @Override
     public Expression visitAddExpr(DBLParser.AddExprContext ctx) {
-        Expression node = new Expression(ExpressionOperator.ADD, (Expression) visit(ctx.expr(0)), (Expression) visit(ctx.expr(1)));
+        ExpressionOperator op = ctx.addOp().ADD() == null ? ExpressionOperator.SUBTRACT : ExpressionOperator.ADD;
+        Expression node = new Expression(op, (Expression) visit(ctx.expr(0)), (Expression) visit(ctx.expr(1)));
         return node;
     }
 

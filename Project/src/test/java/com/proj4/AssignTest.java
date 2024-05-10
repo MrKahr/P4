@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeAll;
 
 import com.proj4.symbolTable.Scope;
 import com.proj4.symbolTable.ScopeObserver;
+import com.proj4.symbolTable.symbols.ArraySymbol;
 import com.proj4.symbolTable.symbols.BooleanSymbol;
 import com.proj4.symbolTable.symbols.IntegerSymbol;
 import com.proj4.symbolTable.symbols.StringSymbol;
@@ -32,12 +33,18 @@ public class AssignTest extends TestingArgs {
 
 
     @Test
+    /**
+     * Integer
+     */
     public void test1(){
         IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("ia");
         assertTrue(intSymbol.getValue() == 3);
     }
 
     @Test
+    /**
+     * Boolean
+     */
     public void test2(){
         BooleanSymbol boolSymbol = (BooleanSymbol) variableTable.get("ba");
         System.out.println(boolSymbol.getValue());
@@ -45,6 +52,9 @@ public class AssignTest extends TestingArgs {
     }
 
     @Test
+    /**
+     * String
+     */
     public void test3(){
         StringSymbol stringSymbol = (StringSymbol) variableTable.get("sa");
         System.out.println(stringSymbol.getValue());
@@ -52,12 +62,35 @@ public class AssignTest extends TestingArgs {
     }
 
     @Test
+    /**
+     * Array instance
+     */
     public void test4(){
-        // TODO: Implement when arrays are done
+        ArraySymbol arraySymbol = (ArraySymbol) variableTable.get("aa");
+        assertEquals("Integer", arraySymbol.getType()); // Check type
+        assertTrue(0 == arraySymbol.getNestingLevel()); // Check nesting level
+        for (Integer i = 0; i <= arraySymbol.getContent().size(); i++) {
+            IntegerSymbol intSymbol = (IntegerSymbol) arraySymbol.getContent().get(i);
+            assertTrue(i+1 == intSymbol.getValue()); // Check values of array
+        }
     }
 
+
     @Test
+    /**
+     * Variable
+     */
     public void test5(){
+        StringSymbol stringSymbol = (StringSymbol) variableTable.get("vb");
+        assertEquals("fish_2", stringSymbol.getValue());
+    }
+
+
+    @Test
+    /**
+     * Variable overwrite
+     */
+    public void test6(){
         IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("voa");
         assertTrue(intSymbol.getValue() == 6);
     }
