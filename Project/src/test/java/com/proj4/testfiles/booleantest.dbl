@@ -5,44 +5,44 @@
 */
 
 /* TEST 1
-Negation (TRUE -> FALSE)
+Negation (true -> false)
 */
-Boolean ba IS NOT TRUE;
+Boolean ba IS NOT true;
 
 /* TEST 2
-Negation (FALSE -> TRUE)
+Negation (false -> true)
 */
-Boolean bb IS NOT FALSE;
+Boolean bb IS NOT false;
 
 
 /* TEST 3
 Logical AND
 */
-Boolean bc IS TRUE AND FALSE;
+Boolean bc IS true AND false;
 
 
 /* TEST 4
 Logical OR (without shortcircuit)
 */
-Boolean bd IS TRUE OR FALSE;
+Boolean bd IS true OR false;
 
 
 /* TEST 5
 Logical OR (with shortcircuiting)
 */
-Boolean be IS FALSE OR TRUE;
+Boolean be IS false OR true;
 
 
 /* TEST 6
-Relational operator == (TRUE)
+Relational operator == (true)
 */
-Boolean bf IS TRUE EQUALS TRUE;
+Boolean bf IS true EQUALS true;
 
 
 /* TEST 7
-Relational operator == (FALSE)
+Relational operator == (false)
 */
-Boolean bg IS TRUE EQUALS FALSE;
+Boolean bg IS true EQUALS false;
 
 
 /*
@@ -52,73 +52,73 @@ Boolean bg IS TRUE EQUALS FALSE;
 */
 
 /* TEST 8
-Relational operator > (TRUE)
+Relational operator > (true)
 */
 Boolean ea IS 3 GREATER THAN 2;
 
 
 /* TEST 9
-Relational operator > (FALSE)
+Relational operator > (false)
 */
 Boolean eb IS 3 GREATER THAN 3;
 
 
 /* TEST 10
-Relational operator >= (TRUE)
+Relational operator >= (true)
 */
 Boolean ec IS 3 GREATER OR EQUALS 3;
 
 
 /* TEST 11
-Relational operator >= (FALSE)
+Relational operator >= (false)
 */
 Boolean ed IS 2 GREATER OR EQUALS 3;
 
 
 /* TEST 12
-Relational operator < (TRUE)
+Relational operator < (true)
 */
 Boolean ee IS 2 LESS THAN 3;
 
 
 /* TEST 13
-Relational operator < (FALSE)
+Relational operator < (false)
 */
 Boolean ef IS 2 LESS THAN 2;
 
 
 /* TEST 14
-Relational operator <= (TRUE)
+Relational operator <= (true)
 */
 Boolean eg IS 2 LESS OR EQUALS 2;
 
 
 /* TEST 15
-Relational operator <= (FALSE)
+Relational operator <= (false)
 */
 Boolean eh IS 3 LESS OR EQUALS 2;
 
 
 /* TEST 16
-Relational operator == (TRUE)
+Relational operator == (true)
 */
 Boolean ei IS 2 EQUALS 2;
 
 
 /* TEST 17
-Relational operator == (FALSE)
+Relational operator == (false)
 */
 Boolean ej IS 2 EQUALS 3;
 
 
 /* TEST 18
-Relational operator != (TRUE)
+Relational operator != (true)
 */
 Boolean ek IS 2 NOT EQUALS 3;
 
 
 /* TEST 19
-Relational operator != (FALSE)
+Relational operator != (false)
 */
 Boolean el IS 2 NOT EQUALS 2;
 
@@ -130,25 +130,25 @@ Boolean el IS 2 NOT EQUALS 2;
 */
 
 /* TEST 20
-Relational operator == (TRUE)
+Relational operator == (true)
 */
 Boolean sa IS "fish" EQUALS "fish";
 
 
 /* TEST 21
-Relational operator == (FALSE)
+Relational operator == (false)
 */
 Boolean sb IS "fish" EQUALS "fisk";
 
 
 /* TEST 22
-Relational operator != (TRUE)
+Relational operator != (true)
 */
 Boolean sc IS "fish" NOT EQUALS "fisk";
 
 
 /* TEST 23
-Relational operator != (FALSE)
+Relational operator != (false)
 */
 Boolean sd IS "fish" NOT EQUALS "fish";
 
@@ -160,6 +160,6 @@ Boolean sd IS "fish" NOT EQUALS "fish";
 */
 
 /* TEST 24
-Parenthesis (FALSE)
+Parenthesis (false)
 */
 Boolean pa IS 3 GREATER THAN 2 EQUALS (3 LESS THAN 2)

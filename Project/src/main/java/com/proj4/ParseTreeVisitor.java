@@ -368,7 +368,9 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
 
     @Override
     public Expression visitLitteralBool(DBLParser.LitteralBoolContext ctx) {
-        Expression node = new Expression(ExpressionOperator.CONSTANT, new BooleanSymbol(Boolean.getBoolean(ctx.BOOLEAN().getText())));
+        System.out.println(ctx.BOOLEAN().getText());
+        System.out.println(Boolean.parseBoolean(ctx.BOOLEAN().getText()));
+        Expression node = new Expression(ExpressionOperator.CONSTANT, new BooleanSymbol(Boolean.parseBoolean(ctx.BOOLEAN().getText())));
         return node;
     }
 

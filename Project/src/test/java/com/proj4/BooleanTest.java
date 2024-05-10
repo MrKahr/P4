@@ -28,6 +28,7 @@ public class BooleanTest extends TestingArgs {
     @Test
     public void test1(){
         BooleanSymbol boolSymbol = (BooleanSymbol) variableTable.get("ba");
+        System.out.println(boolSymbol.getValue());
         assertFalse(boolSymbol.getValue());
     }
 
@@ -40,6 +41,7 @@ public class BooleanTest extends TestingArgs {
     @Test
     public void test3(){
         BooleanSymbol boolSymbol = (BooleanSymbol) variableTable.get("bc");
+        System.out.println(boolSymbol.getValue());
         assertFalse(boolSymbol.getValue());
     }
 
@@ -112,19 +114,19 @@ public class BooleanTest extends TestingArgs {
     @Test
     public void test15(){
         BooleanSymbol boolSymbol = (BooleanSymbol) variableTable.get("eh");
-        assertTrue(boolSymbol.getValue());
+        assertFalse(boolSymbol.getValue());
     }
 
     @Test
     public void test16(){
         BooleanSymbol boolSymbol = (BooleanSymbol) variableTable.get("ei");
-        assertFalse(boolSymbol.getValue());
+        assertTrue(boolSymbol.getValue());
     }
 
     @Test
     public void test17(){
         BooleanSymbol boolSymbol = (BooleanSymbol) variableTable.get("ej");
-        assertTrue(boolSymbol.getValue());
+        assertFalse(boolSymbol.getValue());
     }
 
     @Test
@@ -136,7 +138,7 @@ public class BooleanTest extends TestingArgs {
     @Test
     public void test19(){
         BooleanSymbol boolSymbol = (BooleanSymbol) variableTable.get("el");
-        assertTrue(boolSymbol.getValue());
+        assertFalse(boolSymbol.getValue());
     }
 
     @Test
@@ -148,7 +150,7 @@ public class BooleanTest extends TestingArgs {
     @Test
     public void test21(){
         BooleanSymbol boolSymbol = (BooleanSymbol) variableTable.get("sb");
-        assertTrue(boolSymbol.getValue());
+        assertFalse(boolSymbol.getValue());
     }
 
     @Test
@@ -160,12 +162,12 @@ public class BooleanTest extends TestingArgs {
     @Test
     public void test23(){
         BooleanSymbol boolSymbol = (BooleanSymbol) variableTable.get("sd");
-        assertTrue(boolSymbol.getValue());
+        assertFalse(boolSymbol.getValue());
     }
 
     @Test
     public void test24(){
         BooleanSymbol boolSymbol = (BooleanSymbol) variableTable.get("pa");
-        assertTrue(boolSymbol.getValue());
+        assertFalse(boolSymbol.getValue());
     }
 }
