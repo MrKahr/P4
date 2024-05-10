@@ -13,6 +13,5 @@ public class ProgramTypeChecker extends TypeCheckVisitor{
         Scope.enter();
         program.visitChildren(new CheckDecider());
         Scope.exit();
-        //...which we exit when we're done
     }
 }

@@ -31,7 +31,7 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 break;
             case SUBTRACT:
                 operands = getIntegerOperands(expression);
-                integerResult = operands[0] + operands[1];
+                integerResult = operands[0] - operands[1];
                 System.out.println("Result of " + operands[0] + " - " + operands[1] + " is " + integerResult);
                 InterpreterVisitor.setReturnSymbol(new IntegerSymbol(integerResult));
                 break;
@@ -71,7 +71,7 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 break;
             case GREATER_THAN:
                 operands = getIntegerOperands(expression);
-                booleanResult = operands[0] >= operands[1];
+                booleanResult = operands[0] > operands[1];
                 System.out.println("Result of " + operands[0] + " > " + operands[1] + " is " + booleanResult);
                 InterpreterVisitor.setReturnSymbol(new BooleanSymbol(booleanResult));
                 break;
