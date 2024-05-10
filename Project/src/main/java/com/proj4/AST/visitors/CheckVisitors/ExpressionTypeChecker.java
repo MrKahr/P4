@@ -22,7 +22,26 @@ public class ExpressionTypeChecker extends TypeCheckVisitor {
         // Note: Fallthrough for each operator type
         switch (expression.getOperator()) {
             case ADD:
-                // falltrough
+                expression.visitChild(new CheckDecider(), expression.getFirstOperand());
+                if (!TypeCheckVisitor.getFoundType().equals("Integer") && !TypeCheckVisitor.getFoundType().equals("String")) {
+                    throw new MismatchedTypeException();
+                }
+                //if any operand is a string, we know we'll be concatenating strings instead of adding numbers
+                if (TypeCheckVisitor.getFoundType().equals("String")) {
+                    TypeCheckVisitor.setFoundType("String", "Primitive", 0);
+                }
+
+                expression.visitChild(new CheckDecider(), expression.getSecondOperand());
+                if (!TypeCheckVisitor.getFoundType().equals("Integer") && !TypeCheckVisitor.getFoundType().equals("String")) {
+                    throw new MismatchedTypeException();
+                }
+                if (TypeCheckVisitor.getFoundType().equals("String")) {
+                    TypeCheckVisitor.setFoundType("String", "Primitive", 0);
+                } else {
+                    TypeCheckVisitor.setFoundType("Integer", "Primitive", 0);
+                }
+    
+                break;
             case SUBTRACT:
                 // falltrough
             case DIVIDE:
@@ -94,18 +113,8 @@ public class ExpressionTypeChecker extends TypeCheckVisitor {
                 }
                 TypeCheckVisitor.setFoundType("Boolean", "Primitive", 0);
                 break;
-            case CONCAT:
-                expression.visitChild(new CheckDecider(), expression.getFirstOperand());
-                if (!TypeCheckVisitor.getFoundType().equals("String")) {
-                    throw new MismatchedTypeException();
-                }
-                expression.visitChild(new CheckDecider(), expression.getSecondOperand());
-                if (!TypeCheckVisitor.getFoundType().equals("String")) {
-                    throw new MismatchedTypeException();
-                }
-                TypeCheckVisitor.setFoundType("String", "Primitive", 0);
-                break;
             case VARIABLE:
+                //TODO: this case is unused, as its functionality is partially implemented by cCONCAT
                 TypeCheckVisitor.setFoundType("String", "Primitive", 0);
                 break;
             case CONSTANT:
