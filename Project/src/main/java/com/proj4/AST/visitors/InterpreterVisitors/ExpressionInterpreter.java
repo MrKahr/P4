@@ -31,7 +31,7 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 break;
             case SUBTRACT:
                 operands = getIntegerOperands(expression);
-                integerResult = operands[0] + operands[1];
+                integerResult = operands[0] - operands[1];
                 System.out.println("Result of " + operands[0] + " - " + operands[1] + " is " + integerResult);
                 InterpreterVisitor.setReturnSymbol(new IntegerSymbol(integerResult));
                 break;
@@ -71,7 +71,7 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 break;
             case GREATER_THAN:
                 operands = getIntegerOperands(expression);
-                booleanResult = operands[0] >= operands[1];
+                booleanResult = operands[0] > operands[1];
                 System.out.println("Result of " + operands[0] + " > " + operands[1] + " is " + booleanResult);
                 InterpreterVisitor.setReturnSymbol(new BooleanSymbol(booleanResult));
                 break;
@@ -85,7 +85,7 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 SymbolTableEntry firstElement;
                 SymbolTableEntry secondElement;
 
-                // Visit first element 
+                // Visit first element
                 expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
 
                 if(InterpreterVisitor.getReturnSymbol().getType().equals("Primtive")){
@@ -98,9 +98,9 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 expression.visitChild(new InterpreterDecider(), expression.getSecondOperand());
 
                 secondElement = InterpreterVisitor.getReturnSymbol();
-                
+
                 booleanResult = firstElement.equals(secondElement);
-                
+
                 InterpreterVisitor.setReturnSymbol(new BooleanSymbol(booleanResult));
 
                 //System.out.println("Result of " + firstElement.getValue() + " EQUALS " + secondEq.getValue() + " is " + booleanResult + ".");
@@ -109,7 +109,7 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 SymbolTableEntry NeqfirstElement;
                 SymbolTableEntry NeqsecondElement;
 
-                // Visit first element 
+                // Visit first element
                 expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
 
                 if(InterpreterVisitor.getReturnSymbol().getType().equals("Primtive")){
@@ -122,9 +122,9 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 expression.visitChild(new InterpreterDecider(), expression.getSecondOperand());
 
                 NeqsecondElement = InterpreterVisitor.getReturnSymbol();
-                
+
                 booleanResult = !(NeqfirstElement.equals(NeqsecondElement));
-                
+
                 InterpreterVisitor.setReturnSymbol(new BooleanSymbol(booleanResult));
                 break;
             case OR:

@@ -23,6 +23,6 @@ String sd IS 1 + "fish";
 
 
 /* TEST 5
-Emojis - right
+Emojis
 */
 String se IS "😊";

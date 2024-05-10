@@ -20,9 +20,9 @@
 ┌──────────────────────────┐
 │     Testing progress     │
 └──────────────────────────┘
-1. Declaration test
+1. Declaration test                 // DONE, FAILURES
 2. Assignment test                  // DONE, FAILURES
-3. Expression tests                 // DONE, FAILURES
+3. Expression tests                 // DONE
 4. String tests
 5. Boolean tests
 6. Action Declation tests
@@ -47,10 +47,11 @@
  - Emojis
 
 
-┌───────────────────┐
-│     Questions     │
-└───────────────────┘
+┌─────────────┐
+│     Q&A     │
+└─────────────┘
  - Should float division be floor, ceiling, or round?
+    - A: float division is floor
  - What happens when you assign the result of an actionCall that doesn't return anything to a variable?
  - Should we allow negative integers?
 

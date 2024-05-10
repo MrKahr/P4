@@ -42,7 +42,6 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
                 var childnode = visit(ctx.getChild(i));
                 this.root.addChild((AST) childnode);
             }
-            System.out.println("Program Children: " + root.getChildren());
         } catch (Exception e) {
             if(DEBUG_MODE){
                 System.out.println("Something exploded. Too bad :(\n");
