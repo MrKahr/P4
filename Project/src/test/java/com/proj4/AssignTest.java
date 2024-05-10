@@ -6,7 +6,6 @@ import java.util.HashMap;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 
 import com.proj4.symbolTable.Scope;
 import com.proj4.symbolTable.ScopeObserver;
@@ -40,19 +39,16 @@ public class AssignTest extends TestingArgs {
     @Test
     public void test2() {
         BooleanSymbol boolSymbol = (BooleanSymbol) variableTable.get("ba");
-        System.out.println(boolSymbol.getValue());
         assertTrue(boolSymbol.getValue());
     }
 
     @Test
     public void test3() {
         StringSymbol stringSymbol = (StringSymbol) variableTable.get("sa");
-        System.out.println(stringSymbol.getValue());
         assertEquals("fish_1", stringSymbol.getValue());
     }
 
     @Test
-    @Disabled
     public void test4() {
         ArraySymbol arraySymbol = (ArraySymbol) variableTable.get("aa");
         assertEquals("Integer", arraySymbol.getType()); // Check type

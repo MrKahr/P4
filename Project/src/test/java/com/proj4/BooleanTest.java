@@ -28,7 +28,6 @@ public class BooleanTest extends TestingArgs {
     @Test
     public void test1(){
         BooleanSymbol boolSymbol = (BooleanSymbol) variableTable.get("ba");
-        System.out.println(boolSymbol.getValue());
         assertFalse(boolSymbol.getValue());
     }
 
@@ -41,7 +40,6 @@ public class BooleanTest extends TestingArgs {
     @Test
     public void test3(){
         BooleanSymbol boolSymbol = (BooleanSymbol) variableTable.get("bc");
-        System.out.println(boolSymbol.getValue());
         assertFalse(boolSymbol.getValue());
     }
 

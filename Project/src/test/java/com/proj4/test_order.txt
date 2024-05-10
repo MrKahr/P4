@@ -23,8 +23,8 @@
 1. Declaration test                 // DONE, FAILURES
 2. Assignment test                  // DONE, FAILURES
 3. Expression tests                 // DONE
-4. String tests
-5. Boolean tests
+4. String tests                     // DONE, FAILURES
+5. Boolean tests                    // DONE, FAILURES
 6. Action Declation tests
 7. Action Call tests
 8. Array tests
@@ -60,10 +60,6 @@
 │     TESTING FAILURES     │
 └──────────────────────────┘
    * Assign Test
-        - Test 2
-            - Boolean b IS TRUE     (got: FALSE, expected: TRUE)
-        - Test 3
-            - String s IS "fisk"    (got: ""fisk"", expected: "fisk")
         Test 4
             - Integer[] arr IS [1, 2, 3]    (got: NullPointerException on getNestingLevel(), expected: the nestingLevel)
                 EXCEPTIONS:
@@ -78,6 +74,3 @@
                             at com.proj4.AST.visitors.CheckDecider.decideVisitor(CheckDecider.java:21)
                             at com.proj4.AST.nodes.AST.visitChild(AST.java:105)
                             at com.proj4.AST.visitors.CheckVisitors.DeclarationTypeChecker.visit(DeclarationTypeChecker.java:26)
-    * Expression Test
-    |   - Test 14
-    |   |   - Integer sa IS 2-2;    (got: 4, expected: 0);
