@@ -499,19 +499,19 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     /*** String expression ***/
     @Override
     public Expression visitAddString(DBLParser.AddStringContext ctx) {
-        Expression node = new Expression(ExpressionOperator.CONCAT, (Expression) visit(ctx.stringExpr(0)), (Expression) visit(ctx.stringExpr(1)));
+        Expression node = new Expression(ExpressionOperator.ADD, (Expression) visit(ctx.stringExpr(0)), (Expression) visit(ctx.stringExpr(1)));
         return node;
     }
 
     @Override
     public Expression visitAddStringexpr1(DBLParser.AddStringexpr1Context ctx) {
-        Expression node = new Expression(ExpressionOperator.CONCAT, (Expression) visit(ctx.stringExpr()), (Expression) visit(ctx.expr()));
+        Expression node = new Expression(ExpressionOperator.ADD, (Expression) visit(ctx.stringExpr()), (Expression) visit(ctx.expr()));
         return node;
     }
 
     @Override
     public Expression visitAddStringexpr2(DBLParser.AddStringexpr2Context ctx) {
-        Expression node = new Expression(ExpressionOperator.CONCAT, (Expression) visit(ctx.expr()), (Expression) visit(ctx.stringExpr()));
+        Expression node = new Expression(ExpressionOperator.ADD, (Expression) visit(ctx.expr()), (Expression) visit(ctx.stringExpr()));
         return node;
     }
 
