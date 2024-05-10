@@ -1,6 +1,7 @@
 package com.proj4.symbolTable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Stack;
@@ -29,7 +30,7 @@ public class Scope implements Cloneable{
     //this table keeps track of which states have been declared in the current scope
     private static HashMap<String, StateSymbol> stateTable = new HashMap<>();    //TODO: stateTable contains rulesymbols for now 
   
-    // this table keeps track of which rules have been declared 
+    //this table keeps track of which rules have been declared 
     private static HashMap<String, ArrayList<RuleSymbol>> ruleTable = new HashMap<>();
 
     //this table keeps track of variables
@@ -41,8 +42,20 @@ public class Scope implements Cloneable{
     // TODO: create hashmap of observers instead of arrayList
     private static ArrayList<InterpreterObserver> currentObservers = new ArrayList<InterpreterObserver>();
 
+    // Flags whether the interpreter should copy scopes to its observers //TODO: Use debug flag to restrict interpreter's printing   
     private static boolean inDebugMode = false;
 
+    // Inbuilt actions are hard coded
+    private static ArrayList<String> inbuiltActions = new ArrayList<>(Arrays.asList("setState", "draw", "shuffle"));
+
+    //these strings are not allowed to be used as identifiers anywhere
+    //TODO: the parser seemingly already handles this
+ /*    private static ArrayList<String> keywords = new ArrayList<>(Arrays.asList("Integer", "Boolean", "String",
+    "Action", "Rule", "State", "Template", "IF", "ELSE IF", "ELSE", "FOR", "AND", "OR", "GREATER THAN", "GREATER OR EQUALS",
+    "LESS THAN", "LESS OR EQUALS", "EQUALS", "NOT EQUALS", "RESULT", "RESULT IN", "RESULTS IN", "CONTAINS", "ALLOWS","WHEN", "WITH LOOP",
+    "IS", "NOT", "NEW")); */
+    
+    
     //Method
     public HashMap<String, SymbolTableEntry> getVariableTable(){
         return variableTable;
@@ -128,7 +141,7 @@ public class Scope implements Cloneable{
             declaredTable.add(identifier);
         }
     }
-// TODO: states are unimplemented right now
+
     public static void declareState(String identifier, StateSymbol stateSymbol){
         stateTable.put(identifier, stateSymbol);
     }
@@ -192,6 +205,15 @@ public class Scope implements Cloneable{
         return scopeStack.peek();
     }
 
+    public static ArrayList<String> getInbuiltActions(){
+        return inbuiltActions;
+    }
+
+    /* public static ArrayList<Strings> getKeywords(){
+        return keywords;
+    }
+     * 
+     */
     // OBSERVER PART
     public static void addObserver(InterpreterObserver interpreterObserver){
         currentObservers.add(interpreterObserver);
