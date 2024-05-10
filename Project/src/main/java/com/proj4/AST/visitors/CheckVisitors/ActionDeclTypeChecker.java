@@ -19,6 +19,12 @@ public class ActionDeclTypeChecker extends TypeCheckVisitor{
     public void visit(AST node){
         ActionDecl actionDecl = (ActionDecl) node;
         Scope.inherit();
+
+        // Check whether action is part of the inbuilt actions
+        if(Scope.getInbuiltActions().contains(actionDecl.getIdentifier())){
+            throw new VariableAlreadyDefinedException("Cannot redeclare inbuilt action \"" + actionDecl.getIdentifier());
+        }
+        
         //Check whether action is already defined in scope
         if(Scope.getActionTable().containsKey(actionDecl.getIdentifier())){
             throw new VariableAlreadyDefinedException("Action \"" + actionDecl.getIdentifier() + "\" is already defined!");
@@ -27,6 +33,7 @@ public class ActionDeclTypeChecker extends TypeCheckVisitor{
         if (Scope.getBlueprintTable().containsKey(actionDecl.getIdentifier())) {
             throw new VariableAlreadyDefinedException("Template is using reserved identifier \"" + actionDecl.getIdentifier() + "\"!");
         }
+
         //Construct symbol to represent the action
         ActionSymbol action = new ActionSymbol(
             actionDecl.getType(), 
