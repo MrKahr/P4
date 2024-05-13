@@ -56,4 +56,12 @@ public class StringTest extends TestingArgs {
         StringSymbol stringSymbol = (StringSymbol) variableTable.get("se");
         assertEquals("😊", stringSymbol.getValue());
     }
+
+    @Test
+    public void test6(){
+        StringSymbol stringSymbol = (StringSymbol) variableTable.get("sf");
+        assertEquals("This is a \"String\"", stringSymbol.getValue());
+    }
+
+
 }

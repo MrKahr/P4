@@ -115,7 +115,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
 
     @Override
     public ActionDecl visitNoReturnActionDecl(DBLParser.NoReturnActionDeclContext ctx){
-        String identifier = ctx.getChild(1).getText();
+        String identifier = ctx.typedefUser().getText();
         ActionDecl node = new ActionDecl(identifier, (Body) visit(ctx.body()));
         ArrayList<Declaration> parameterList = (ArrayList<Declaration>) visit(ctx.parameterList());
         for (Declaration parameter : (ArrayList<Declaration>) parameterList) {
