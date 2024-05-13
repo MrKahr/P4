@@ -9,7 +9,7 @@
 6. Action Declation tests
 7. Action Call tests
 8. Array tests
-9. If-else tests
+9. If-else tests                    // DONE
 10. For-loop tests
 11. Template Decl tests
 12. Template Initialization tests
@@ -28,7 +28,7 @@
 6. Action Declation tests
 7. Action Call tests
 8. Array tests
-9. If-else tests
+9. If-else tests                    // DONE
 10. For-loop tests
 11. Template Decl tests
 12. Template Initialization tests

@@ -2,14 +2,16 @@
 /* TEST 1
 Action Decl with parameters, without return
 */
-ACTION tad(Integer a, String b) {
-    a+b;
+Action tad1(Integer a, Integer b) {
+    Integer adb IS a+b;
 }
 
 /* TEST 2
 Action Decl with parameters, without return
-*/
-ACTION tad2(Integer a, String b) RESULTS IN Integer[] {
+
+Action tad2(Integer a, String b) RESULTS IN Integer[] {
     Integer[] c IS [a,b];
     RESULT IN c;
 }
+*/
+Integer ada IS 1;

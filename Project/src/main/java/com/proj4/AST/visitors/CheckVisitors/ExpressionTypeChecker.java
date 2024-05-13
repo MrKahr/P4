@@ -94,17 +94,17 @@ public class ExpressionTypeChecker extends TypeCheckVisitor {
                 }
                 TypeCheckVisitor.setFoundType("Boolean", "Primitive", 0);
                 break;
-            case CONCAT:
-                expression.visitChild(new CheckDecider(), expression.getFirstOperand());
-                if (!TypeCheckVisitor.getFoundType().equals("String")) {
-                    throw new MismatchedTypeException();
-                }
-                expression.visitChild(new CheckDecider(), expression.getSecondOperand());
-                if (!TypeCheckVisitor.getFoundType().equals("String")) {
-                    throw new MismatchedTypeException();
-                }
-                TypeCheckVisitor.setFoundType("String", "Primitive", 0);
-                break;
+            // case CONCAT:
+            //     expression.visitChild(new CheckDecider(), expression.getFirstOperand());
+            //     if (!TypeCheckVisitor.getFoundType().equals("String")) {
+            //         throw new MismatchedTypeException();
+            //     }
+            //     expression.visitChild(new CheckDecider(), expression.getSecondOperand());
+            //     if (!TypeCheckVisitor.getFoundType().equals("String")) {
+            //         throw new MismatchedTypeException();
+            //     }
+            //     TypeCheckVisitor.setFoundType("String", "Primitive", 0);
+            //     break;
             case VARIABLE:
                 TypeCheckVisitor.setFoundType("String", "Primitive", 0);
                 break;

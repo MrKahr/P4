@@ -20,6 +20,8 @@ public class IfElseTypeChecker extends TypeCheckVisitor{
         }
         // Check each body 
         ifElse.visitChild(new CheckDecider(), ifElse.getThenBlock());
-        ifElse.visitChild(new CheckDecider(), ifElse.getElseBlock());
+        if (ifElse.getElseBlock() != null) {
+            ifElse.visitChild(new CheckDecider(), ifElse.getElseBlock());
+        }
     }
 }

@@ -156,14 +156,14 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 System.out.println("Negating boolean.");
                 InterpreterVisitor.setReturnSymbol(new BooleanSymbol(!((BooleanSymbol)InterpreterVisitor.getReturnSymbol()).getValue()));
                 break;
-            case CONCAT:
-                expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
-                String stringOne = ((StringSymbol)InterpreterVisitor.getReturnSymbol()).getValue();
-                expression.visitChild(new InterpreterDecider(), expression.getSecondOperand());
-                String stringTwo = ((StringSymbol)InterpreterVisitor.getReturnSymbol()).getValue();
-                System.out.println("Concatenating \"" + stringOne + "\" with \"" + stringOne + "\".");
-                InterpreterVisitor.setReturnSymbol(new StringSymbol(stringOne + stringTwo));
-                break;
+            // case CONCAT:
+            //     expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
+            //     String stringOne = ((StringSymbol)InterpreterVisitor.getReturnSymbol()).getValue();
+            //     expression.visitChild(new InterpreterDecider(), expression.getSecondOperand());
+            //     String stringTwo = ((StringSymbol)InterpreterVisitor.getReturnSymbol()).getValue();
+            //     System.out.println("Concatenating \"" + stringOne + "\" with \"" + stringOne + "\".");
+            //     InterpreterVisitor.setReturnSymbol(new StringSymbol(stringOne + stringTwo));
+            //     break;
             case VARIABLE:
                 //TODO: WARNING:THIS OPERATOR IS UNSUPPORTED
                 //TODO: figure out how to handle this in the interpreter!
