@@ -18,9 +18,9 @@ public class ForLoopInterpreter extends InterpreterVisitor {
         forLoop.visitChild(new InterpreterDecider(), forLoop.getCondition());
         //interpret the body if the condition is true
         //interpret the iteratorAction if the condition is true
-        if (((BooleanSymbol)InterpreterVisitor.getReturnSymbol()).getValue()) {
-            forLoop.visitChild(new InterpreterDecider(), forLoop.getBody());
-            forLoop.visitChild(new InterpreterDecider(), forLoop.getIteratorAction());
+        while (((BooleanSymbol)InterpreterVisitor.getReturnSymbol()).getValue()) {
+            forLoop.visitChildren(new InterpreterDecider());
+            forLoop.visitChild(new InterpreterDecider(), forLoop.getCondition());
         }
         Scope.synthesize();
     }

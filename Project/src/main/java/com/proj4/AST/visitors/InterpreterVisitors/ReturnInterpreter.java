@@ -17,10 +17,9 @@ public class ReturnInterpreter extends InterpreterVisitor {
         returnNode.visitChild(new InterpreterDecider(), returnNode.getReturnValue());
 
         //update the action template with the new return symbol
+        System.out.println("Attempting to write to actionTemplate with identifier \"" + InterpreterVisitor.getCurrentActionIdentifier() + "\"");
         TemplateSymbol actionTemplate = (TemplateSymbol)Scope.getCurrent().getVariableTable().get(InterpreterVisitor.getCurrentActionIdentifier());
         //the 0th field is RESULT
-        actionTemplate.getContent().set(0, InterpreterVisitor.getReturnSymbol());
-
-        
+        actionTemplate.getContent().set(0, InterpreterVisitor.getReturnSymbol());        
     }
 }

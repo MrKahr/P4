@@ -1,30 +1,28 @@
 package com.proj4.AST.nodes;
 
 public class ForLoop extends Statement{
+    private Identifiable iterator;
+    private Expression condition;
     //Constructor
     public ForLoop(Identifiable iterator, Expression condition, Assignment iteratorAction, Body body){
-        addChild((AST) iterator);    //first child is the iterator
-        addChild(condition);        //second child is the condition
-        addChild(iteratorAction);   //third child is what to do with the iterator every loop
+        this.iterator = iterator;
+        this.condition = condition;
         for (AST child : body.getChildren()){   //add extra children from a potential body node
             addChild(child);
         }
+        addChild(iteratorAction);   //last child is what to do with the iterator every loop
     }
 
     //Method
     public Identifiable getIterator(){                      //using Identifiable here instead of PrimitiveDecl 
-        return (Identifiable) getChildren().get(0);   //since we just need to be able to refer to
+        return iterator;   //since we just need to be able to refer to
     }                                                       //the identifier for the loop to work, in theory
 
     public Expression getCondition(){
-        return (Expression) getChildren().get(1);
+        return condition;
     }
 
     public Assignment getIteratorAction(){
-        return (Assignment) getChildren().get(2);
-    }
-
-    public Body getBody(){
-        return (Body) getChildren().get(3);
+        return (Assignment) getChildren().get(1);
     }
 }

@@ -17,6 +17,8 @@ public class TemplateSymbol extends SymbolTableEntry{
     public TemplateSymbol(){}    //content list is created by default
 
     public TemplateSymbol(TemplateSymbol other){  //create a copy of a given TemplateSymbol
+
+        this.setType(other.getType());
         for (SymbolTableEntry entry : other.getContent()) {
             //use the type to figure out which symbol type we're dealing with and create a copy of that type
             switch (entry.getType()) {

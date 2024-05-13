@@ -16,18 +16,18 @@ public abstract class SymbolTableEntry implements Typed{
     public abstract String getComplexType();
 
     public static SymbolTableEntry instantiateDefault(String type, String complexType, int nestingLevel){
-
-                switch (complexType) {
-                    case "Array":
-                        return new ArraySymbol(type, 0);
-                    case "Template":
-                        return new TemplateSymbol(Scope.getBlueprintTable().get(type));
-                    case "Primitive":
-                        return instantiateDefault(type);
-                    default:
-                        throw new UndefinedTypeException("The complex type \"" + complexType + "\" is undefined!");
-                }
+        System.out.println("Attempting to instantiate default instance of T: " + type + ", CT: " + complexType + ", NL: " + nestingLevel + ".");
+        switch (complexType) {
+            case "Array":
+                return new ArraySymbol(type, 0);
+            case "Template":
+                return new TemplateSymbol(Scope.getBlueprintTable().get(type));
+            case "Primitive":
+                return instantiateDefault(type);
+            default:
+                throw new UndefinedTypeException("The complex type \"" + complexType + "\" is undefined!");
         }
+    }
 
     public static SymbolTableEntry instantiateDefault(String type){
         switch (type) {

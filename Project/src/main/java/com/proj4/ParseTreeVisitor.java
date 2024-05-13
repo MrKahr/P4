@@ -88,7 +88,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     public ActionDecl visitReturnActionDecl(DBLParser.ReturnActionDeclContext ctx) {
         ParseTree resultsIn = ctx.resultsIn();
         String resultComplexType;
-        String resultType = resultsIn.getText();
+        String resultType = (String)visit(ctx.resultsIn());
         Integer nestingLevel = 0;
         if (resultsIn.getClass().getSimpleName().equals("TypedefUserContext")) {
             resultComplexType = "Template";
@@ -160,13 +160,24 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     public ActionCall visitActionCall(DBLParser.ActionCallContext ctx) {
         ActionCall node = new ActionCall(ctx.typedefUser().getText());
 
+        ArrayList<Expression> arguments = (ArrayList<Expression>) visit(ctx.argumentList());
+        for (Expression argument : arguments) {
+            node.addChild(argument);
+        }
+        
+        return node;
+    }
+
+    @Override
+    public ArrayList<Expression> visitArgumentList(DBLParser.ArgumentListContext ctx){
+        ArrayList<Expression> argumentNodes = new ArrayList<Expression>();
         for (int i = 0; i < ctx.getChildCount(); i++) {
-            var childnode = visit(ctx.getChild(i));
-            if (childnode != null){
-                node.addChild((Expression) childnode);
+            Expression node = (Expression)visit(ctx.getChild(i));
+            if (node != null) {
+                argumentNodes.add(node);
             }
         }
-        return node;
+        return argumentNodes;
     }
 
     @Override
@@ -561,5 +572,18 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
             identifiers.add(node.getText());
         }
         return identifiers;
+    }
+
+    @Override
+    public String visitResultsIn(DBLParser.ResultsInContext ctx) {
+        String type = "mangler type";
+        if(ctx.typedefUser() != null) {
+            type = ctx.typedefUser().getText();
+        } else if(ctx.typePrimitive() != null) {
+            type = ctx.typePrimitive().getText();
+        } else if(ctx.arrayType() != null) {
+            type = ctx.arrayType().getText();
+        }
+        return type;
     }
 }

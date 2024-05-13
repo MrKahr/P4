@@ -9,6 +9,7 @@ import java.util.Stack;
 import com.proj4.exceptions.VariableAlreadyDefinedException;
 import com.proj4.symbolTable.symbols.TemplateSymbol;
 import com.proj4.symbolTable.symbols.ActionSymbol;
+import com.proj4.symbolTable.symbols.PrimitiveSymbol;
 import com.proj4.symbolTable.symbols.RuleSymbol;
 import com.proj4.symbolTable.symbols.StateSymbol;
 import com.proj4.symbolTable.symbols.SymbolTableEntry;
@@ -237,5 +238,20 @@ public class Scope implements Cloneable{
         Stack <Scope> stackCopy = new Stack<Scope>();
         stackCopy.addAll(scopeStack);
         return stackCopy;
+    }
+
+    public void printBindings(){
+        System.out.println("--------Bindings--------");
+        for (String identifier : variableTable.keySet()) {
+            SymbolTableEntry variable = variableTable.get(identifier);
+            String value;
+            if (variable instanceof PrimitiveSymbol) {
+                value = ((PrimitiveSymbol) variable).getValue().toString();
+            } else {
+                value = "Content";
+            }
+            System.out.println(identifier + " |-> " + value);
+        }
+        System.out.println("------------------------");
     }
 }

@@ -188,7 +188,7 @@ return
     ;
 
 resultsIn
-    :   RESULTS_IN (typedefUser | typePrimitive | STATE | arrayType)
+    :   RESULTS_IN (typedefUser | typePrimitive | arrayType)
     ;
 
 multOp

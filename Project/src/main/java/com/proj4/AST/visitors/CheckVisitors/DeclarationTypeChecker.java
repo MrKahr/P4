@@ -14,7 +14,7 @@ public class DeclarationTypeChecker extends TypeCheckVisitor{
 
         // Check variable does not exist in Dtable
         if (declaration.getScope().getDeclaredTable().contains(declaration.getIdentifier())) {
-            throw new VariableAlreadyDefinedException();
+            throw new VariableAlreadyDefinedException("Variable \"" + declaration.getIdentifier() + "\" has already been declared in this scope!");
         } 
 
         //create a new variable with the given type

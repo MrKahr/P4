@@ -42,6 +42,9 @@ public class ActionDeclTypeChecker extends TypeCheckVisitor{
             actionDecl.getNestingLevel()
         );
 
+        //Add declared action to action table so return node can see it
+        Scope.getActionTable().put(actionDecl.getIdentifier(), action);
+
         //set the action body before checking children
         TypeCheckVisitor.setCurrentAction(actionDecl.getIdentifier());
 
@@ -65,12 +68,10 @@ public class ActionDeclTypeChecker extends TypeCheckVisitor{
         //clear current action
         TypeCheckVisitor.setCurrentAction(null);
     
-        //Add declared action to action table 
-        Scope.getActionTable().put(actionDecl.getIdentifier(), action);
-
         //In this language, given some action "a", we can write a.RESULT to get the most recently returned value
         //So let's make a template blueprint for this action (we'll instantiate the actual template with the interpreter)
         TemplateSymbol blueprint = new TemplateSymbol();
+        blueprint.setType(actionDecl.getIdentifier());
         blueprint.addContent(
             SymbolTableEntry.instantiateDefault(
                 actionDecl.getType(),
@@ -85,7 +86,10 @@ public class ActionDeclTypeChecker extends TypeCheckVisitor{
         //Now let's add them to the appropriate tables
         Scope.getTemplateMapTable().put(actionDecl.getIdentifier(), map);
         Scope.getBlueprintTable().put(actionDecl.getIdentifier(), blueprint);
-
+        Scope.getCurrent().declareVariable(actionDecl.getIdentifier(), blueprint);
         Scope.exit();
+
+        //placing the action template in the program's scope
+        Scope.getCurrent().declareVariable(actionDecl.getIdentifier(), blueprint);
     }
 }

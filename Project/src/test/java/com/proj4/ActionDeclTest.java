@@ -33,6 +33,6 @@ public class ActionDeclTest extends TestingArgs {
     public void test1() {
         IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("ada");
         System.out.println(intSymbol.getValue());
-        assertTrue(intSymbol.getValue() == 1);
+        assertTrue(intSymbol.getValue() == 3);
     }
 }

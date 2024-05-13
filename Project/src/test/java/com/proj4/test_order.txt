@@ -6,11 +6,11 @@
 3. Expression tests                 // DONE
 4. String tests                     // DONE
 5. Boolean tests                    // DONE
-6. Action Declation tests
-7. Action Call tests
+6. Action Declation tests           // single case done
+7. Action Call tests                // single case done
 8. Array tests
 9. If-else tests                    // DONE
-10. For-loop tests
+10. For-loop tests                  // single case done
 11. Template Decl tests
 12. Template Initialization tests
 13. Rule tests
@@ -25,11 +25,11 @@
 3. Expression tests                 // DONE
 4. String tests                     // DONE, FAILURES
 5. Boolean tests                    // DONE, FAILURES
-6. Action Declation tests
-7. Action Call tests
+6. Action Declation tests           // single case done
+7. Action Call tests                // single case done
 8. Array tests
 9. If-else tests                    // DONE
-10. For-loop tests
+10. For-loop tests                  // single case done
 11. Template Decl tests
 12. Template Initialization tests
 13. Rule tests
