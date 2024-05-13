@@ -26,3 +26,8 @@ String sd IS 1 + "fish";
 Emojis
 */
 String se IS "😊";
+
+/* TEST 6
+Nested strings
+*/
+String sf IS "This is a "String"";
