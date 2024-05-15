@@ -553,13 +553,17 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     public TemplateInstance visitTemplateInit(DBLParser.TemplateInitContext ctx) {
         TemplateInstance node = new TemplateInstance(ctx.typedefUser().getText());
         for (ParseTree treeNode : ctx.children) {
-            if (treeNode instanceof DBLParser.TemplateInitContext || treeNode instanceof DBLParser.AssignmentContext) {
+            if (treeNode instanceof DBLParser.TemplateInitContext || treeNode instanceof DBLParser.ExprContext) {
                 node.addChild((AST) visit(treeNode));
             }
         }
         return node;
     }
-
+    @Override
+    public TemplateInstance visitTemplateInitExpr(DBLParser.TemplateInitExprContext ctx) {
+        TemplateInstance node = (TemplateInstance)visit(ctx.templateInit());
+        return node;
+    }
     @Override public Expression visitTemplateAccessExpr(DBLParser.TemplateAccessExprContext ctx) {
         Expression node = new Expression(ExpressionOperator.ACCESS, (Expression) visit(ctx.expr()), new TField(ctx.IDENTIFIER().getText()));
         return node;

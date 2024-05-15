@@ -14,7 +14,7 @@ import com.proj4.symbolTable.ScopeObserver;
 import com.proj4.symbolTable.symbols.IntegerSymbol;
 import com.proj4.symbolTable.symbols.SymbolTableEntry;
 
-public class ActionDeclTest extends TestingArgs {
+public class ActionTest extends TestingArgs {
     private static HashMap<String, SymbolTableEntry> variableTable;
 
     @BeforeAll

@@ -6,9 +6,9 @@ Template Card CONTAINS {
     Integer health;
 }
 
-/*
-Card c1 IS NEW Card{cost IS 1;health IS 2;}
 
+Card c1 IS NEW Card{cost IS 1; health IS 2;}
+/*
 c1.cost IS 1;
 
 Integer tda IS c1.cost;
