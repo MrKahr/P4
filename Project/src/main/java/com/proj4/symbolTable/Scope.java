@@ -77,6 +77,9 @@ public class Scope implements Cloneable{
     public HashSet<String> getDeclaredTable(){
         return declaredTable;
     }
+    public Boolean getDebugStatus(){
+        return inDebugMode;
+    }
 
     public static HashMap<String, StateSymbol> getStateTable(){
         return stateTable;
@@ -121,6 +124,7 @@ public class Scope implements Cloneable{
     //Copy all mappings from the specified scope to this scope, overwriting duplicates with mappings from the other scope
     public void putAll(Scope other){
         variableTable.putAll(other.getVariableTable());
+        setDebugStatus(other.getDebugStatus());
         //declaredTable.addAll(other.getDTable());  <- don't do this! Otherwise variables must have unique names always
     }
 
