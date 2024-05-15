@@ -27,31 +27,31 @@ public class StringTest extends TestingArgs {
 
         variableTable = scopeObserver.getCurrentScope().peek().getVariableTable();
     }
-    @Disabled
+
     @Test
     public void test1() {
         StringSymbol stringSymbol = (StringSymbol) variableTable.get("sa");
         assertEquals("fish", stringSymbol.getValue());
     }
-    @Disabled
+
     @Test
     public void test2() {
         StringSymbol stringSymbol = (StringSymbol) variableTable.get("sb");
         assertEquals("JohnUserman", stringSymbol.getValue());
     }
-    @Disabled
+
     @Test
     public void test3() {
         StringSymbol stringSymbol = (StringSymbol) variableTable.get("sc");
         assertEquals("fish1", stringSymbol.getValue());
     }
-    @Disabled
+
     @Test
     public void test4() {
         StringSymbol stringSymbol = (StringSymbol) variableTable.get("sd");
         assertEquals("1fish", stringSymbol.getValue());
     }
-    @Disabled
+
     @Test
     public void test5() {
         StringSymbol stringSymbol = (StringSymbol) variableTable.get("se");

@@ -2,23 +2,23 @@
 Action call
 - without parameters
 - without return
-*/
+
 ACTION ta() RESULTS IN Integer {
     RESULT IN 3;
 }
 Integer a IS ta();
-
+*/
 
 /* TEST 2
 Action call 
 - with parameters
 - without return
-*/
+
 ACTION tb() {
     Integer a IS 4;
 }
 Integer b IS tb();
-
+*/
 
 /* TEST 3
 Action Decl with parameters, without return

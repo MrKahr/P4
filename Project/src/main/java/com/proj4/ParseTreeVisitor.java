@@ -533,7 +533,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     @Override
     public Expression visitLitteralString(DBLParser.LitteralStringContext ctx) {
         String str = ctx.string().getText();
-        Expression node = new Expression(ExpressionOperator.CONSTANT, new StringSymbol(str.substring(0, str.length()-1)));
+        Expression node = new Expression(ExpressionOperator.CONSTANT, new StringSymbol(str.substring(1, str.length()-1)));
         return node;
     }
 
