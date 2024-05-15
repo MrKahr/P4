@@ -2,6 +2,8 @@ package com.proj4;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalTime;
+import java.time.Duration;
 
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -12,9 +14,11 @@ import com.proj4.AST.visitors.CheckDecider;
 import com.proj4.AST.visitors.InterpreterDecider;
 import com.proj4.antlrClass.DBLLexer;
 import com.proj4.antlrClass.DBLParser;
+import com.proj4.symbolTable.Scope;
 
 public class DBL {
     private Boolean debugMode = false;
+    private LocalTime startTime;
 
     // Constructor
     public DBL(){}
@@ -32,7 +36,6 @@ public class DBL {
         return this.debugMode;
     }
 
-
     /**
      * <b> The interpreter for DBL </b>
      * <p> This class is a wrapper which does the following: </p>
@@ -44,7 +47,9 @@ public class DBL {
      * @param input The input to interpret. Can be either a string of DBL-code or a file containing DBL-code
      */
     public void interpret(String input){
-        System.out.println("Reading input: " + input + "\n");
+        this.startTime = LocalTime.now();
+
+        System.out.println("\nReading input: " + input + "\n");
 
         File file = new File(input);
         File absFile = new File(file.getAbsolutePath());
@@ -76,8 +81,13 @@ public class DBL {
             // Create a parse tree. The starting rule is "program"
             ParseTree tree = parser.program();
 
+            System.out.println("Lexing and parsing done");
+
             // Our custom visitor (does the actions as tree is traversed)
             ParseTreeVisitor parseVisitor = new ParseTreeVisitor();
+
+            // Set debug mode for parse tree visitor
+            parseVisitor.setDebugMode(this.debugMode);
 
             // Generate the AST
             parseVisitor.visit(tree);
@@ -85,10 +95,15 @@ public class DBL {
             // Assign AST
             AST abstractSyntaxTree = parseVisitor.getRoot();
 
+            System.out.println("AST generated");
+
             if(this.debugMode){
                 // Print tree
                 abstractSyntaxTree.printTree();
             }
+
+            // Set debug status for type checker and interpreter
+            Scope.setDebugStatus(this.debugMode);
 
             // Typecheck AST
             CheckDecider checkDecider = new CheckDecider();
@@ -97,9 +112,26 @@ public class DBL {
             // Interpret AST
             InterpreterDecider interpreterDecider = new InterpreterDecider();
             interpreterDecider.decideVisitor(abstractSyntaxTree);
+
+            // Input was sucessfully interpreted
+            this.printDone(input);
         } catch (Exception e) {
             System.out.println("Failed to interpret input '" + input + "'\n");
             e.printStackTrace();
         }
+    }
+
+    private void printDone(String input) {
+        LocalTime stopTime = LocalTime.now();
+        Duration duration = Duration.between(startTime, stopTime);
+        String success = "Successfully interpreted input: \"" + input + "\"";
+        String lines = "";
+        for (int i = 0; i < success.length(); i++) {
+            lines += "=";
+        }
+        System.out.println("\n\n" + lines);
+        System.out.println(success);
+        System.out.printf("Interpreting took %.3f seconds\n", (float) duration.toMillis()/1000);
+        System.out.println(lines);
     }
 }

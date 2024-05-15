@@ -7,7 +7,7 @@ import com.proj4.symbolTable.Scope;
 public class InterpreterDecider implements VisitorDecider {
      //decide which visitor class to use for the given node
      public void decideVisitor(AST node){
-        System.out.println("Interpreting " + node.getClass().getSimpleName() + ".");
+        System.out.println("\n\nInterpreting " + node.getClass().getSimpleName() + ".");
         if (!Scope.getScopeStack().empty()) {
             Scope.getCurrent().printBindings();
         }

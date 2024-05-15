@@ -29,9 +29,9 @@ public class Scope implements Cloneable{
     private static HashMap<String, ActionSymbol> actionTable = new HashMap<>();
 
     //this table keeps track of which states have been declared in the current scope
-    private static HashMap<String, StateSymbol> stateTable = new HashMap<>();    //TODO: stateTable contains rulesymbols for now 
-  
-    //this table keeps track of which rules have been declared 
+    private static HashMap<String, StateSymbol> stateTable = new HashMap<>();    //TODO: stateTable contains rulesymbols for now
+
+    //this table keeps track of which rules have been declared
     private static HashMap<String, ArrayList<RuleSymbol>> ruleTable = new HashMap<>();
 
     //this table keeps track of variables
@@ -43,7 +43,7 @@ public class Scope implements Cloneable{
     // TODO: create hashmap of observers instead of arrayList
     private static ArrayList<InterpreterObserver> currentObservers = new ArrayList<InterpreterObserver>();
 
-    // Flags whether the interpreter should copy scopes to its observers //TODO: Use debug flag to restrict interpreter's printing   
+    // Flags whether the interpreter should copy scopes to its observers //TODO: Use debug flag to restrict interpreter's printing
     private static boolean inDebugMode = false;
 
     // Inbuilt actions are hard coded
@@ -55,8 +55,8 @@ public class Scope implements Cloneable{
     "Action", "Rule", "State", "Template", "IF", "ELSE IF", "ELSE", "FOR", "AND", "OR", "GREATER THAN", "GREATER OR EQUALS",
     "LESS THAN", "LESS OR EQUALS", "EQUALS", "NOT EQUALS", "RESULT", "RESULT IN", "RESULTS IN", "CONTAINS", "ALLOWS","WHEN", "WITH LOOP",
     "IS", "NOT", "NEW")); */
-    
-    
+
+
     //Method
     public HashMap<String, SymbolTableEntry> getVariableTable(){
         return variableTable;
@@ -213,7 +213,7 @@ public class Scope implements Cloneable{
     /* public static ArrayList<Strings> getKeywords(){
         return keywords;
     }
-     * 
+     *
      */
     // OBSERVER PART
     public static void addObserver(InterpreterObserver interpreterObserver){
@@ -241,17 +241,19 @@ public class Scope implements Cloneable{
     }
 
     public void printBindings(){
-        System.out.println("--------Bindings--------");
-        for (String identifier : variableTable.keySet()) {
-            SymbolTableEntry variable = variableTable.get(identifier);
-            String value;
-            if (variable instanceof PrimitiveSymbol) {
-                value = ((PrimitiveSymbol) variable).getValue().toString();
-            } else {
-                value = "Content";
+        if(inDebugMode) {
+            System.out.println("--------Bindings--------");
+            for (String identifier : variableTable.keySet()) {
+                SymbolTableEntry variable = variableTable.get(identifier);
+                String value;
+                if (variable instanceof PrimitiveSymbol) {
+                    value = ((PrimitiveSymbol) variable).getValue().toString();
+                } else {
+                    value = "Content";
+                }
+                System.out.println(identifier + " |-> " + value);
             }
-            System.out.println(identifier + " |-> " + value);
+            System.out.println("------------------------");
         }
-        System.out.println("------------------------");
     }
 }

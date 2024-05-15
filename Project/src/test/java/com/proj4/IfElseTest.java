@@ -6,8 +6,6 @@ import java.util.HashMap;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
 
 import com.proj4.symbolTable.Scope;
 import com.proj4.symbolTable.ScopeObserver;

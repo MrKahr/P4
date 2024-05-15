@@ -21,12 +21,18 @@ import com.proj4.symbolTable.symbols.StringSymbol;
 
 
 public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
-    Boolean DEBUG_MODE = false;  // USE THIS WHEN DEBUGGING!!!
+    Boolean debugMode = false;  // USE THIS WHEN DEBUGGING!!!
 
     // Fields
     private AST root;
+
+    // Methods
     public AST getRoot() {
         return this.root;
+    }
+
+    public void setDebugMode(Boolean debugMode) {
+        this.debugMode = debugMode;
     }
     /*
      * ┌─────────────────────────────────┐
@@ -43,7 +49,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
                 this.root.addChild((AST) childnode);
             }
         } catch (Exception e) {
-            if(DEBUG_MODE){
+            if(debugMode){
                 System.out.println("Something exploded. Too bad :(\n");
                 e.printStackTrace();
             } else {
@@ -164,7 +170,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         for (Expression argument : arguments) {
             node.addChild(argument);
         }
-        
+
         return node;
     }
 
@@ -379,8 +385,6 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
 
     @Override
     public Expression visitLitteralBool(DBLParser.LitteralBoolContext ctx) {
-        System.out.println(ctx.BOOLEAN().getText());
-        System.out.println(Boolean.parseBoolean(ctx.BOOLEAN().getText()));
         Expression node = new Expression(ExpressionOperator.CONSTANT, new BooleanSymbol(Boolean.parseBoolean(ctx.BOOLEAN().getText())));
         return node;
     }

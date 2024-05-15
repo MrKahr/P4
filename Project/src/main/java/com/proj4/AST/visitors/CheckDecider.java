@@ -7,7 +7,7 @@ import com.proj4.symbolTable.Scope;
 public class CheckDecider implements VisitorDecider {
      //decide which visitor class to use for the given node
      public void decideVisitor(AST node){
-        System.out.println("Type checking " + node.getClass().getSimpleName() + ".");
+        System.out.println("\n\nType checking " + node.getClass().getSimpleName() + ".");
         if (!Scope.getScopeStack().empty()) {
             Scope.getCurrent().printBindings();
         }
