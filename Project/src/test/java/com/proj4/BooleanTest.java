@@ -20,7 +20,7 @@ public class BooleanTest extends TestingArgs {
         Scope.addObserver(scopeObserver);
         Scope.setDebugStatus(true);
 
-        DBL interpreter = new DBL();
+        DBL interpreter = new DBL(true);
         interpreter.interpret(getPath() + "booleantest.dbl");
 
         variableTable = scopeObserver.getCurrentScope().peek().getVariableTable();

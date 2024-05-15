@@ -1,6 +1,7 @@
 package com.proj4;
 
 import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.HashMap;
 
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.function.Executable;
 
 import com.proj4.symbolTable.Scope;
 import com.proj4.symbolTable.ScopeObserver;
@@ -23,7 +25,7 @@ public class ExpressionTest extends TestingArgs {
         Scope.addObserver(scopeObserver);
         Scope.setDebugStatus(true);
 
-        DBL interpreter = new DBL();
+        DBL interpreter = new DBL(true);
         interpreter.interpret(getPath() + "expressiontest.dbl");
 
         variableTable = scopeObserver.getCurrentScope().peek().getVariableTable();
@@ -82,14 +84,11 @@ public class ExpressionTest extends TestingArgs {
     }
 
     @Test
-    @Disabled
     @DisplayName("Divide by zero")
     public void test9() {
-        /* Tested working
-            The test is disabled and code removed since
-            divide by zero throws an exception during interpreting
-            which impedes with the rest of the tests (as the interpreter stops if this case is encountered - as it should)
-        */
+        DBL interpreter = new DBL();
+        Executable e = () -> {interpreter.interpret(getPath() + "expressiontest.dbl");};
+        assertThrows(ArithmeticException.class, e);
     }
 
     @Test

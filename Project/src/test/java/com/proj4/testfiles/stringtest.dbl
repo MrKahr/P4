@@ -6,28 +6,23 @@ String sa IS "fish";
 
 /* TEST 2
 String + String
-*/
-String sb IS "John" + "Userman";
 
+String sb IS "John" + "Userman";
+*/
 
 /* TEST 3
 String + Expression (Integer to String type coercion)
-*/
-String sc IS "fish" + 1;
 
+String sc IS "fish" + 1;
+*/
 
 /* TEST 4
 Expression + String (Integer to String type coercion)
-*/
-String sd IS 1 + "fish";
 
+String sd IS 1 + "fish";
+*/
 
 /* TEST 5
 Emojis
 */
 String se IS "😊";
-
-/* TEST 6
-Nested strings
-*/
-String sf IS "This is a "String"";

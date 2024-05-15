@@ -21,8 +21,8 @@ public class ActionTest extends TestingArgs {
         Scope.addObserver(scopeObserver);
         Scope.setDebugStatus(true);
 
-        DBL interpreter = new DBL();
-        interpreter.interpret(getPath() + "actiondecltest.dbl");
+        DBL interpreter = new DBL(true);
+        interpreter.interpret(getPath() + "actiontest.dbl");
 
         variableTable = scopeObserver.getCurrentScope().peek().getVariableTable();
     }

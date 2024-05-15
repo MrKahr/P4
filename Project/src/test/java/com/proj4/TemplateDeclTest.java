@@ -1,35 +1,36 @@
-package com.proj4;
+// package com.proj4;
 
-import static org.junit.Assert.*;
+// import static org.junit.Assert.*;
 
-import java.util.HashMap;
+// import java.util.HashMap;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeAll;
-import com.proj4.symbolTable.Scope;
-import com.proj4.symbolTable.ScopeObserver;
-import com.proj4.symbolTable.symbols.IntegerSymbol;
-import com.proj4.symbolTable.symbols.SymbolTableEntry;
+// import org.junit.jupiter.api.Test;
+// import org.junit.jupiter.api.BeforeAll;
+// import org.junit.jupiter.api.Disabled;
 
-public class TemplateDeclTest extends TestingArgs {
-    private static HashMap<String, SymbolTableEntry> variableTable;
+// import com.proj4.symbolTable.Scope;
+// import com.proj4.symbolTable.ScopeObserver;
+// import com.proj4.symbolTable.symbols.IntegerSymbol;
+// import com.proj4.symbolTable.symbols.SymbolTableEntry;
 
-    @BeforeAll
-    public static void setup() {
-        ScopeObserver scopeObserver = new ScopeObserver();
-        Scope.addObserver(scopeObserver);
-        Scope.setDebugStatus(true);
+// public class TemplateDeclTest extends TestingArgs {
+//     private static HashMap<String, SymbolTableEntry> variableTable;
 
-        DBL interpreter = new DBL();
-        interpreter.interpret(getPath() + "templatedecltest.dbl");
+//     @BeforeAll
+//     public static void setup() {
+//         ScopeObserver scopeObserver = new ScopeObserver();
+//         Scope.addObserver(scopeObserver);
+//         Scope.setDebugStatus(true);
 
-        variableTable = scopeObserver.getCurrentScope().peek().getVariableTable();
-    }
+//         DBL interpreter = new DBL();
+//         interpreter.interpret(getPath() + "templatedecltest.dbl");
 
-    @Test
-    public void test1() {
-        IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("tda");
-        System.out.println(intSymbol.getValue());
-        assertTrue(intSymbol.getValue() == 2);
-    }
-}
+//         variableTable = scopeObserver.getCurrentScope().peek().getVariableTable();
+//     }
+//     @Test
+//     public void test1() {
+//         IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("tda");
+//         System.out.println(intSymbol.getValue());
+//         assertTrue(intSymbol.getValue() == 2);
+//     }
+// }

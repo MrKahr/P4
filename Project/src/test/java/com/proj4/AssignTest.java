@@ -24,7 +24,7 @@ public class AssignTest extends TestingArgs {
         Scope.addObserver(scopeObserver);
         Scope.setDebugStatus(true);
 
-        DBL interpreter = new DBL();
+        DBL interpreter = new DBL(true);
         interpreter.interpret(getPath() + "assigntest.dbl");
 
         variableTable = scopeObserver.getCurrentScope().peek().getVariableTable();

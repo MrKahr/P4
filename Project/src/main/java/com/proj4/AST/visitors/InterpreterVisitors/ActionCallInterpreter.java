@@ -69,7 +69,9 @@ public class ActionCallInterpreter extends InterpreterVisitor {
         ArrayList<RuleSymbol> rules = Scope.getRuleTable().get(actionCall.getIdentifier());
         if (rules != null) {
             for (RuleSymbol rule : rules) {
+                Scope.inherit();    //rule evaluation will have dynamic scope rules. Swap these to enter() and exit() for static scope rules
                 actionCall.visitChild(new InterpreterDecider(), rule.getBody());    //pretend the rules' bodies are children
+                Scope.synthesize();
             }
         }
     }
