@@ -5,11 +5,21 @@ import com.proj4.AST.visitors.InterpreterVisitors.*;
 import com.proj4.symbolTable.Scope;
 
 public class InterpreterDecider implements VisitorDecider {
-     //decide which visitor class to use for the given node
+    private static Boolean verbose = false;
+
+    public InterpreterDecider(){}
+
+    public InterpreterDecider(Boolean isVerbose) {
+        verbose = isVerbose;
+    }
+
+    //decide which visitor class to use for the given node
      public void decideVisitor(AST node){
-        System.out.println("\n\nInterpreting " + node.getClass().getSimpleName() + ".");
-        if (!Scope.getScopeStack().empty()) {
-            Scope.getCurrent().printBindings();
+        if(verbose){
+            System.out.println("\n\nInterpreting " + node.getClass().getSimpleName() + ".");
+            if (!Scope.getScopeStack().empty()) {
+                Scope.getCurrent().printBindings();
+            }
         }
         switch (node.getClass().getSimpleName()) {
             case "ActionCall":
@@ -22,16 +32,16 @@ public class InterpreterDecider implements VisitorDecider {
                 node.acceptVisitor(new ArrayInstanceInterpreter());
                 break;
             case "Assignment":
-                node.acceptVisitor(new AssignmentInterpreter());
+                node.acceptVisitor(new AssignmentInterpreter(verbose));
                 break;
             case "Expression":
-                node.acceptVisitor(new ExpressionInterpreter());
+                node.acceptVisitor(new ExpressionInterpreter(verbose));
                 break;
             case "ForLoop":
                 node.acceptVisitor(new ForLoopInterpreter());
                 break;
             case "IfElse":
-                node.acceptVisitor(new IfElseInterpreter());
+                node.acceptVisitor(new IfElseInterpreter(verbose));
                 break;
             case "Declaration":
                 node.acceptVisitor(new DeclarationInterpreter());
@@ -40,7 +50,7 @@ public class InterpreterDecider implements VisitorDecider {
                 node.acceptVisitor(new ProgramInterpreter());
                 break;
             case "Return":
-                node.acceptVisitor(new ReturnInterpreter());
+                node.acceptVisitor(new ReturnInterpreter(verbose));
                 break;
             case "RuleDecl":
                 node.acceptVisitor(new RuleDeclInterpreter());
@@ -58,7 +68,7 @@ public class InterpreterDecider implements VisitorDecider {
                 node.acceptVisitor(new BodyInterpreter());
                 break;
             case "Variable":
-                node.acceptVisitor(new VariableInterpreter());
+                node.acceptVisitor(new VariableInterpreter(verbose));
                 break;
             default:
                 System.err.println("UNRECOGNIZED NODE TYPE!\nGOT " + node.getClass().getSimpleName());

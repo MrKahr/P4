@@ -12,6 +12,12 @@ import com.proj4.symbolTable.Scope;
 import com.proj4.symbolTable.symbols.*;
 
 public class ExpressionInterpreter extends InterpreterVisitor {
+    private Boolean verbose = false;
+
+    public ExpressionInterpreter(){}
+    public ExpressionInterpreter(Boolean verbose){
+        this.verbose = verbose;
+    }
 
     @SuppressWarnings("unchecked")  //typecasting without respecting generics is ok here, because we've already typechecked the program at this point
     public void visit(AST node) {
@@ -20,7 +26,6 @@ public class ExpressionInterpreter extends InterpreterVisitor {
         Integer integerResult;
         Boolean booleanResult;
         Integer operands[];
-        Boolean booleanOperands[];
         // Note: These operators always return primitive types
         switch (expression.getOperator()) {
             case ADD:
@@ -41,7 +46,10 @@ public class ExpressionInterpreter extends InterpreterVisitor {
             case SUBTRACT:
                 operands = getIntegerOperands(expression);
                 integerResult = operands[0] - operands[1];
-                System.out.println("Result of " + operands[0] + " - " + operands[1] + " is " + integerResult);
+
+                if(this.verbose){
+                    System.out.println("Result of " + operands[0] + " - " + operands[1] + " is " + integerResult);
+                }
                 InterpreterVisitor.setReturnSymbol(new IntegerSymbol(integerResult));
                 break;
             case DIVIDE:
@@ -51,43 +59,63 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                     throw new ArithmeticException("Division by zero!");
                 }
                 integerResult = operands[0] / operands[1];
-                System.out.println("Result of " + operands[0] + " / " + operands[1] + " is " + integerResult);
+
+                if(this.verbose){
+                    System.out.println("Result of " + operands[0] + " / " + operands[1] + " is " + integerResult);
+                }
                 InterpreterVisitor.setReturnSymbol(new IntegerSymbol(integerResult));
                 break;
             case MULTIPLY:
                 operands = getIntegerOperands(expression);
                 integerResult = operands[0] * operands[1];
-                System.out.println("Result of " + operands[0] + " * " + operands[1] + " is " + integerResult);
+
+                if(this.verbose){
+                    System.out.println("Result of " + operands[0] + " * " + operands[1] + " is " + integerResult);
+                }
                 InterpreterVisitor.setReturnSymbol(new IntegerSymbol(integerResult));
                 break;
             case NEGATE:
                 expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
                 integerResult = -((IntegerSymbol)InterpreterVisitor.getReturnSymbol()).getValue();
-                System.out.println("Result of -" + -integerResult + " is " + integerResult);    //funky, but it works
+
+                if(this.verbose){
+                    System.out.println("Result of -" + -integerResult + " is " + integerResult);    //funky, but it works
+                }
                 InterpreterVisitor.setReturnSymbol(new IntegerSymbol(integerResult));
                 break;
             case LESS_THAN:
                 operands = getIntegerOperands(expression);
                 booleanResult = operands[0] < operands[1];
-                System.out.println("Result of " + operands[0] + " < " + operands[1] + " is " + booleanResult);
+
+                if(this.verbose){
+                    System.out.println("Result of " + operands[0] + " < " + operands[1] + " is " + booleanResult);
+                }
                 InterpreterVisitor.setReturnSymbol(new BooleanSymbol(booleanResult));
                 break;
             case LESS_OR_EQUALS:
                 operands = getIntegerOperands(expression);
                 booleanResult = operands[0] <= operands[1];
-                System.out.println("Result of " + operands[0] + " <= " + operands[1] + " is " + booleanResult);
+
+                if(this.verbose){
+                    System.out.println("Result of " + operands[0] + " <= " + operands[1] + " is " + booleanResult);
+                }
                 InterpreterVisitor.setReturnSymbol(new BooleanSymbol(booleanResult));
                 break;
             case GREATER_THAN:
                 operands = getIntegerOperands(expression);
                 booleanResult = operands[0] > operands[1];
-                System.out.println("Result of " + operands[0] + " > " + operands[1] + " is " + booleanResult);
+
+                if(this.verbose){
+                    System.out.println("Result of " + operands[0] + " > " + operands[1] + " is " + booleanResult);
+                }
                 InterpreterVisitor.setReturnSymbol(new BooleanSymbol(booleanResult));
                 break;
             case GREATER_OR_EQUALS:
                 operands = getIntegerOperands(expression);
                 booleanResult = operands[0] >= operands[1];
-                System.out.println("Result of " + operands[0] + " >= " + operands[1] + " is " + booleanResult);
+                if(this.verbose){
+                    System.out.println("Result of " + operands[0] + " >= " + operands[1] + " is " + booleanResult);
+                }
                 InterpreterVisitor.setReturnSymbol(new BooleanSymbol(booleanResult));
                 break;
             case EQUALS:
@@ -146,7 +174,9 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 }
                 InterpreterVisitor.setReturnSymbol(new BooleanSymbol(orOne || orTwo));
 
-                System.out.println("Result of " + orOne + " OR " + orTwo + " is " + (orOne || orTwo));
+                if(this.verbose){
+                    System.out.println("Result of " + orOne + " OR " + orTwo + " is " + (orOne || orTwo));
+                }
                 break;
             case AND:
                 expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
@@ -158,22 +188,31 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 }
                 InterpreterVisitor.setReturnSymbol(new BooleanSymbol(andOne && andTwo));
 
-                System.out.println("Result of " + andOne + " AND " + andTwo + " is " + (andOne && andTwo));
+                if(this.verbose){
+                    System.out.println("Result of " + andOne + " AND " + andTwo + " is " + (andOne && andTwo));
+                }
                 break;
             case NOT:
                 expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
-                System.out.println("Negating boolean.");
+
+                if(this.verbose){
+                    System.out.println("Negating boolean.");
+                }
                 InterpreterVisitor.setReturnSymbol(new BooleanSymbol(!((BooleanSymbol)InterpreterVisitor.getReturnSymbol()).getValue()));
                 break;
             case VARIABLE:
                 //TODO: WARNING:THIS OPERATOR IS UNSUPPORTED
                 //TODO: figure out how to handle this in the interpreter!
                 //at the time of writing, there is no syntactic support for this operator
-                System.out.println("Converting variable to string.");
+                if(this.verbose){
+                    System.out.println("Converting variable to string.");
+                }
                 break;
             case CONSTANT:
                 //this operator always returns a primitive!
-                System.out.println("Fetching constant.");
+                if(this.verbose){
+                    System.out.println("Fetching constant.");
+                }
                 InterpreterVisitor.setReturnSymbol(expression.getConstant());
                 break;
             case ACCESS:
@@ -186,9 +225,11 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 ArrayList<String> map = Scope.getTemplateMapTable().get(template.getType());         //get the arraylist with the chosen template's fields
 
                 SymbolTableEntry fieldContent = template.getContent().get(map.indexOf(fieldName));   //find the field we need with the map and get the content of the field
-                System.out.println("Accessing template with \"" + fieldName + "\".");
-                InterpreterVisitor.setReturnSymbol(fieldContent);
 
+                if(this.verbose){
+                    System.out.println("Accessing template with \"" + fieldName + "\".");
+                }
+                InterpreterVisitor.setReturnSymbol(fieldContent);
                 break;
             case INDEX:
                 expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
@@ -196,7 +237,10 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 expression.visitChild(new InterpreterDecider(), expression.getSecondOperand());
                 Integer index = ((IntegerSymbol)InterpreterVisitor.getReturnSymbol()).getValue();
                 InterpreterVisitor.setReturnSymbol(content.get(index));
-                System.out.println("Indexing array with \"" + index + "\".");
+
+                if(this.verbose){
+                    System.out.println("Indexing array with \"" + index + "\".");
+                }
                 break;
             default:
                 break;
@@ -212,15 +256,4 @@ public class ExpressionInterpreter extends InterpreterVisitor {
         operands[1] = ((PrimitiveSymbol<Integer>)InterpreterVisitor.getReturnSymbol()).getValue();
         return operands;
     }
-
-    @SuppressWarnings("unchecked")
-    private Boolean[] getBooleanOperands(Expression node){
-        Boolean[] operands = new Boolean[2];
-        node.visitChild(new InterpreterDecider(), node.getFirstOperand());
-        operands[0] = ((PrimitiveSymbol<Boolean>)InterpreterVisitor.getReturnSymbol()).getValue();
-        node.visitChild(new InterpreterDecider(), node.getSecondOperand());
-        operands[1] = ((PrimitiveSymbol<Boolean>)InterpreterVisitor.getReturnSymbol()).getValue();
-        return operands;
-    }
-
 }

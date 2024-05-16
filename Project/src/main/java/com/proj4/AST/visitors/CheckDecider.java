@@ -5,11 +5,20 @@ import com.proj4.AST.visitors.CheckVisitors.*;
 import com.proj4.symbolTable.Scope;
 
 public class CheckDecider implements VisitorDecider {
-     //decide which visitor class to use for the given node
+    private static Boolean verbose = false;
+
+    public CheckDecider(){}
+
+    public CheckDecider(Boolean isVerbose){
+        verbose = isVerbose;
+    }
+    //decide which visitor class to use for the given node
      public void decideVisitor(AST node){
-        System.out.println("\n\nType checking " + node.getClass().getSimpleName() + ".");
-        if (!Scope.getScopeStack().empty() && Scope.getVerbosity()) {
-            Scope.getCurrent().printBindings();
+        if(verbose){
+            System.out.println("\n\nType checking " + node.getClass().getSimpleName() + ".");
+            if (!Scope.getScopeStack().empty()) {
+                Scope.getCurrent().printBindings();
+            }
         }
         switch (node.getClass().getSimpleName()) {
             case "ActionCall":
@@ -40,7 +49,7 @@ public class CheckDecider implements VisitorDecider {
                 node.acceptVisitor(new ProgramTypeChecker());
                 break;
             case "Return":
-                node.acceptVisitor(new ReturnTypeChecker());
+                node.acceptVisitor(new ReturnTypeChecker(verbose));
                 break;
             case "RuleDecl":
                 node.acceptVisitor(new RuleDeclTypeChecker());

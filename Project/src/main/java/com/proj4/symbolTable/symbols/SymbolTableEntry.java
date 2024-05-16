@@ -16,7 +16,8 @@ public abstract class SymbolTableEntry implements Typed{
     public abstract String getComplexType();
 
     public static SymbolTableEntry instantiateDefault(String type, String complexType, int nestingLevel){
-        System.out.println("Attempting to instantiate default instance of T: " + type + ", CT: " + complexType + ", NL: " + nestingLevel + ".");
+        // Debug printing
+        //System.out.println("Attempting to instantiate default instance of T: " + type + ", CT: " + complexType + ", NL: " + nestingLevel + ".");
         switch (complexType) {
             case "Array":
                 return new ArraySymbol(type, 0);

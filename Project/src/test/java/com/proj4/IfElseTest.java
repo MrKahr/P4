@@ -21,8 +21,8 @@ public class IfElseTest extends TestingArgs {
         Scope.addObserver(scopeObserver);
 
         DBL interpreter = new DBL();
-        interpreter.setDebugMode(true);
-        interpreter.setVerbosity(true);
+        interpreter.setDebugMode(debugMode);
+        interpreter.setVerbosity(verbose);
         interpreter.interpret(getPath() + "ifelsetest.dbl");
 
         variableTable = scopeObserver.getCurrentScope().peek().getVariableTable();
@@ -31,37 +31,31 @@ public class IfElseTest extends TestingArgs {
     @Test
     public void test1() {
         IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("iea");
-        System.out.println(intSymbol.getValue());
         assertTrue(intSymbol.getValue() == 2);
     }
     @Test
     public void test2() {
         IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("ieb");
-        System.out.println(intSymbol.getValue());
         assertTrue(intSymbol.getValue() == 3);
     }
     @Test
     public void test3() {
         IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("iec");
-        System.out.println(intSymbol.getValue());
         assertTrue(intSymbol.getValue() == 4);
     }
     @Test
     public void test4() {
         IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("ied");
-        System.out.println(intSymbol.getValue());
         assertTrue(intSymbol.getValue() == 6);
     }
     @Test
     public void test5() {
         IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("iee");
-        System.out.println(intSymbol.getValue());
         assertTrue(intSymbol.getValue() == 6);
     }
     @Test
     public void test6() {
         IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("ief");
-        System.out.println(intSymbol.getValue());
         assertTrue(intSymbol.getValue() == 8);
     }
 }

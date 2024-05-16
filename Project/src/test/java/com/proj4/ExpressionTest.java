@@ -25,8 +25,8 @@ public class ExpressionTest extends TestingArgs {
         Scope.addObserver(scopeObserver);
 
         DBL interpreter = new DBL();
-        interpreter.setDebugMode(true);
-        interpreter.setVerbosity(true);
+        interpreter.setDebugMode(debugMode);
+        interpreter.setVerbosity(verbose);
         interpreter.interpret(getPath() + "expressiontest.dbl");
 
         variableTable = scopeObserver.getCurrentScope().peek().getVariableTable();
@@ -88,7 +88,7 @@ public class ExpressionTest extends TestingArgs {
     @DisplayName("Divide by zero")
     public void test9() {
         DBL interpreter = new DBL();
-        Executable e = () -> {interpreter.interpret(getPath() + "expressiontest.dbl");};
+        Executable e = () -> {interpreter.interpret("Integer dd IS 2/0;");};
         assertThrows(ArithmeticException.class, e);
     }
 

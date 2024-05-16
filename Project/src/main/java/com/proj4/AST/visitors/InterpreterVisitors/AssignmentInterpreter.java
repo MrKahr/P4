@@ -8,6 +8,12 @@ import com.proj4.AST.visitors.InterpreterVisitor;
 import com.proj4.symbolTable.symbols.*;
 
 public class AssignmentInterpreter extends InterpreterVisitor {
+    private Boolean verbose = false;
+
+    public AssignmentInterpreter(){}
+    public AssignmentInterpreter(Boolean verbose){
+        this.verbose = verbose;
+    }
 
     public void visit(AST node) {
         Assignment assignment = (Assignment) node;
@@ -29,7 +35,11 @@ public class AssignmentInterpreter extends InterpreterVisitor {
                         break;
                     case "String":
                         StringSymbol stringValue = (StringSymbol) value;
-                        System.out.println("Assigning value \"" + stringValue.getValue() + "\".");
+
+                        if(this.verbose){
+                            System.out.println("Assigning value \"" + stringValue.getValue() + "\".");
+                        }
+
                         ((StringSymbol) symbol).setValue(stringValue.getValue());
                         break;
                     default:
@@ -44,6 +54,7 @@ public class AssignmentInterpreter extends InterpreterVisitor {
             case "Array":
                 ArraySymbol arrayValue = (ArraySymbol) value;
                 ((ArraySymbol) symbol).setContent(arrayValue.getContent());
+                break;
             default:
                 throw new RuntimeException("Interpreter failed. Read invalid complex type \"" + value.getComplexType() + "\"!");
         }

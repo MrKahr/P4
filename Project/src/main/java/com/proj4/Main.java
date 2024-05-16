@@ -7,6 +7,7 @@ public class Main {
             args = new String[]{"String sa IS \"fish\"; String sb IS \"John\" + \"Userman\";"};
         }
         DBL interpreter = new DBL();
+        interpreter.setVerbosity(true);
         interpreter.interpret(args[0]);
     }
 }

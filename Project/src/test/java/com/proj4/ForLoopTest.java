@@ -20,8 +20,8 @@ public class ForLoopTest extends TestingArgs {
         Scope.addObserver(scopeObserver);
 
         DBL interpreter = new DBL();
-        interpreter.setDebugMode(true);
-        interpreter.setVerbosity(true);
+        interpreter.setDebugMode(debugMode);
+        interpreter.setVerbosity(verbose);
         interpreter.interpret(getPath() + "forlooptest.dbl");
 
         variableTable = scopeObserver.getCurrentScope().peek().getVariableTable();
@@ -30,13 +30,11 @@ public class ForLoopTest extends TestingArgs {
     @Test
     public void test1() {
         IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("fa");
-        System.out.println(intSymbol.getValue());
         assertTrue(intSymbol.getValue() == 5);
     }
     @Test
     public void test2() {
         IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("fa");
-        System.out.println(intSymbol.getValue());
         assertTrue(intSymbol.getValue() == 5);
     }
 }

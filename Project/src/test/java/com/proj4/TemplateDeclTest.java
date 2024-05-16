@@ -22,8 +22,8 @@ public class TemplateDeclTest extends TestingArgs {
         Scope.addObserver(scopeObserver);
 
         DBL interpreter = new DBL();
-        interpreter.setDebugMode(true);
-        interpreter.setVerbosity(true);
+        interpreter.setDebugMode(debugMode);
+        interpreter.setVerbosity(verbose);
         interpreter.interpret(getPath() + "templatedecltest.dbl");
 
         variableTable = scopeObserver.getCurrentScope().peek().getVariableTable();
