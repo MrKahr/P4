@@ -19,8 +19,6 @@ public class TemplateInstanceTypeChecker extends TypeCheckVisitor{
 
         String templateType = templateInstance.getType();
 
-        TypeCheckVisitor.setFoundType(templateType, "Template", 0);
-
         //we make assignments to the fields in the order the fields are declared
         if (templateInstance.getChildren().size() > 0) {
             //get the blueprint for comparing types
@@ -50,5 +48,6 @@ public class TemplateInstanceTypeChecker extends TypeCheckVisitor{
                 }
             }
         }
+        TypeCheckVisitor.setFoundType(templateType, "Template", 0);
     }
 }

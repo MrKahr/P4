@@ -7,6 +7,7 @@ import java.util.HashMap;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
 
+import com.proj4.exceptions.MismatchedTypeException;
 import com.proj4.symbolTable.Scope;
 import com.proj4.symbolTable.ScopeObserver;
 import com.proj4.symbolTable.symbols.IntegerSymbol;
@@ -29,8 +30,8 @@ public class TemplateDeclTest extends TestingArgs {
     }
     @Test
     public void test1() {
-        IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("tda");
-        System.out.println(intSymbol.getValue());
-        assertTrue(intSymbol.getValue() == 2);
+            IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("tda");
+            System.out.println(intSymbol.getValue());
+            assertTrue(intSymbol.getValue() == 2);
     }
 }

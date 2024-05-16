@@ -21,10 +21,12 @@ public class TemplateDeclInterpreter extends InterpreterVisitor {
         ArrayList<SymbolTableEntry> content = blueprint.getContent();
 
         for (int index = 0; index < templateDecl.getChildren().size(); index++) {
-            Assignment assignment = ((Declaration)templateDecl.getChild(index)).getInitialAssignment();
-            if(assignment != null){
+            Declaration decl  = (Declaration)templateDecl.getChild(index);
+            
+            if(decl.getChildren().size() != 0){
+                Assignment assignment = decl.getInitialAssignment();
                 assignment.visitChild(new InterpreterDecider(), assignment.getValueExpression());
-                blueprint.getContent().set(index,InterpreterVisitor.getReturnSymbol());
+                content.set(index,InterpreterVisitor.getReturnSymbol());
             }
         }
     }
