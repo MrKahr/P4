@@ -19,7 +19,9 @@ public class ForLoopTest extends TestingArgs {
         ScopeObserver scopeObserver = new ScopeObserver();
         Scope.addObserver(scopeObserver);
 
-        DBL interpreter = new DBL(true);
+        DBL interpreter = new DBL();
+        interpreter.setDebugMode(true);
+        interpreter.setVerbosity(true);
         interpreter.interpret(getPath() + "forlooptest.dbl");
 
         variableTable = scopeObserver.getCurrentScope().peek().getVariableTable();

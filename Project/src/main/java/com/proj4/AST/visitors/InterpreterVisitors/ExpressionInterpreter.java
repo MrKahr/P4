@@ -24,10 +24,19 @@ public class ExpressionInterpreter extends InterpreterVisitor {
         // Note: These operators always return primitive types
         switch (expression.getOperator()) {
             case ADD:
-                operands = getIntegerOperands(expression);
-                integerResult = operands[0] + operands[1];
-                System.out.println("Result of " + operands[0] + " + " + operands[1] + " is " + integerResult);
-                InterpreterVisitor.setReturnSymbol(new IntegerSymbol(integerResult));
+                //this handles both concatenation and addition. We concatenate if at least one operand is a string
+                expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
+                SymbolTableEntry addArgOne = InterpreterVisitor.getReturnSymbol();
+                expression.visitChild(new InterpreterDecider(), expression.getSecondOperand());
+                SymbolTableEntry addArgTwo = InterpreterVisitor.getReturnSymbol();
+                if (addArgOne.getType().equals("String") || addArgTwo.getType().equals("String")) {
+                    @SuppressWarnings("rawtypes")
+                    String concatenatedString = ((PrimitiveSymbol) addArgOne).getValue().toString() + ((PrimitiveSymbol) addArgTwo).getValue().toString();
+                    InterpreterVisitor.setReturnSymbol(new StringSymbol(concatenatedString));
+                } else {
+                    integerResult = ((IntegerSymbol) addArgOne).getValue() + ((IntegerSymbol) addArgTwo).getValue();
+                    InterpreterVisitor.setReturnSymbol(new IntegerSymbol(integerResult));
+                }
                 break;
             case SUBTRACT:
                 operands = getIntegerOperands(expression);
@@ -156,14 +165,6 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 System.out.println("Negating boolean.");
                 InterpreterVisitor.setReturnSymbol(new BooleanSymbol(!((BooleanSymbol)InterpreterVisitor.getReturnSymbol()).getValue()));
                 break;
-            // case CONCAT:
-            //     expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
-            //     String stringOne = ((StringSymbol)InterpreterVisitor.getReturnSymbol()).getValue();
-            //     expression.visitChild(new InterpreterDecider(), expression.getSecondOperand());
-            //     String stringTwo = ((StringSymbol)InterpreterVisitor.getReturnSymbol()).getValue();
-            //     System.out.println("Concatenating \"" + stringOne + "\" with \"" + stringOne + "\".");
-            //     InterpreterVisitor.setReturnSymbol(new StringSymbol(stringOne + stringTwo));
-            //     break;
             case VARIABLE:
                 //TODO: WARNING:THIS OPERATOR IS UNSUPPORTED
                 //TODO: figure out how to handle this in the interpreter!

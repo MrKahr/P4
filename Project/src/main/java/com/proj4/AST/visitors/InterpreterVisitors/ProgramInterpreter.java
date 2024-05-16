@@ -42,16 +42,6 @@ public class ProgramInterpreter extends InterpreterVisitor {
                 System.out.println("Reached final state: No available actions! Stopping program.");
             }
         }
-
-        System.out.println("\nBEFORE");
-        if (!Scope.getScopeStack().empty()) {
-            Scope.getCurrent().printBindings();
-        }
         Scope.exit();
-
-        System.out.println("\nAFTER");
-        if (!Scope.getScopeStack().empty()) {
-            Scope.getCurrent().printBindings();
-        }
     }
 }

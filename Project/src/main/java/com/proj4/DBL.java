@@ -14,23 +14,23 @@ import com.proj4.AST.visitors.CheckDecider;
 import com.proj4.AST.visitors.InterpreterDecider;
 import com.proj4.antlrClass.DBLLexer;
 import com.proj4.antlrClass.DBLParser;
-import com.proj4.exceptions.MismatchedTypeException;
 import com.proj4.symbolTable.Scope;
 
 public class DBL {
     private Boolean debugMode = false;
+    private Boolean verbose = false;
     private LocalTime startTime;
 
     // Constructor
     public DBL(){}
 
-    public DBL(Boolean debugMode){
-        this.debugMode = debugMode;
-    }
-
     // Methods
     public void setDebugMode(Boolean debugMode){
         this.debugMode = debugMode;
+    }
+
+    public void setVerbosity(Boolean verbosity){
+        this.verbose = verbosity;
     }
 
     public Boolean getDebugMode(){
@@ -105,6 +105,8 @@ public class DBL {
 
             // Set debug status for type checker and interpreter
             Scope.setDebugStatus(this.debugMode);
+
+            Scope.setVerbosity(this.verbose);
 
             // Typecheck AST
             CheckDecider checkDecider = new CheckDecider();

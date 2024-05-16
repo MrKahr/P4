@@ -12,7 +12,6 @@ import com.proj4.symbolTable.symbols.ActionSymbol;
 import com.proj4.symbolTable.symbols.PrimitiveSymbol;
 import com.proj4.symbolTable.symbols.RuleSymbol;
 import com.proj4.symbolTable.symbols.StateSymbol;
-import com.proj4.symbolTable.symbols.StringSymbol;
 import com.proj4.symbolTable.symbols.SymbolTableEntry;
 
 //this class represents a scope in the programming language
@@ -46,6 +45,8 @@ public class Scope implements Cloneable{
 
     // Flags whether the interpreter should copy scopes to its observers //TODO: Use debug flag to restrict interpreter's printing
     private static boolean inDebugMode = false;
+
+    private static boolean verbose = false;
 
     // Inbuilt actions are hard coded
     private static ArrayList<String> inbuiltActions = new ArrayList<>(Arrays.asList("setState", "draw", "shuffle"));
@@ -216,11 +217,6 @@ public class Scope implements Cloneable{
         return inbuiltActions;
     }
 
-    /* public static ArrayList<Strings> getKeywords(){
-        return keywords;
-    }
-     *
-     */
     // OBSERVER PART
     public static void addObserver(InterpreterObserver interpreterObserver){
         currentObservers.add(interpreterObserver);
@@ -240,27 +236,22 @@ public class Scope implements Cloneable{
         inDebugMode = truthValue;
     }
 
+    public static void setVerbosity(Boolean verbosity){
+        verbose = verbosity;
+    }
+
+    public static Boolean getVerbosity(){
+        return verbose;
+    }
+
     public static Stack<Scope> copyStack(){
         Stack <Scope> stackCopy = new Stack<Scope>();
         stackCopy.addAll(scopeStack);
-
-        // try {
-        //     System.out.println("\n\n\n=====VARIABLE TABLE=====");
-        //     for(Scope scope : stackCopy){
-        //         System.out.println("Keys:" + scope.variableTable.keySet());
-        //         StringSymbol symbol = (StringSymbol) scope.variableTable.values().toArray()[0];
-        //         System.out.println("Values: " + symbol.getValue());
-        //     }
-        //     System.out.println("===============\n\n\n");
-        // } catch (Exception e) {
-        //     e.printStackTrace();
-        // }
-
         return stackCopy;
     }
 
     public void printBindings(){
-        if(inDebugMode) {
+        if(verbose) {
             System.out.println("--------Bindings--------");
             for (String identifier : variableTable.keySet()) {
                 SymbolTableEntry variable = variableTable.get(identifier);

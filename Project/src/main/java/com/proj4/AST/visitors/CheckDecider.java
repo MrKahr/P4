@@ -8,7 +8,7 @@ public class CheckDecider implements VisitorDecider {
      //decide which visitor class to use for the given node
      public void decideVisitor(AST node){
         System.out.println("\n\nType checking " + node.getClass().getSimpleName() + ".");
-        if (!Scope.getScopeStack().empty()) {
+        if (!Scope.getScopeStack().empty() && Scope.getVerbosity()) {
             Scope.getCurrent().printBindings();
         }
         switch (node.getClass().getSimpleName()) {
