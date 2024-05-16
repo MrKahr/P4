@@ -162,4 +162,4 @@ Boolean sd IS "fish" NOT EQUALS "fish";
 /* TEST 24
 Parenthesis (false)
 */
-Boolean pa IS 3 GREATER THAN 2 EQUALS (3 LESS THAN 2)
+Boolean pa IS 3 GREATER THAN 2 EQUALS (3 LESS THAN 2);

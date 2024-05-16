@@ -6,7 +6,6 @@ import java.util.HashMap;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 
 import com.proj4.symbolTable.Scope;
 import com.proj4.symbolTable.ScopeObserver;
@@ -20,7 +19,6 @@ public class StringTest extends TestingArgs {
     public static void setup() {
         ScopeObserver scopeObserver = new ScopeObserver();
         Scope.addObserver(scopeObserver);
-        Scope.setDebugStatus(true);
 
         DBL interpreter = new DBL(true);
         interpreter.interpret(getPath() + "stringtest.dbl");

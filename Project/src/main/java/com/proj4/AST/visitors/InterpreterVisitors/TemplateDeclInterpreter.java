@@ -24,13 +24,8 @@ public class TemplateDeclInterpreter extends InterpreterVisitor {
             Assignment assignment = ((Declaration)templateDecl.getChild(index)).getInitialAssignment();
             if(assignment != null){
                 assignment.visitChild(new InterpreterDecider(), assignment.getValueExpression());
-                // Get return symbol
-                InterpreterVisitor.getReturnSymbol();
-                
+                blueprint.getContent().set(index,InterpreterVisitor.getReturnSymbol());
             }
         }
-        //TODO: the interpreter must evaluate optional default value assignments and make the content in the blueprint match
-
- 
     }
 }

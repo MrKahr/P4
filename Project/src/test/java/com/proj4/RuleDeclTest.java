@@ -31,5 +31,4 @@ public class RuleDeclTest extends TestingArgs{
         System.out.println(intSymbol.getValue());
         assertTrue(intSymbol.getValue() == 5);
     }
-
 }

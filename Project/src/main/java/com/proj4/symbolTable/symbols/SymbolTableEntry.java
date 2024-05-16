@@ -36,7 +36,7 @@ public abstract class SymbolTableEntry implements Typed{
             case "Boolean":
                 return new BooleanSymbol(false);
             case "String":
-                return new StringSymbol("");
+                return new StringSymbol("o");
             default:
                 throw new UndefinedTypeException("The type \"" + type + "\" is not a primtive!");
         }

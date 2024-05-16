@@ -19,7 +19,6 @@ public class ActionTest extends TestingArgs {
     public static void setup() {
         ScopeObserver scopeObserver = new ScopeObserver();
         Scope.addObserver(scopeObserver);
-        Scope.setDebugStatus(true);
 
         DBL interpreter = new DBL(true);
         interpreter.interpret(getPath() + "actiontest.dbl");

@@ -51,10 +51,10 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         } catch (Exception e) {
             if(debugMode){
                 System.out.println("Something exploded. Too bad :(\n");
-                e.printStackTrace();
             } else {
                 System.out.println("Syntax error in input!");
             }
+            throw e;
         }
         return this.root;
     }

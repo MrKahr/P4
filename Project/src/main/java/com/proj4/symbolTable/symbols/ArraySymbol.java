@@ -15,6 +15,7 @@ public class ArraySymbol extends SymbolTableEntry{
         if (nestingLevel > 0) {
             addContent(new ArraySymbol(type, nestingLevel - 1));
         }
+        this.nestingLevel = nestingLevel;
     }
 
     public ArraySymbol(ArraySymbol other){  //create a copy of a given ComplexSymbol{

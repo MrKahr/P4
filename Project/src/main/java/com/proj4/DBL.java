@@ -14,6 +14,7 @@ import com.proj4.AST.visitors.CheckDecider;
 import com.proj4.AST.visitors.InterpreterDecider;
 import com.proj4.antlrClass.DBLLexer;
 import com.proj4.antlrClass.DBLParser;
+import com.proj4.exceptions.MismatchedTypeException;
 import com.proj4.symbolTable.Scope;
 
 public class DBL {
@@ -117,7 +118,7 @@ public class DBL {
             this.printDone(input);
         } catch (Exception e) {
             System.out.println("Failed to interpret input '" + input + "'\n");
-            e.printStackTrace();
+            throw e;
         }
     }
 

@@ -12,6 +12,7 @@ import com.proj4.symbolTable.symbols.ActionSymbol;
 import com.proj4.symbolTable.symbols.PrimitiveSymbol;
 import com.proj4.symbolTable.symbols.RuleSymbol;
 import com.proj4.symbolTable.symbols.StateSymbol;
+import com.proj4.symbolTable.symbols.StringSymbol;
 import com.proj4.symbolTable.symbols.SymbolTableEntry;
 
 //this class represents a scope in the programming language
@@ -140,8 +141,9 @@ public class Scope implements Cloneable{
         if (declaredTable.contains(identifier)) {
             throw new VariableAlreadyDefinedException("The variable name \"" + identifier + "\" is already in use!");
         } else {
-            //TODO: remove debug print
-            System.out.println("Declaring variable \"" + identifier + "\" with type \"" + variable.getType() + "\", complex type \"" + variable.getComplexType() + "\".");
+            if (inDebugMode) {
+                System.out.println("Declaring variable \"" + identifier + "\" with type \"" + variable.getType() + "\", complex type \"" + variable.getComplexType() + "\".");
+            }
             variableTable.put(identifier, variable);
             declaredTable.add(identifier);
         }
@@ -187,13 +189,13 @@ public class Scope implements Cloneable{
     }
 
     public static void synthesize(){
-        Scope poppedScope = scopeStack.pop();
-        Scope currentScope = scopeStack.peek();
-
         // We save the current scope if we want to use the scope in testing or debugging
         if(inDebugMode){
             notifyObservers(Scope.copyStack());
         }
+
+        Scope poppedScope = scopeStack.pop();
+        Scope currentScope = scopeStack.peek();
 
         for (String identifier : poppedScope.getVariableTable().keySet()) {
             if(!poppedScope.getDeclaredTable().contains(identifier)){
@@ -241,6 +243,19 @@ public class Scope implements Cloneable{
     public static Stack<Scope> copyStack(){
         Stack <Scope> stackCopy = new Stack<Scope>();
         stackCopy.addAll(scopeStack);
+
+        // try {
+        //     System.out.println("\n\n\n=====VARIABLE TABLE=====");
+        //     for(Scope scope : stackCopy){
+        //         System.out.println("Keys:" + scope.variableTable.keySet());
+        //         StringSymbol symbol = (StringSymbol) scope.variableTable.values().toArray()[0];
+        //         System.out.println("Values: " + symbol.getValue());
+        //     }
+        //     System.out.println("===============\n\n\n");
+        // } catch (Exception e) {
+        //     e.printStackTrace();
+        // }
+
         return stackCopy;
     }
 

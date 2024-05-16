@@ -22,7 +22,6 @@ public class AssignmentInterpreter extends InterpreterVisitor {
                     case "Integer":
                         IntegerSymbol intValue = (IntegerSymbol) value;
                         ((IntegerSymbol) symbol).setValue(intValue.getValue());
-                        System.out.println("Assigning value \"" + intValue.getValue() + "\".");
                         break;
                     case "Boolean":
                         BooleanSymbol boolValue = (BooleanSymbol) value;
@@ -30,6 +29,7 @@ public class AssignmentInterpreter extends InterpreterVisitor {
                         break;
                     case "String":
                         StringSymbol stringValue = (StringSymbol) value;
+                        System.out.println("Assigning value \"" + stringValue.getValue() + "\".");
                         ((StringSymbol) symbol).setValue(stringValue.getValue());
                         break;
                     default:
