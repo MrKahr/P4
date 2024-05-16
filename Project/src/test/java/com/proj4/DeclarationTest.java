@@ -24,8 +24,8 @@ public class DeclarationTest extends TestingArgs {
         Scope.addObserver(scopeObserver);
 
         DBL interpreter = new DBL();
-        interpreter.setDebugMode(true);
-        interpreter.setVerbosity(true);
+        interpreter.setDebugMode(debugMode);
+        interpreter.setVerbosity(verbose);
         interpreter.interpret(getPath() + "declarationtest.dbl");
 
         variableTable = scopeObserver.getCurrentScope().peek().getVariableTable();

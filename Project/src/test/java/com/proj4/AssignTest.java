@@ -24,8 +24,8 @@ public class AssignTest extends TestingArgs {
         Scope.addObserver(scopeObserver);
 
         DBL interpreter = new DBL();
-        interpreter.setDebugMode(true);
-        interpreter.setVerbosity(true);
+        interpreter.setDebugMode(debugMode);
+        interpreter.setVerbosity(verbose);
         interpreter.interpret(getPath() + "assigntest.dbl");
 
         variableTable = scopeObserver.getCurrentScope().peek().getVariableTable();
@@ -55,7 +55,7 @@ public class AssignTest extends TestingArgs {
             ArraySymbol arraySymbol = (ArraySymbol) variableTable.get("aa");
             assertEquals("Integer", arraySymbol.getType()); // Check type
             assertTrue(0 == arraySymbol.getNestingLevel()); // Check nesting level
-            for (Integer i = 0; i <= arraySymbol.getContent().size(); i++) {
+            for (Integer i = 0; i < arraySymbol.getContent().size(); i++) {
                 IntegerSymbol intSymbol = (IntegerSymbol) arraySymbol.getContent().get(i);
                 assertTrue(i + 1 == intSymbol.getValue()); // Check values of array
             }

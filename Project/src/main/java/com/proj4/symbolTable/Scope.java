@@ -79,9 +79,6 @@ public class Scope implements Cloneable{
     public HashSet<String> getDeclaredTable(){
         return declaredTable;
     }
-    public Boolean getDebugStatus(){
-        return inDebugMode;
-    }
 
     public static HashMap<String, StateSymbol> getStateTable(){
         return stateTable;
@@ -142,7 +139,7 @@ public class Scope implements Cloneable{
         if (declaredTable.contains(identifier)) {
             throw new VariableAlreadyDefinedException("The variable name \"" + identifier + "\" is already in use!");
         } else {
-            if (inDebugMode) {
+            if (verbose) {
                 System.out.println("Declaring variable \"" + identifier + "\" with type \"" + variable.getType() + "\", complex type \"" + variable.getComplexType() + "\".");
             }
             variableTable.put(identifier, variable);
@@ -236,12 +233,12 @@ public class Scope implements Cloneable{
         inDebugMode = truthValue;
     }
 
-    public static void setVerbosity(Boolean verbosity){
-        verbose = verbosity;
+    public Boolean getDebugStatus(){
+        return inDebugMode;
     }
 
-    public static Boolean getVerbosity(){
-        return verbose;
+    public static void setVerbosity(Boolean verbosity){
+        verbose = verbosity;
     }
 
     public static Stack<Scope> copyStack(){

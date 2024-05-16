@@ -50,7 +50,13 @@ public class DBL {
     public void interpret(String input){
         this.startTime = LocalTime.now();
 
-        System.out.println("\nReading input: " + input + "\n");
+        String printString = "Reading input: " + input;
+        String lines = "";
+        for (int i = 0; i < printString.length(); i++) {
+            lines += "=";
+        }
+        System.out.println("\n\n" + lines);
+        System.out.println(printString + "\n");
 
         File file = new File(input);
         File absFile = new File(file.getAbsolutePath());
@@ -82,8 +88,9 @@ public class DBL {
             // Create a parse tree. The starting rule is "program"
             ParseTree tree = parser.program();
 
-            System.out.println("Lexing and parsing done");
-
+            if(this.verbose){
+                System.out.println("Lexing and parsing done");
+            }
             // Our custom visitor (does the actions as tree is traversed)
             ParseTreeVisitor parseVisitor = new ParseTreeVisitor();
 
@@ -96,9 +103,10 @@ public class DBL {
             // Assign AST
             AST abstractSyntaxTree = parseVisitor.getRoot();
 
-            System.out.println("AST generated");
-
-            if(this.debugMode){
+            if(this.verbose){
+                System.out.println("AST generated");
+            }
+            if(this.verbose){
                 // Print tree
                 abstractSyntaxTree.printTree();
             }
@@ -109,17 +117,18 @@ public class DBL {
             Scope.setVerbosity(this.verbose);
 
             // Typecheck AST
-            CheckDecider checkDecider = new CheckDecider();
+            CheckDecider checkDecider = new CheckDecider(this.verbose);
             checkDecider.decideVisitor(abstractSyntaxTree);
 
             // Interpret AST
-            InterpreterDecider interpreterDecider = new InterpreterDecider();
+            InterpreterDecider interpreterDecider = new InterpreterDecider(this.verbose);
             interpreterDecider.decideVisitor(abstractSyntaxTree);
 
             // Input was sucessfully interpreted
             this.printDone(input);
         } catch (Exception e) {
             System.out.println("Failed to interpret input '" + input + "'\n");
+            e.printStackTrace();
             throw e;
         }
     }
@@ -132,7 +141,7 @@ public class DBL {
         for (int i = 0; i < success.length(); i++) {
             lines += "=";
         }
-        System.out.println("\n\n" + lines);
+        System.out.println(lines);
         System.out.println(success);
         System.out.printf("Interpreting took %.3f seconds\n", (float) duration.toMillis()/1000);
         System.out.println(lines);
