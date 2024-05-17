@@ -61,7 +61,7 @@ public class TemplateDeclTest extends TestingArgs {
     @Test
     // Nested templates
     public void test5() {
-            TemplateSymbol fisk = (TemplateSymbol) variableTable.get("c3");
+            TemplateSymbol fisk = (TemplateSymbol) variableTable.get("c4");
             TemplateSymbol fieldThree = (TemplateSymbol)fisk.getContent().get(2); 
 
             assertTrue(fieldThree instanceof TemplateSymbol);
