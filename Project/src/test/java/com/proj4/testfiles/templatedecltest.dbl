@@ -26,4 +26,4 @@ Integer tda IS c1.cost;
 
 Hej c2 IS NEW Hej{1; 2; "bob";}
 
-Fisk c3 IS NEW Fisk{1; 2; c1;}
+Fisk c4 IS NEW Fisk{1; 2; c1;}

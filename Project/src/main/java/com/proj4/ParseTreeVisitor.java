@@ -362,11 +362,10 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         return node;
     }
 
+
     @Override
     public Declaration visitIdDeclUser(DBLParser.IdDeclUserContext ctx) {
         Declaration node = new Declaration(ctx.IDENTIFIER().getText(), ctx.typedefUser().getText(), "Template");
-        TemplateInstance ti = new TemplateInstance(ctx.typedefUser().getText());
-        node.addChild(ti);
         return node;
     }
 

@@ -27,6 +27,7 @@ public class TemplateDeclInterpreter extends InterpreterVisitor {
                 Assignment assignment = decl.getInitialAssignment();
                 assignment.visitChild(new InterpreterDecider(), assignment.getValueExpression());
                 content.set(index,InterpreterVisitor.getReturnSymbol());
+                // TEMPLATE CHILDREN NOT 0 HERE FOR C3
             }
         }
     }
