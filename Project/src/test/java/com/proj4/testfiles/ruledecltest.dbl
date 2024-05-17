@@ -2,17 +2,17 @@
 /* TEST 1
 Action Decl with parameters, without return
 */
+
 Action tad1(Integer a, Integer b) RESULTS IN Integer {
     Integer ada IS a+b;
     RESULT IN ada;
 }
 
-RULE trd1 WHEN [tad1] IF(1 EQUALS 1){
-    storeInt(tad1.RESULT + 5);
-    //after tad1 is evaluated, ada is 5
+
+
+Rule trd1 WHEN [tad1] IF(1 EQUALS 1){
+    //storeInt(tad1.RESULT + 5);
+    Integer i IS tad1.RESULT + 5;
 }
 Integer ada IS 1;
-//ada is 1
 ada IS tad1(1,2);
-
-//ada was 5, then is assigned value 3

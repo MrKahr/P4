@@ -1,23 +1,35 @@
 package com.proj4;
 
-import com.proj4.antlrClass.DBLBaseVisitor;
-import com.proj4.antlrClass.DBLParser;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.lang.Math;
-
-import com.proj4.AST.nodes.*;
+import com.proj4.AST.nodes.AST;
+import com.proj4.AST.nodes.ActionCall;
+import com.proj4.AST.nodes.ActionDecl;
+import com.proj4.AST.nodes.ArrayInstance;
+import com.proj4.AST.nodes.Assignment;
+import com.proj4.AST.nodes.Body;
+import com.proj4.AST.nodes.Declaration;
+import com.proj4.AST.nodes.Expression;
+import com.proj4.AST.nodes.ExpressionOperator;
+import com.proj4.AST.nodes.ForLoop;
+import com.proj4.AST.nodes.IfElse;
+import com.proj4.AST.nodes.Program;
+import com.proj4.AST.nodes.Return;
+import com.proj4.AST.nodes.RuleDecl;
+import com.proj4.AST.nodes.StateDecl;
+import com.proj4.AST.nodes.TField;
+import com.proj4.AST.nodes.TemplateDecl;
+import com.proj4.AST.nodes.TemplateInstance;
+import com.proj4.AST.nodes.Variable;
+import com.proj4.antlrClass.DBLBaseVisitor;
+import com.proj4.antlrClass.DBLParser;
 import com.proj4.symbolTable.symbols.BooleanSymbol;
 import com.proj4.symbolTable.symbols.IntegerSymbol;
 import com.proj4.symbolTable.symbols.StringSymbol;
-
-
-/* TODO: Visit:
-*/
 
 
 public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
@@ -131,6 +143,18 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     }
 
     @Override
+    public Expression visitActionResult(DBLParser.ActionResultContext ctx){
+        String identifier = ctx.typedefUser().getText();
+        Expression node = new Expression(ExpressionOperator.ACCESS, new Variable(identifier), new TField(ctx.RESULT().getText()));
+        for(int i=ctx.IDENTIFIER().size(); i > 0; i--){
+            Expression access = new Expression(ExpressionOperator.ACCESS, new TField(ctx.IDENTIFIER().get(i).getText()));
+            node.addChild(access);
+        }
+        return node;
+    }
+
+
+    @Override
     public ArrayList<Declaration> visitParameterList(DBLParser.ParameterListContext ctx) {
         ArrayList<Declaration> parameterNodes = new ArrayList<Declaration>();
         ParseTree type = null;
@@ -191,6 +215,13 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         ActionCall node = (ActionCall) visit(ctx.actionCall());
         return node;
     }
+
+    @Override
+    public Expression visitActionResultExpr(DBLParser.ActionResultExprContext ctx) {
+        Expression node = (Expression) visit(ctx.actionResult());
+        return node;
+    }
+
 
     /*** ASSIGNMENT ***/
     @Override

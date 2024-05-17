@@ -59,6 +59,11 @@
 ┌──────────────────────────┐
 │     TESTING FAILURES     │
 └──────────────────────────┘
+   * Parser
+        If you make a single-line comment on the last line of a DBL-file it WILL cause errors!
+        Solution: if a single-line comment is the last line of the file, create an empty line as the last instead.
+
+
    * Assign Test
         Test 4
             - Integer[] arr IS [1, 2, 3]    (got: NullPointerException on getNestingLevel(), expected: the nestingLevel)
