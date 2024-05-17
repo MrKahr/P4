@@ -154,6 +154,7 @@ public class ExpressionTypeChecker extends TypeCheckVisitor {
 
                 //TODO: When we finally get to interpreting the program, the process of getting the field will be quite similar,
                 //TODO: the difference being that we use the TemplateSymbol returned by the first operand instead of using the blueprint for the template type
+                break;
             case INDEX:
                 // Case 1: Check whether first operand is an array that is declared in scope
                 expression.visitChild(new CheckDecider(), expression.getFirstOperand());

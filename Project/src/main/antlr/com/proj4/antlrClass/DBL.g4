@@ -139,7 +139,7 @@ templateDecl
     ;
 
 templateInit
-    :   NEW typedefUser BODY_START ((expr SEMICOLON | templateInit))* BODY_END
+    :   NEW typedefUser BODY_START ((expr SEMICOLON | stringExpr SEMICOLON | boolExpr SEMICOLON| templateInit))* BODY_END
     ;
 
 ruleDecl
