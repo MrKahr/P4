@@ -24,7 +24,7 @@ public class ReturnInterpreter extends InterpreterVisitor {
 
         //update the action template with the new return symbol
         if(this.verbose){
-            System.out.println("Attempting to write to actionTemplate with identifier \"" + InterpreterVisitor.getCurrentActionIdentifier() + "\"");
+            System.out.println(this.getClass().getSimpleName() + ": Attempting to write to actionTemplate with identifier \"" + InterpreterVisitor.getCurrentActionIdentifier() + "\"");
         }
         TemplateSymbol actionTemplate = (TemplateSymbol)Scope.getCurrent().getVariableTable().get(InterpreterVisitor.getCurrentActionIdentifier());
         //the 0th field is RESULT

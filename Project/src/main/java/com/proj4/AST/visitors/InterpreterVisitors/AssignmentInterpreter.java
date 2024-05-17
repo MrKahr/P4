@@ -5,7 +5,12 @@ import com.proj4.AST.nodes.AST;
 import com.proj4.AST.nodes.Assignment;
 import com.proj4.AST.visitors.InterpreterDecider;
 import com.proj4.AST.visitors.InterpreterVisitor;
-import com.proj4.symbolTable.symbols.*;
+import com.proj4.symbolTable.symbols.ArraySymbol;
+import com.proj4.symbolTable.symbols.BooleanSymbol;
+import com.proj4.symbolTable.symbols.IntegerSymbol;
+import com.proj4.symbolTable.symbols.StringSymbol;
+import com.proj4.symbolTable.symbols.SymbolTableEntry;
+import com.proj4.symbolTable.symbols.TemplateSymbol;
 
 public class AssignmentInterpreter extends InterpreterVisitor {
     private Boolean verbose = false;
@@ -37,7 +42,7 @@ public class AssignmentInterpreter extends InterpreterVisitor {
                         StringSymbol stringValue = (StringSymbol) value;
 
                         if(this.verbose){
-                            System.out.println("Assigning value \"" + stringValue.getValue() + "\".");
+                            System.out.println(getClass().getSimpleName() + ": Assigning value \"" + stringValue.getValue() + "\".");
                         }
 
                         ((StringSymbol) symbol).setValue(stringValue.getValue());

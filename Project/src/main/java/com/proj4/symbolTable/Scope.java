@@ -7,12 +7,12 @@ import java.util.HashSet;
 import java.util.Stack;
 
 import com.proj4.exceptions.VariableAlreadyDefinedException;
-import com.proj4.symbolTable.symbols.TemplateSymbol;
 import com.proj4.symbolTable.symbols.ActionSymbol;
 import com.proj4.symbolTable.symbols.PrimitiveSymbol;
 import com.proj4.symbolTable.symbols.RuleSymbol;
 import com.proj4.symbolTable.symbols.StateSymbol;
 import com.proj4.symbolTable.symbols.SymbolTableEntry;
+import com.proj4.symbolTable.symbols.TemplateSymbol;
 
 //this class represents a scope in the programming language
 public class Scope implements Cloneable{
@@ -161,16 +161,18 @@ public class Scope implements Cloneable{
         // We save the current scope if we want to use the scope in testing or debugging
         if(inDebugMode){
             notifyObservers(Scope.copyStack());
+            System.out.println("Exiting scope");
         }
         scopeStack.pop();
     }
 
     public static void enter(){
         scopeStack.push(new Scope());
-            // We save the current scope if we want to use the scope in testing or debugging
-            if(inDebugMode){
-                notifyObservers(Scope.copyStack());
-            }
+        // We save the current scope if we want to use the scope in testing or debugging
+        if(inDebugMode){
+            notifyObservers(Scope.copyStack());
+            System.out.println("Entering a new scope");
+        }
     }
 
     // Scopes inherited are pushed unto the stack because the stack top models the current available scope.
@@ -180,16 +182,18 @@ public class Scope implements Cloneable{
         }
         scopeStack.push(scopeStack.peek().clone()); //clone the top scope and push it
 
-            // We save the current scope if we want to use the scope in testing or debugging
-            if(inDebugMode){
-                notifyObservers(Scope.copyStack());
-            }
+        // We save the current scope if we want to use the scope in testing or debugging
+        if(inDebugMode){
+            notifyObservers(Scope.copyStack());
+            System.out.println("Inheriting parent's scope");
+        }
     }
 
     public static void synthesize(){
         // We save the current scope if we want to use the scope in testing or debugging
         if(inDebugMode){
             notifyObservers(Scope.copyStack());
+            System.out.println("Synthesizing scope");
         }
 
         Scope poppedScope = scopeStack.pop();

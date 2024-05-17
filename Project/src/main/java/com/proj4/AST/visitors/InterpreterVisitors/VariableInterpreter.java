@@ -17,7 +17,7 @@ public class VariableInterpreter extends InterpreterVisitor {
         Variable variable = (Variable) node;
         InterpreterVisitor.setReturnSymbol(Scope.getCurrent().getVariableTable().get(variable.getIdentifier()));
         if(this.verbose) {
-            System.out.println("Fetching symbol bound to identifier \"" + variable.getIdentifier() + "\".");
+            System.out.println(this.getClass().getSimpleName() + ": Fetching symbol bound to identifier \"" + variable.getIdentifier() + "\".");
         }
     }
 }

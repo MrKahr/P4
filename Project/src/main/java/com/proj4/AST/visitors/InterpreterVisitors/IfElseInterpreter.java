@@ -20,7 +20,7 @@ public class IfElseInterpreter extends InterpreterVisitor {
         Boolean truthValue = ((BooleanSymbol)InterpreterVisitor.getReturnSymbol()).getValue();
 
         if(this.verbose){
-            System.out.println("If-statement condition is " + truthValue + ".");
+            System.out.println(this.getClass().getSimpleName() + ": If-statement condition is " + truthValue + ".");
         }
         if (truthValue) {
             ifElse.visitChild(new InterpreterDecider(), ifElse.getThenBlock());

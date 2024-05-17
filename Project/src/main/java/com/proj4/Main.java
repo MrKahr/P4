@@ -8,6 +8,7 @@ public class Main {
         }
         DBL interpreter = new DBL();
         interpreter.setVerbosity(true);
+        interpreter.setDebugMode(true);
         interpreter.interpret(args[0]);
     }
 }

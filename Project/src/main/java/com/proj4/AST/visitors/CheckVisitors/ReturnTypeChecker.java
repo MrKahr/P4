@@ -23,7 +23,7 @@ public class ReturnTypeChecker extends TypeCheckVisitor{
         String actionIdentifier = TypeCheckVisitor.getCurrentAction();
 
         if(this.verbose) {
-            System.out.println("Attempting to return from \"" + TypeCheckVisitor.getCurrentAction() + "\".");
+            System.out.println(this.getClass().getSimpleName() + ": Attempting to return from \"" + TypeCheckVisitor.getCurrentAction() + "\".");
         }
 
         ActionSymbol action = Scope.getActionTable().get(actionIdentifier);
