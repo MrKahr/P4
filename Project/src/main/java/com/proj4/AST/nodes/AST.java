@@ -36,9 +36,9 @@ public abstract class AST {
         // newChild.setParent(this);
     }
 
-    // public void setParent(AST parent){
-    //     this.parent = parent;
-    // }
+    public void setParent(AST parent){
+        this.parent = parent;
+    }
 /*
     public void setScope(Scope scope){
         this.scope = scope;
