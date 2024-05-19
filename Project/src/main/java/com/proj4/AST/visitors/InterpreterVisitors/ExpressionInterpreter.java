@@ -29,14 +29,10 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 SymbolTableEntry addArgOne = InterpreterVisitor.getReturnSymbol();
                 expression.visitChild(new InterpreterDecider(), expression.getSecondOperand());
                 SymbolTableEntry addArgTwo = InterpreterVisitor.getReturnSymbol();
-                if (addArgOne.getType().equals("String") || addArgTwo.getType().equals("String")) {
-                    @SuppressWarnings("rawtypes")
-                    String concatenatedString = ((PrimitiveSymbol) addArgOne).getValue().toString() + ((PrimitiveSymbol) addArgTwo).getValue().toString();
-                    InterpreterVisitor.setReturnSymbol(new StringSymbol(concatenatedString));
-                } else {
-                    integerResult = ((IntegerSymbol) addArgOne).getValue() + ((IntegerSymbol) addArgTwo).getValue();
-                    InterpreterVisitor.setReturnSymbol(new IntegerSymbol(integerResult));
-                }
+
+                integerResult = ((IntegerSymbol) addArgOne).getValue() + ((IntegerSymbol) addArgTwo).getValue();
+                InterpreterVisitor.setReturnSymbol(new IntegerSymbol(integerResult));
+                
                 break;
             case SUBTRACT:
                 operands = getIntegerOperands(expression);
@@ -197,6 +193,15 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 Integer index = ((IntegerSymbol)InterpreterVisitor.getReturnSymbol()).getValue();
                 InterpreterVisitor.setReturnSymbol(content.get(index));
                 System.out.println("Indexing array with \"" + index + "\".");
+                break;
+            case CONCAT:
+                //the type checker has already set up typecasting for us, so all inputs here will be strings
+                expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
+                String stringOne = ((StringSymbol)InterpreterVisitor.getReturnSymbol()).getValue();
+                expression.visitChild(new InterpreterDecider(), expression.getSecondOperand());
+                String stringTwo = ((StringSymbol)InterpreterVisitor.getReturnSymbol()).getValue();
+
+                InterpreterVisitor.setReturnSymbol(new StringSymbol(stringOne + stringTwo));
                 break;
             default:
                 break;

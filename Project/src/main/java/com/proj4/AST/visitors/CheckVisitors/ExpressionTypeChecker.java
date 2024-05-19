@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.proj4.AST.nodes.AST;
 import com.proj4.AST.nodes.Expression;
+import com.proj4.AST.nodes.ExpressionOperator;
 import com.proj4.AST.nodes.StringCast;
 import com.proj4.AST.nodes.TField;
 import com.proj4.AST.visitors.CheckDecider;
@@ -55,18 +56,21 @@ public class ExpressionTypeChecker extends TypeCheckVisitor {
                     TypeCheckVisitor.setFoundType("Integer", "Primitive", 0);
 
                 } else if (firstType.equals("String") && secondType.equals("Integer")) {
-                    //first operand is a string. Cast second operand to string. Output is a string
+                    //first operand is a string. Cast second operand to string and set operator to CONCAT. Output is a string
                     new StringCast(expression.getSecondOperand());
                     TypeCheckVisitor.setFoundType("String", "Primitive", 0);
+                    expression.setOperator(ExpressionOperator.CONCAT);
 
                 } else if (firstType.equals("Integer") && secondType.equals("String")){
                     //second operand is a string. Cast first operand to string. Output is a string
                     new StringCast(expression.getFirstOperand());
                     TypeCheckVisitor.setFoundType("String", "Primitive", 0);
+                    expression.setOperator(ExpressionOperator.CONCAT);
 
                 } else if (firstType.equals("String") && secondType.equals("String")){
                     //both operands are strings. Output is a string
                     TypeCheckVisitor.setFoundType("String", "Primitive", 0);
+                    expression.setOperator(ExpressionOperator.CONCAT);
                 } else {
                     //Something that's not a string or integer has been found. Throw
                     throw new MismatchedTypeException();
