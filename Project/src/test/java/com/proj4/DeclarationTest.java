@@ -7,7 +7,7 @@ import java.util.HashMap;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
 
-import com.proj4.symbolTable.Scope;
+import com.proj4.symbolTable.ScopeManager;
 import com.proj4.symbolTable.ScopeObserver;
 import com.proj4.symbolTable.symbols.ArraySymbol;
 import com.proj4.symbolTable.symbols.BooleanSymbol;
@@ -21,8 +21,8 @@ public class DeclarationTest extends TestingArgs {
     @BeforeAll
     public static void setup() {
         ScopeObserver scopeObserver = new ScopeObserver();
-        Scope.addObserver(scopeObserver);
-        Scope.setDebugStatus(true);
+        ScopeManager.getInstance().addObserver(scopeObserver);
+        ScopeManager.getInstance().setDebugStatus(true);
 
         DBL interpreter = new DBL();
         interpreter.interpret(getPath() + "declarationtest.dbl");

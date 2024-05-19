@@ -8,7 +8,7 @@ import com.proj4.AST.nodes.TField;
 import com.proj4.AST.visitors.CheckDecider;
 import com.proj4.AST.visitors.TypeCheckVisitor;
 import com.proj4.exceptions.*;
-import com.proj4.symbolTable.Scope;
+import com.proj4.symbolTable.GlobalScope;
 import com.proj4.symbolTable.symbols.ArraySymbol;
 import com.proj4.symbolTable.symbols.SymbolTableEntry;
 import com.proj4.symbolTable.symbols.TemplateSymbol;
@@ -140,8 +140,8 @@ public class ExpressionTypeChecker extends TypeCheckVisitor {
                 //remember the field to find in the template
                 String fieldName = templateField.getFieldName();
 
-                ArrayList<String> map = Scope.getTemplateMapTable().get(templateType);    //get the arraylist with the chosen template's fields
-                TemplateSymbol blueprint = Scope.getBlueprintTable().get(templateType); //get the blueprint for the chosen template
+                ArrayList<String> map = GlobalScope.getInstance().getTemplateMapTable().get(templateType);    //get the arraylist with the chosen template's fields
+                TemplateSymbol blueprint = GlobalScope.getInstance().getBlueprintTable().get(templateType); //get the blueprint for the chosen template
 
                 SymbolTableEntry fieldContent = blueprint.getContent().get(map.indexOf(fieldName));  //find the field we need with the map and get the content of the field
 

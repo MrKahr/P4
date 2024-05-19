@@ -7,7 +7,8 @@ import com.proj4.AST.nodes.ActionCall;
 import com.proj4.AST.visitors.InterpreterDecider;
 import com.proj4.AST.visitors.InterpreterVisitor;
 import com.proj4.exceptions.MismatchedTypeException;
-import com.proj4.symbolTable.Scope;
+import com.proj4.symbolTable.GlobalScope;
+import com.proj4.symbolTable.ScopeManager;
 import com.proj4.symbolTable.symbols.*;
 
 public class ActionCallInterpreter extends InterpreterVisitor {
@@ -15,7 +16,7 @@ public class ActionCallInterpreter extends InterpreterVisitor {
     public void visit(AST node) {
         ActionCall actionCall = (ActionCall) node;
 
-        ActionSymbol action = Scope.getActionTable().get(actionCall.getIdentifier());
+        ActionSymbol action = GlobalScope.getInstance().getActionTable().get(actionCall.getIdentifier());
 
         //pass parameters by value
         for (int index = 0; index < action.getParameterNames().size(); index++) {
@@ -52,7 +53,7 @@ public class ActionCallInterpreter extends InterpreterVisitor {
         }
 
         //check if the action is built-in or not
-        if (Scope.getInbuiltActions().contains(actionCall.getIdentifier())) {
+        if (GlobalScope.getInstance().getInbuiltActions().contains(actionCall.getIdentifier())) {
             //hand control to an InbuiltFunctionInterpreter and let it do its thing
             InbuiltFunctionInterpreter inbuiltFunctionInterpreter = new InbuiltFunctionInterpreter();
             inbuiltFunctionInterpreter.visit(actionCall);
@@ -60,13 +61,13 @@ public class ActionCallInterpreter extends InterpreterVisitor {
             //set the scope and interpret the action. Also set the current action so return nodes target the right places
             String thisAction = InterpreterVisitor.getCurrentActionIdentifier();
             InterpreterVisitor.setCurrentAction(actionCall.getIdentifier());
-            Scope.getScopeStack().push(action.getInitialScope());
+            ScopeManager.getInstance().getScopeStack().push(action.getInitialScope());
             actionCall.visitChild(new InterpreterDecider(), action.getBody());
-            Scope.exit();
+            ScopeManager.getInstance().exit();
             InterpreterVisitor.setCurrentAction(thisAction);
         }
         //finally, trigger any rules bound to his action
-        ArrayList<RuleSymbol> rules = Scope.getRuleTable().get(actionCall.getIdentifier());
+        ArrayList<RuleSymbol> rules = GlobalScope.getInstance().getRuleTable().get(actionCall.getIdentifier());
         if (rules != null) {
             for (RuleSymbol rule : rules) {
                 actionCall.visitChild(new InterpreterDecider(), rule.getBody());    //pretend the rules' bodies are children

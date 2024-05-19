@@ -8,7 +8,7 @@ import com.proj4.AST.nodes.TField;
 import com.proj4.AST.visitors.InterpreterDecider;
 import com.proj4.AST.visitors.InterpreterVisitor;
 import com.proj4.exceptions.*;
-import com.proj4.symbolTable.Scope;
+import com.proj4.symbolTable.GlobalScope;
 import com.proj4.symbolTable.symbols.*;
 
 public class ExpressionInterpreter extends InterpreterVisitor {
@@ -183,7 +183,7 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 //remember the field to find in the template
                 String fieldName = ((TField) expression.getSecondOperand()).getFieldName();
 
-                ArrayList<String> map = Scope.getTemplateMapTable().get(template.getType());         //get the arraylist with the chosen template's fields
+                ArrayList<String> map = GlobalScope.getInstance().getTemplateMapTable().get(template.getType());         //get the arraylist with the chosen template's fields
 
                 SymbolTableEntry fieldContent = template.getContent().get(map.indexOf(fieldName));   //find the field we need with the map and get the content of the field
                 System.out.println("Accessing template with \"" + fieldName + "\".");
