@@ -130,7 +130,6 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         return node;
     }
 
-
     @Override
     public ActionDecl visitNoReturnActionDecl(DBLParser.NoReturnActionDeclContext ctx){
         String identifier = ctx.typedefUser().getText();
@@ -144,15 +143,17 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
 
     @Override
     public Expression visitActionResult(DBLParser.ActionResultContext ctx){
-        String identifier = ctx.typedefUser().getText();
-        Expression node = new Expression(ExpressionOperator.ACCESS, new Variable(identifier), new TField(ctx.RESULT().getText()));
+        Expression actionResultNode = new Expression(ExpressionOperator.ACCESS, new Variable(ctx.typedefUser().getText()), new TField(ctx.RESULT().getText()));
+        Expression accessNode = null;
         for(int i=ctx.IDENTIFIER().size(); i > 0; i--){
-            Expression access = new Expression(ExpressionOperator.ACCESS, new TField(ctx.IDENTIFIER().get(i).getText()));
-            node.addChild(access);
+            if(i == ctx.IDENTIFIER().size()){
+                accessNode = new Expression(ExpressionOperator.ACCESS, actionResultNode, new TField(ctx.IDENTIFIER().get(i).getText()));
+            } else {
+                accessNode = new Expression(ExpressionOperator.ACCESS, accessNode, new TField(ctx.IDENTIFIER().get(i).getText()));
+            }
         }
-        return node;
+        return accessNode != null ? accessNode : actionResultNode;
     }
-
 
     @Override
     public ArrayList<Declaration> visitParameterList(DBLParser.ParameterListContext ctx) {
