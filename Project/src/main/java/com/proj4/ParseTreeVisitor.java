@@ -615,7 +615,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
 
     @Override
     public String visitResultsIn(DBLParser.ResultsInContext ctx) {
-        String type = "mangler type";
+        String type = null;
         if(ctx.typedefUser() != null) {
             type = ctx.typedefUser().getText();
         } else if(ctx.typePrimitive() != null) {
