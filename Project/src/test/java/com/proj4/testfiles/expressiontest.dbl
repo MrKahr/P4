@@ -46,7 +46,7 @@ Division with double negative integers
 //Integer dc IS -9/-3;
 
 
-/* TEST 9
+/* TEST 9  --  THIS TEST IS DEFINED IN THE JAVA TEST FILE!!!
 Divide by zero
 */
 //Integer dd IS 2/0;

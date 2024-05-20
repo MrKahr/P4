@@ -1,0 +1,71 @@
+/* TEST 1
+if (no else)
+*/
+Integer iea IS 1;
+
+IF(iea EQUALS 1){
+    Integer iea IS 2;
+}
+
+/* TEST 2
+if else
+*/
+Integer ieb IS 1;
+
+IF(ieb EQUALS 4){
+    ieb IS 2;
+} ELSE {
+    ieb IS 3;
+}
+
+/* TEST 3
+if else if (no else)
+*/
+Integer iec IS 1;
+
+IF(iec EQUALS 2){
+    iec IS 3;
+} ELSE IF(iec EQUALS 1) {
+    iec IS 4;
+}
+
+/* TEST 4
+if elseif else
+*/
+Integer ied IS 1;
+
+IF(ied EQUALS 2){
+    ied IS 3;
+} ELSE IF(ied EQUALS 4) {
+    ied IS 5;
+} ELSE{
+    ied IS 6;
+}
+
+/* TEST 5
+if elseif elseif
+*/
+Integer iee IS 1;
+
+IF(iee EQUALS 2){
+    iee IS 3;
+} ELSE IF(iee EQUALS 4) {
+    iee IS 5;
+} ELSE IF(iee EQUALS 1){
+    iee IS 6;
+}
+
+/* TEST 6
+if elseif elseif else
+*/
+Integer ief IS 1;
+
+IF(ief EQUALS 2){
+    ief IS 3;
+} ELSE IF(ief EQUALS 4) {
+    ief IS 5;
+} ELSE IF(ief EQUALS 6){
+    ief IS 7;
+} ELSE {
+    ief IS 8;
+}

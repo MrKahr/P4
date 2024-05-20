@@ -1,24 +1,26 @@
 /* TEST 1
-Action call with return
-*/
+Action call
+- without parameters
+- without return
+
 ACTION ta() RESULTS IN Integer {
     RESULT IN 3;
 }
 Integer a IS ta();
-
+*/
 
 /* TEST 2
-Action call without return
-*/
+Action call 
+- with parameters
+- without return
+
 ACTION tb() {
     Integer a IS 4;
 }
 Integer b IS tb();
+*/
 
-
-
-/*** ACTION CALLS ***/
-/* TEST 1
+/* TEST 3
 Action Decl with parameters, without return
 */
 Action tad1(Integer a, Integer b) RESULTS IN Integer {

@@ -62,6 +62,7 @@ expr
     |   actionCall                 # actionCallExpr     // Ensure action calls are the last of parser definitions
     |   DIGIT                      # digitExpr
     |   IDENTIFIER                 # idExpr
+    |   templateInit               #templateInitExpr
     ;
 
 boolExpr
@@ -138,7 +139,7 @@ templateDecl
     ;
 
 templateInit
-    :   NEW typedefUser BODY_START ((assignment SEMICOLON | templateAssignment))* BODY_END
+    :   NEW typedefUser BODY_START ((expr SEMICOLON | stringExpr SEMICOLON | boolExpr SEMICOLON| templateInit))* BODY_END
     ;
 
 ruleDecl
@@ -188,7 +189,7 @@ return
     ;
 
 resultsIn
-    :   RESULTS_IN (typedefUser | typePrimitive | STATE | arrayType)
+    :   RESULTS_IN (typedefUser | typePrimitive | arrayType)
     ;
 
 multOp

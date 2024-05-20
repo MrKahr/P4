@@ -1,0 +1,16 @@
+/* TEST 1
+for loop
+*/
+Integer fa IS 0;
+FOR(Integer i IS 0; i LESS THAN 5; i IS i+1){
+    fa IS fa+1;
+}
+
+/* TEST 2
+for loop
+
+Integer fb IS 0;
+FOR(Integer i IS 0; true; i IS i+1){
+    fb IS fb+1;
+}
+*/

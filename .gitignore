@@ -1,5 +1,5 @@
 # ANTLR
-#SandBox/*.txt
+SandBox/*.txt
 #SandBox/*.g4
 SandBox/*.png
 SandBox/*.svg

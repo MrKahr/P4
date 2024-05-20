@@ -1,6 +1,7 @@
 package com.proj4;
 
 import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.HashMap;
 
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.function.Executable;
 
 import com.proj4.symbolTable.ScopeManager;
 import com.proj4.symbolTable.ScopeObserver;
@@ -21,9 +23,10 @@ public class ExpressionTest extends TestingArgs {
     public static void setup() {
         ScopeObserver scopeObserver = new ScopeObserver();
         ScopeManager.getInstance().addObserver(scopeObserver);
-        ScopeManager.getInstance().setDebugStatus(true);
 
         DBL interpreter = new DBL();
+        interpreter.setDebugMode(debugMode);
+        interpreter.setVerbosity(verbose);
         interpreter.interpret(getPath() + "expressiontest.dbl");
 
         variableTable = scopeObserver.getCurrentScope().peek().getVariableTable();
@@ -44,7 +47,6 @@ public class ExpressionTest extends TestingArgs {
     @Test
     public void test3() {
         IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("mc");
-        System.out.println("3 "+intSymbol.getValue());
         assertTrue(intSymbol.getValue() == 2);
     }
 
@@ -65,7 +67,6 @@ public class ExpressionTest extends TestingArgs {
     @Test
     public void test6() {
         IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("da");
-        System.out.println("6 "+intSymbol.getValue());
         assertTrue(intSymbol.getValue() == 3);
     }
 
@@ -84,14 +85,11 @@ public class ExpressionTest extends TestingArgs {
     }
 
     @Test
-    @Disabled
     @DisplayName("Divide by zero")
     public void test9() {
-        /* Tested working
-            The test is disabled and code removed since
-            divide by zero throws an exception during interpreting
-            which impedes with the rest of the tests (as the interpreter stops if this case is encountered - as it should)
-        */
+        DBL interpreter = new DBL();
+        Executable e = () -> {interpreter.interpret("Integer dd IS 2/0;");};
+        assertThrows(ArithmeticException.class, e);
     }
 
     @Test
@@ -123,7 +121,6 @@ public class ExpressionTest extends TestingArgs {
     @Test
     public void test14() {
         IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("sa");
-        System.out.println("14 "+intSymbol.getValue());
         assertTrue(intSymbol.getValue() == 0);
     }
 
@@ -150,7 +147,6 @@ public class ExpressionTest extends TestingArgs {
     @Test
     public void test18() {
         IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("ob");
-        System.out.println("18 "+intSymbol.getValue());
         assertTrue(intSymbol.getValue() == 3);
 
     }
@@ -158,14 +154,12 @@ public class ExpressionTest extends TestingArgs {
     @Test
     public void test19() {
         IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("oc");
-        System.out.println("19 "+intSymbol.getValue());
         assertTrue(intSymbol.getValue() == 5);
     }
 
     @Test
     public void test20() {
         IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("pa");
-        System.out.println("20 "+intSymbol.getValue());
         assertTrue(intSymbol.getValue() == 4);
     }
 }

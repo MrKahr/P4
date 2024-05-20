@@ -2,6 +2,8 @@ package com.proj4;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalTime;
+import java.time.Duration;
 
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -12,26 +14,28 @@ import com.proj4.AST.visitors.CheckDecider;
 import com.proj4.AST.visitors.InterpreterDecider;
 import com.proj4.antlrClass.DBLLexer;
 import com.proj4.antlrClass.DBLParser;
+import com.proj4.symbolTable.Scope;
 
 public class DBL {
     private Boolean debugMode = false;
+    private Boolean verbose = false;
+    private LocalTime startTime;
 
     // Constructor
     public DBL(){}
-
-    public DBL(Boolean debugMode){
-        this.debugMode = debugMode;
-    }
 
     // Methods
     public void setDebugMode(Boolean debugMode){
         this.debugMode = debugMode;
     }
 
+    public void setVerbosity(Boolean verbosity){
+        this.verbose = verbosity;
+    }
+
     public Boolean getDebugMode(){
         return this.debugMode;
     }
-
 
     /**
      * <b> The interpreter for DBL </b>
@@ -44,7 +48,15 @@ public class DBL {
      * @param input The input to interpret. Can be either a string of DBL-code or a file containing DBL-code
      */
     public void interpret(String input){
-        System.out.println("Reading input: " + input + "\n");
+        this.startTime = LocalTime.now();
+
+        String printString = "Reading input: " + input;
+        String lines = "";
+        for (int i = 0; i < printString.length(); i++) {
+            lines += "=";
+        }
+        System.out.println("\n\n" + lines);
+        System.out.println(printString + "\n");
 
         File file = new File(input);
         File absFile = new File(file.getAbsolutePath());
@@ -76,8 +88,14 @@ public class DBL {
             // Create a parse tree. The starting rule is "program"
             ParseTree tree = parser.program();
 
+            if(this.verbose){
+                System.out.println("Lexing and parsing done");
+            }
             // Our custom visitor (does the actions as tree is traversed)
             ParseTreeVisitor parseVisitor = new ParseTreeVisitor();
+
+            // Set debug mode for parse tree visitor
+            parseVisitor.setDebugMode(this.debugMode);
 
             // Generate the AST
             parseVisitor.visit(tree);
@@ -85,21 +103,47 @@ public class DBL {
             // Assign AST
             AST abstractSyntaxTree = parseVisitor.getRoot();
 
-            if(this.debugMode){
+            if(this.verbose){
+                System.out.println("AST generated");
+            }
+            if(this.verbose){
                 // Print tree
                 abstractSyntaxTree.printTree();
             }
 
+            // Set debug status for type checker and interpreter
+            Scope.setDebugStatus(this.debugMode);
+
+            Scope.setVerbosity(this.verbose);
+
             // Typecheck AST
-            CheckDecider checkDecider = new CheckDecider();
+            CheckDecider checkDecider = new CheckDecider(this.verbose);
             checkDecider.decideVisitor(abstractSyntaxTree);
 
             // Interpret AST
-            InterpreterDecider interpreterDecider = new InterpreterDecider();
+            InterpreterDecider interpreterDecider = new InterpreterDecider(this.verbose);
             interpreterDecider.decideVisitor(abstractSyntaxTree);
+
+            // Input was sucessfully interpreted
+            this.printDone(input);
         } catch (Exception e) {
             System.out.println("Failed to interpret input '" + input + "'\n");
             e.printStackTrace();
+            throw e;
         }
+    }
+
+    private void printDone(String input) {
+        LocalTime stopTime = LocalTime.now();
+        Duration duration = Duration.between(startTime, stopTime);
+        String success = "Successfully interpreted input: \"" + input + "\"";
+        String lines = "";
+        for (int i = 0; i < success.length(); i++) {
+            lines += "=";
+        }
+        System.out.println(lines);
+        System.out.println(success);
+        System.out.printf("Interpreting took %.3f seconds\n", (float) duration.toMillis()/1000);
+        System.out.println(lines);
     }
 }

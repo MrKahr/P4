@@ -8,7 +8,6 @@ import com.proj4.symbolTable.ScopeManager;
 public class ProgramTypeChecker extends TypeCheckVisitor{
 
     public void visit(AST program){
-
         // Start of traversing the AST requires new scope 
         ScopeManager.getInstance().enter();
         program.visitChildren(new CheckDecider());

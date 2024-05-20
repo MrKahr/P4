@@ -5,9 +5,20 @@ import com.proj4.AST.nodes.AST;
 import com.proj4.AST.nodes.Assignment;
 import com.proj4.AST.visitors.InterpreterDecider;
 import com.proj4.AST.visitors.InterpreterVisitor;
-import com.proj4.symbolTable.symbols.*;
+import com.proj4.symbolTable.symbols.ArraySymbol;
+import com.proj4.symbolTable.symbols.BooleanSymbol;
+import com.proj4.symbolTable.symbols.IntegerSymbol;
+import com.proj4.symbolTable.symbols.StringSymbol;
+import com.proj4.symbolTable.symbols.SymbolTableEntry;
+import com.proj4.symbolTable.symbols.TemplateSymbol;
 
 public class AssignmentInterpreter extends InterpreterVisitor {
+    private Boolean verbose = false;
+
+    public AssignmentInterpreter(){}
+    public AssignmentInterpreter(Boolean verbose){
+        this.verbose = verbose;
+    }
 
     public void visit(AST node) {
         Assignment assignment = (Assignment) node;
@@ -22,7 +33,6 @@ public class AssignmentInterpreter extends InterpreterVisitor {
                     case "Integer":
                         IntegerSymbol intValue = (IntegerSymbol) value;
                         ((IntegerSymbol) symbol).setValue(intValue.getValue());
-                        System.out.println("Assigning value \"" + intValue.getValue() + "\".");
                         break;
                     case "Boolean":
                         BooleanSymbol boolValue = (BooleanSymbol) value;
@@ -30,6 +40,11 @@ public class AssignmentInterpreter extends InterpreterVisitor {
                         break;
                     case "String":
                         StringSymbol stringValue = (StringSymbol) value;
+
+                        if(this.verbose){
+                            System.out.println(getClass().getSimpleName() + ": Assigning value \"" + stringValue.getValue() + "\".");
+                        }
+
                         ((StringSymbol) symbol).setValue(stringValue.getValue());
                         break;
                     default:
@@ -44,6 +59,7 @@ public class AssignmentInterpreter extends InterpreterVisitor {
             case "Array":
                 ArraySymbol arrayValue = (ArraySymbol) value;
                 ((ArraySymbol) symbol).setContent(arrayValue.getContent());
+                break;
             default:
                 throw new RuntimeException("Interpreter failed. Read invalid complex type \"" + value.getComplexType() + "\"!");
         }

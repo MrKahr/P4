@@ -6,11 +6,11 @@
 3. Expression tests                 // DONE
 4. String tests                     // DONE
 5. Boolean tests                    // DONE
-6. Action Declation tests
-7. Action Call tests
+6. Action Declation tests           // single case done
+7. Action Call tests                // single case done
 8. Array tests
-9. If-else tests
-10. For-loop tests
+9. If-else tests                    // DONE
+10. For-loop tests                  // single case done
 11. Template Decl tests
 12. Template Initialization tests
 13. Rule tests
@@ -23,13 +23,13 @@
 1. Declaration test                 // DONE, FAILURES
 2. Assignment test                  // DONE, FAILURES
 3. Expression tests                 // DONE
-4. String tests
-5. Boolean tests
-6. Action Declation tests
-7. Action Call tests
+4. String tests                     // DONE, FAILURES
+5. Boolean tests                    // DONE, FAILURES
+6. Action Declation tests           // single case done
+7. Action Call tests                // single case done
 8. Array tests
-9. If-else tests
-10. For-loop tests
+9. If-else tests                    // DONE
+10. For-loop tests                  // single case done
 11. Template Decl tests
 12. Template Initialization tests
 13. Rule tests
@@ -59,11 +59,12 @@
 ┌──────────────────────────┐
 │     TESTING FAILURES     │
 └──────────────────────────┘
+   * Parser
+        If you make a single-line comment on the last line of a DBL-file it WILL cause errors!
+        Solution: if a single-line comment is the last line of the file, create an empty line as the last instead.
+
+
    * Assign Test
-        - Test 2
-            - Boolean b IS TRUE     (got: FALSE, expected: TRUE)
-        - Test 3
-            - String s IS "fisk"    (got: ""fisk"", expected: "fisk")
         Test 4
             - Integer[] arr IS [1, 2, 3]    (got: NullPointerException on getNestingLevel(), expected: the nestingLevel)
                 EXCEPTIONS:
@@ -78,6 +79,3 @@
                             at com.proj4.AST.visitors.CheckDecider.decideVisitor(CheckDecider.java:21)
                             at com.proj4.AST.nodes.AST.visitChild(AST.java:105)
                             at com.proj4.AST.visitors.CheckVisitors.DeclarationTypeChecker.visit(DeclarationTypeChecker.java:26)
-    * Expression Test
-    |   - Test 14
-    |   |   - Integer sa IS 2-2;    (got: 4, expected: 0);

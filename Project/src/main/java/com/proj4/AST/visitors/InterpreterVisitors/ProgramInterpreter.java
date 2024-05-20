@@ -1,5 +1,7 @@
 package com.proj4.AST.visitors.InterpreterVisitors;
 
+import java.util.Scanner;
+
 import com.proj4.AST.nodes.AST;
 import com.proj4.AST.nodes.Program;
 import com.proj4.AST.visitors.InterpreterDecider;
@@ -8,7 +10,6 @@ import com.proj4.symbolTable.GlobalScope;
 import com.proj4.symbolTable.ScopeManager;
 import com.proj4.symbolTable.symbols.ActionSymbol;
 import com.proj4.symbolTable.symbols.StateSymbol;
-import java.util.Scanner; 
 
 
 
@@ -43,6 +44,13 @@ public class ProgramInterpreter extends InterpreterVisitor {
                 System.out.println("Reached final state: No available actions! Stopping program.");
             }
         }
+        if (!ScopeManager.getInstance().empty()) {
+            System.out.println("\nInterpreting done. Final scope: ");
+            ScopeManager.getInstance().getCurrent().printBindings();
+        } else {
+            System.out.println("\nInterpreting done. Final scope is empty!");
+        }
+
         ScopeManager.getInstance().exit();
     }
 }

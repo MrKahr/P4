@@ -22,9 +22,10 @@ public class DeclarationTest extends TestingArgs {
     public static void setup() {
         ScopeObserver scopeObserver = new ScopeObserver();
         ScopeManager.getInstance().addObserver(scopeObserver);
-        ScopeManager.getInstance().setDebugStatus(true);
 
         DBL interpreter = new DBL();
+        interpreter.setDebugMode(debugMode);
+        interpreter.setVerbosity(verbose);
         interpreter.interpret(getPath() + "declarationtest.dbl");
 
         variableTable = scopeObserver.getCurrentScope().peek().getVariableTable();

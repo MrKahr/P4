@@ -1,4 +1,0 @@
-Action AttackPlayer(Card attacking, Player attacked) RESULTS IN Player {
-    Bob IS 3 + 4 / 2;
-    Card[i] = 3 + 4;
-}

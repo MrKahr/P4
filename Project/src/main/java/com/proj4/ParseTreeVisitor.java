@@ -1,32 +1,50 @@
 package com.proj4;
 
-import com.proj4.antlrClass.DBLBaseVisitor;
-import com.proj4.antlrClass.DBLParser;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.lang.Math;
-
-import com.proj4.AST.nodes.*;
+import com.proj4.AST.nodes.AST;
+import com.proj4.AST.nodes.ActionCall;
+import com.proj4.AST.nodes.ActionDecl;
+import com.proj4.AST.nodes.ArrayInstance;
+import com.proj4.AST.nodes.Assignment;
+import com.proj4.AST.nodes.Body;
+import com.proj4.AST.nodes.Declaration;
+import com.proj4.AST.nodes.Expression;
+import com.proj4.AST.nodes.ExpressionOperator;
+import com.proj4.AST.nodes.ForLoop;
+import com.proj4.AST.nodes.IfElse;
+import com.proj4.AST.nodes.Program;
+import com.proj4.AST.nodes.Return;
+import com.proj4.AST.nodes.RuleDecl;
+import com.proj4.AST.nodes.StateDecl;
+import com.proj4.AST.nodes.TField;
+import com.proj4.AST.nodes.TemplateDecl;
+import com.proj4.AST.nodes.TemplateInstance;
+import com.proj4.AST.nodes.Variable;
+import com.proj4.antlrClass.DBLBaseVisitor;
+import com.proj4.antlrClass.DBLParser;
 import com.proj4.symbolTable.symbols.BooleanSymbol;
 import com.proj4.symbolTable.symbols.IntegerSymbol;
 import com.proj4.symbolTable.symbols.StringSymbol;
 
 
-/* TODO: Visit:
-*/
-
-
 public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
-    Boolean DEBUG_MODE = false;  // USE THIS WHEN DEBUGGING!!!
+    Boolean debugMode = false;  // USE THIS WHEN DEBUGGING!!!
 
     // Fields
     private AST root;
+
+    // Methods
     public AST getRoot() {
         return this.root;
+    }
+
+    public void setDebugMode(Boolean debugMode) {
+        this.debugMode = debugMode;
     }
     /*
      * ┌─────────────────────────────────┐
@@ -43,12 +61,12 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
                 this.root.addChild((AST) childnode);
             }
         } catch (Exception e) {
-            if(DEBUG_MODE){
-                System.out.println("Something exploded. Too bad :(\n");
-                e.printStackTrace();
+            if(debugMode){
+                System.out.println(this.getClass().getSimpleName() + " exploded. Too bad :(\n");
             } else {
                 System.out.println("Syntax error in input!");
             }
+            throw e;
         }
         return this.root;
     }
@@ -88,7 +106,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     public ActionDecl visitReturnActionDecl(DBLParser.ReturnActionDeclContext ctx) {
         ParseTree resultsIn = ctx.resultsIn();
         String resultComplexType;
-        String resultType = resultsIn.getText();
+        String resultType = (String)visit(ctx.resultsIn());
         Integer nestingLevel = 0;
         if (resultsIn.getClass().getSimpleName().equals("TypedefUserContext")) {
             resultComplexType = "Template";
@@ -112,16 +130,29 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         return node;
     }
 
-
     @Override
     public ActionDecl visitNoReturnActionDecl(DBLParser.NoReturnActionDeclContext ctx){
-        String identifier = ctx.getChild(1).getText();
+        String identifier = ctx.typedefUser().getText();
         ActionDecl node = new ActionDecl(identifier, (Body) visit(ctx.body()));
         ArrayList<Declaration> parameterList = (ArrayList<Declaration>) visit(ctx.parameterList());
         for (Declaration parameter : (ArrayList<Declaration>) parameterList) {
             node.addChild((AST) parameter);
         }
         return node;
+    }
+
+    @Override
+    public Expression visitActionResult(DBLParser.ActionResultContext ctx){
+        Expression actionResultNode = new Expression(ExpressionOperator.ACCESS, new Variable(ctx.typedefUser().getText()), new TField(ctx.RESULT().getText()));
+        Expression accessNode = null;
+        for(int i=ctx.IDENTIFIER().size(); i > 0; i--){
+            if(i == ctx.IDENTIFIER().size()){
+                accessNode = new Expression(ExpressionOperator.ACCESS, actionResultNode, new TField(ctx.IDENTIFIER().get(i).getText()));
+            } else {
+                accessNode = new Expression(ExpressionOperator.ACCESS, accessNode, new TField(ctx.IDENTIFIER().get(i).getText()));
+            }
+        }
+        return accessNode != null ? accessNode : actionResultNode;
     }
 
     @Override
@@ -160,13 +191,24 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     public ActionCall visitActionCall(DBLParser.ActionCallContext ctx) {
         ActionCall node = new ActionCall(ctx.typedefUser().getText());
 
+        ArrayList<Expression> arguments = (ArrayList<Expression>) visit(ctx.argumentList());
+        for (Expression argument : arguments) {
+            node.addChild(argument);
+        }
+
+        return node;
+    }
+
+    @Override
+    public ArrayList<Expression> visitArgumentList(DBLParser.ArgumentListContext ctx){
+        ArrayList<Expression> argumentNodes = new ArrayList<Expression>();
         for (int i = 0; i < ctx.getChildCount(); i++) {
-            var childnode = visit(ctx.getChild(i));
-            if (childnode != null){
-                node.addChild((Expression) childnode);
+            Expression node = (Expression)visit(ctx.getChild(i));
+            if (node != null) {
+                argumentNodes.add(node);
             }
         }
-        return node;
+        return argumentNodes;
     }
 
     @Override
@@ -174,6 +216,13 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         ActionCall node = (ActionCall) visit(ctx.actionCall());
         return node;
     }
+
+    @Override
+    public Expression visitActionResultExpr(DBLParser.ActionResultExprContext ctx) {
+        Expression node = (Expression) visit(ctx.actionResult());
+        return node;
+    }
+
 
     /*** ASSIGNMENT ***/
     @Override
@@ -314,11 +363,10 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         return node;
     }
 
+
     @Override
     public Declaration visitIdDeclUser(DBLParser.IdDeclUserContext ctx) {
         Declaration node = new Declaration(ctx.IDENTIFIER().getText(), ctx.typedefUser().getText(), "Template");
-        TemplateInstance ti = new TemplateInstance(ctx.typedefUser().getText());
-        node.addChild(ti);
         return node;
     }
 
@@ -368,8 +416,6 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
 
     @Override
     public Expression visitLitteralBool(DBLParser.LitteralBoolContext ctx) {
-        System.out.println(ctx.BOOLEAN().getText());
-        System.out.println(Boolean.parseBoolean(ctx.BOOLEAN().getText()));
         Expression node = new Expression(ExpressionOperator.CONSTANT, new BooleanSymbol(Boolean.parseBoolean(ctx.BOOLEAN().getText())));
         return node;
     }
@@ -517,7 +563,8 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
 
     @Override
     public Expression visitLitteralString(DBLParser.LitteralStringContext ctx) {
-        Expression node = new Expression(ExpressionOperator.CONSTANT, new StringSymbol(ctx.string().getText()));
+        String str = ctx.string().getText();
+        Expression node = new Expression(ExpressionOperator.CONSTANT, new StringSymbol(str.substring(1, str.length()-1)));
         return node;
     }
 
@@ -541,13 +588,17 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     public TemplateInstance visitTemplateInit(DBLParser.TemplateInitContext ctx) {
         TemplateInstance node = new TemplateInstance(ctx.typedefUser().getText());
         for (ParseTree treeNode : ctx.children) {
-            if (treeNode instanceof DBLParser.TemplateInitContext || treeNode instanceof DBLParser.AssignmentContext) {
+            if (treeNode instanceof DBLParser.TemplateInitContext || treeNode instanceof DBLParser.ExprContext || treeNode instanceof DBLParser.StringExprContext || treeNode instanceof DBLParser.BoolExprContext) {
                 node.addChild((AST) visit(treeNode));
             }
         }
         return node;
     }
-
+    @Override
+    public TemplateInstance visitTemplateInitExpr(DBLParser.TemplateInitExprContext ctx) {
+        TemplateInstance node = (TemplateInstance)visit(ctx.templateInit());
+        return node;
+    }
     @Override public Expression visitTemplateAccessExpr(DBLParser.TemplateAccessExprContext ctx) {
         Expression node = new Expression(ExpressionOperator.ACCESS, (Expression) visit(ctx.expr()), new TField(ctx.IDENTIFIER().getText()));
         return node;
@@ -560,5 +611,18 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
             identifiers.add(node.getText());
         }
         return identifiers;
+    }
+
+    @Override
+    public String visitResultsIn(DBLParser.ResultsInContext ctx) {
+        String type = null;
+        if(ctx.typedefUser() != null) {
+            type = ctx.typedefUser().getText();
+        } else if(ctx.typePrimitive() != null) {
+            type = ctx.typePrimitive().getText();
+        } else if(ctx.arrayType() != null) {
+            type = ctx.arrayType().getText();
+        }
+        return type;
     }
 }

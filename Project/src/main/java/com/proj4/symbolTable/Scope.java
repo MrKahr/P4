@@ -4,7 +4,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import com.proj4.exceptions.VariableAlreadyDefinedException;
+import com.proj4.symbolTable.symbols.ActionSymbol;
+import com.proj4.symbolTable.symbols.PrimitiveSymbol;
+import com.proj4.symbolTable.symbols.RuleSymbol;
+import com.proj4.symbolTable.symbols.StateSymbol;
 import com.proj4.symbolTable.symbols.SymbolTableEntry;
+import com.proj4.symbolTable.symbols.TemplateSymbol;
 
 //this class represents a scope in the programming language
 public class Scope implements Cloneable{
@@ -16,14 +21,24 @@ public class Scope implements Cloneable{
     //this table keeps track of whether or not a variable or function has been declared in this scope
     private HashSet<String> declaredTable = new HashSet<>();
 
+    // TODO: create hashmap of observers instead of arrayList
+    private static ArrayList<InterpreterObserver> currentObservers = new ArrayList<InterpreterObserver>();
+
+    // Flags whether the interpreter should copy scopes to its observers //TODO: Use debug flag to restrict interpreter's printing
+    private static boolean inDebugMode = false;
+
+    private static boolean verbose = false;
+
+    // Inbuilt actions are hard coded
+    private static ArrayList<String> inbuiltActions = new ArrayList<>(Arrays.asList("setState", "draw", "shuffle"));
+
     //these strings are not allowed to be used as identifiers anywhere
     //TODO: the parser seemingly already handles this
  /*    private static ArrayList<String> keywords = new ArrayList<>(Arrays.asList("Integer", "Boolean", "String",
     "Action", "Rule", "State", "Template", "IF", "ELSE IF", "ELSE", "FOR", "AND", "OR", "GREATER THAN", "GREATER OR EQUALS",
     "LESS THAN", "LESS OR EQUALS", "EQUALS", "NOT EQUALS", "RESULT", "RESULT IN", "RESULTS IN", "CONTAINS", "ALLOWS","WHEN", "WITH LOOP",
     "IS", "NOT", "NEW")); */
-    
- 
+
     //Method
     public HashMap<String, SymbolTableEntry> getVariableTable(){
         return variableTable;
@@ -88,6 +103,7 @@ public class Scope implements Cloneable{
     //Copy all mappings from the specified scope to this scope, overwriting duplicates with mappings from the other scope
     public void putAll(Scope other){
         variableTable.putAll(other.getVariableTable());
+        setDebugStatus(other.getDebugStatus());
         //declaredTable.addAll(other.getDTable());  <- don't do this! Otherwise variables must have unique names always
     }
 
@@ -103,8 +119,9 @@ public class Scope implements Cloneable{
         if (declaredTable.contains(identifier)) {
             throw new VariableAlreadyDefinedException("The variable name \"" + identifier + "\" is already in use!");
         } else {
-            //TODO: remove debug print
-            System.out.println("Declaring variable \"" + identifier + "\" with type \"" + variable.getType() + "\", complex type \"" + variable.getComplexType() + "\".");
+            if (verbose) {
+                System.out.println("Declaring variable \"" + identifier + "\" with type \"" + variable.getType() + "\", complex type \"" + variable.getComplexType() + "\".");
+            }
             variableTable.put(identifier, variable);
             declaredTable.add(identifier);
         }
@@ -124,16 +141,18 @@ public class Scope implements Cloneable{
         // We save the current scope if we want to use the scope in testing or debugging
         if(inDebugMode){
             notifyObservers(Scope.copyStack());
+            System.out.println("Exiting scope");
         }
         scopeStack.pop();
     }
 
     public static void enter(){
         scopeStack.push(new Scope());
-            // We save the current scope if we want to use the scope in testing or debugging
-            if(inDebugMode){
-                notifyObservers(Scope.copyStack());
-            }
+        // We save the current scope if we want to use the scope in testing or debugging
+        if(inDebugMode){
+            notifyObservers(Scope.copyStack());
+            System.out.println("Entering a new scope");
+        }
     }
 
     // Scopes inherited are pushed unto the stack because the stack top models the current available scope.
@@ -143,20 +162,22 @@ public class Scope implements Cloneable{
         }
         scopeStack.push(scopeStack.peek().clone()); //clone the top scope and push it
 
-            // We save the current scope if we want to use the scope in testing or debugging
-            if(inDebugMode){
-                notifyObservers(Scope.copyStack());
-            }
-    }
-
-    public static void synthesize(){
-        Scope poppedScope = scopeStack.pop();
-        Scope currentScope = scopeStack.peek();
-
         // We save the current scope if we want to use the scope in testing or debugging
         if(inDebugMode){
             notifyObservers(Scope.copyStack());
+            System.out.println("Inheriting parent's scope");
         }
+    }
+
+    public static void synthesize(){
+        // We save the current scope if we want to use the scope in testing or debugging
+        if(inDebugMode){
+            notifyObservers(Scope.copyStack());
+            System.out.println("Synthesizing scope");
+        }
+
+        Scope poppedScope = scopeStack.pop();
+        Scope currentScope = scopeStack.peek();
 
         for (String identifier : poppedScope.getVariableTable().keySet()) {
             if(!poppedScope.getDeclaredTable().contains(identifier)){
@@ -177,12 +198,6 @@ public class Scope implements Cloneable{
         return inbuiltActions;
     }
 
-    /* public static ArrayList<Strings> getKeywords(){
-        return keywords;
-    }
-     * 
-     */
-    /*
     // OBSERVER PART
     public static void addObserver(InterpreterObserver interpreterObserver){
         currentObservers.add(interpreterObserver);
@@ -202,10 +217,35 @@ public class Scope implements Cloneable{
         inDebugMode = truthValue;
     }
 
+    public Boolean getDebugStatus(){
+        return inDebugMode;
+    }
+
+    public static void setVerbosity(Boolean verbosity){
+        verbose = verbosity;
+    }
+
     public static Stack<Scope> copyStack(){
         Stack <Scope> stackCopy = new Stack<Scope>();
         stackCopy.addAll(scopeStack);
         return stackCopy;
     }
-     */
+
+    public void printBindings(){
+        if(verbose) {
+            System.out.println("--------Bindings--------");
+            for (String identifier : variableTable.keySet()) {
+                SymbolTableEntry variable = variableTable.get(identifier);
+                String value;
+                if (variable instanceof PrimitiveSymbol) {
+                    value = ((PrimitiveSymbol) variable).getValue().toString();
+                } else {
+                    value = "Content";
+                }
+                System.out.println(identifier + " |-> " + value);
+            }
+            System.out.println("------------------------");
+        }
+    }
+
 }

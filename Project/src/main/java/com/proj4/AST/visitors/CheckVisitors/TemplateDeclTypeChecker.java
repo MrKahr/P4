@@ -15,9 +15,13 @@ public class TemplateDeclTypeChecker extends TypeCheckVisitor{
     
     public void visit(AST node){
         TemplateDecl templateDecl = (TemplateDecl) node;
+
         ScopeManager.getInstance().enter();
+
         //the blueprint
         TemplateSymbol blueprint = new TemplateSymbol();
+        blueprint.setType(templateDecl.getIdentifier());
+
         //the map
         ArrayList<String> map = new ArrayList<>();
 
@@ -27,7 +31,11 @@ public class TemplateDeclTypeChecker extends TypeCheckVisitor{
 
             Declaration identifiableChild = (Declaration) child; //will throw a ClassCastException if the child does not extend Declaration
 
-            identifiableChild.getType();
+            String t = identifiableChild.getType();
+            String ct = identifiableChild.getComplexType();
+            int nl = identifiableChild.getNestingLevel();
+
+            entry = SymbolTableEntry.instantiateDefault(t, ct, nl);
 
             map.add(identifiableChild.getIdentifier());
             blueprint.addContent(entry);

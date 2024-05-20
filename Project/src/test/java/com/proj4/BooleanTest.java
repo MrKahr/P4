@@ -18,9 +18,10 @@ public class BooleanTest extends TestingArgs {
     public static void setup() {
         ScopeObserver scopeObserver = new ScopeObserver();
         ScopeManager.getInstance().addObserver(scopeObserver);
-        ScopeManager.getInstance().setDebugStatus(true);
 
         DBL interpreter = new DBL();
+        interpreter.setDebugMode(debugMode);
+        interpreter.setVerbosity(verbose);
         interpreter.interpret(getPath() + "booleantest.dbl");
 
         variableTable = scopeObserver.getCurrentScope().peek().getVariableTable();
@@ -28,7 +29,6 @@ public class BooleanTest extends TestingArgs {
     @Test
     public void test1(){
         BooleanSymbol boolSymbol = (BooleanSymbol) variableTable.get("ba");
-        System.out.println(boolSymbol.getValue());
         assertFalse(boolSymbol.getValue());
     }
 
@@ -41,7 +41,6 @@ public class BooleanTest extends TestingArgs {
     @Test
     public void test3(){
         BooleanSymbol boolSymbol = (BooleanSymbol) variableTable.get("bc");
-        System.out.println(boolSymbol.getValue());
         assertFalse(boolSymbol.getValue());
     }
 

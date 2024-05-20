@@ -1,0 +1,29 @@
+/* TEST 1
+template decl
+*/
+
+Template Card CONTAINS {
+    Integer cost;
+    Integer health;
+}
+
+Template Hej CONTAINS {
+    Integer cost;
+    Integer health;
+    String name;
+}
+Template Fisk CONTAINS {
+    Integer cost;
+    Integer health;
+    Card c3;
+}
+
+Card c1 IS NEW Card{1; 2;}
+
+c1.cost IS 3;
+
+Integer tda IS c1.cost;
+
+Hej c2 IS NEW Hej{1; 2; "bob";}
+
+Fisk c4 IS NEW Fisk{1; 2; c1;}

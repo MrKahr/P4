@@ -45,10 +45,11 @@ public abstract class AST {
     }
 */
     public void printTree(){
+        System.out.println("\n\n=======Printing AST Tree=======");
         Integer currentLevel = 0;
         List<List<AST>> result = new ArrayList<>();
         getLevel(this, currentLevel, result);
-        
+
         for (List<AST> list : result) {
             // Avoid printing level for leaf nodes
             if(list.size() > 0){
@@ -59,10 +60,10 @@ public abstract class AST {
             }
             currentLevel++;
         }
- 
+        System.out.println("\n\n===============================");
     }
 
-    public void getLevel(AST root, Integer level, List<List<AST>> result){
+    private void getLevel(AST root, Integer level, List<List<AST>> result){
         if (root == null) {
             return;
         }
@@ -93,7 +94,7 @@ public abstract class AST {
     //specify a decider and use it to visit all children
     public void visitChildren(VisitorDecider decider){
         children.forEach((child) -> {
-            decider.decideVisitor(child);  
+            decider.decideVisitor(child);
         });
     }
 
@@ -115,21 +116,4 @@ public abstract class AST {
             }
         }
     }
-
-    //TODO: these two are currently not functional because of the changes to how scopes work
-    /*
-    //call this to set the parent scope's value of the variable bound to the given identifier to the value it has in this scope
-    public void synthesizeVariable(String identifier){
-        parent.getScope().getVTable().put(identifier, scope.getVTable().get(identifier));
-    }
-
-    //call this to synthesize all variables that were not declared in this scope
-    public void synthesizeInheritedVariables(){
-        for (String identifier : scope.getVTable().keySet()) {
-            if (!scope.getDTable().contains(identifier)) {  //if we didn't declare a variable with this identifier in this scope
-                synthesizeVariable(identifier);             //synthesize it
-            }
-        }
-    }
-     */
 }

@@ -1,0 +1,5 @@
+Template Card CONTAINS {
+    Integer cost;
+    Integer health;
+}
+Card c1 IS NEW Card{1+1;2+2;}

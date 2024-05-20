@@ -26,26 +26,6 @@ public class ExpressionTypeChecker extends TypeCheckVisitor {
         String secondType;
         switch (expression.getOperator()) {
             case ADD:
-            /*
-                expression.visitChild(new CheckDecider(), expression.getFirstOperand());
-                if (!TypeCheckVisitor.getFoundType().equals("Integer") && !TypeCheckVisitor.getFoundType().equals("String")) {
-                    throw new MismatchedTypeException();
-                }
-                //if any operand is a string, we know we'll be concatenating strings instead of adding numbers
-                if (TypeCheckVisitor.getFoundType().equals("String")) {
-                    TypeCheckVisitor.setFoundType("String", "Primitive", 0);
-                }
-
-                expression.visitChild(new CheckDecider(), expression.getSecondOperand());
-                if (!TypeCheckVisitor.getFoundType().equals("Integer") && !TypeCheckVisitor.getFoundType().equals("String")) {
-                    throw new MismatchedTypeException();
-                }
-                if (TypeCheckVisitor.getFoundType().equals("String")) {
-                    TypeCheckVisitor.setFoundType("String", "Primitive", 0);
-                } else {
-                    TypeCheckVisitor.setFoundType("Integer", "Primitive", 0);
-                }
-            */
                 expression.visitChild(new CheckDecider(), expression.getFirstOperand());
                 firstType = TypeCheckVisitor.getFoundType();
                 expression.visitChild(new CheckDecider(), expression.getSecondOperand());
@@ -157,7 +137,7 @@ public class ExpressionTypeChecker extends TypeCheckVisitor {
                 break;
             case ACCESS:
                 //make sure the first operand is actually a template
-                expression.visitChild(new CheckDecider(), expression.getFirstOperand());    
+                expression.visitChild(new CheckDecider(), expression.getFirstOperand());
                 if (!TypeCheckVisitor.getFoundComplexType().equals("Template")) {
                     throw new MismatchedTypeException();
                 }
@@ -186,13 +166,14 @@ public class ExpressionTypeChecker extends TypeCheckVisitor {
                 } else {
                     TypeCheckVisitor.setFoundType(fieldContent.getType(), fieldContent.getComplexType(), 0);
                 }
-                
-                //TODO: When we finally get to interpreting the program, the process of getting the field will be quite similar, 
+
+                //TODO: When we finally get to interpreting the program, the process of getting the field will be quite similar,
                 //TODO: the difference being that we use the TemplateSymbol returned by the first operand instead of using the blueprint for the template type
+                break;
             case INDEX:
                 // Case 1: Check whether first operand is an array that is declared in scope
                 expression.visitChild(new CheckDecider(), expression.getFirstOperand());
-                // Check whether operand is an array 
+                // Check whether operand is an array
                 if (!TypeCheckVisitor.getFoundComplexType().equals("Array")) {
                     throw new MismatchedTypeException(
                         "Error on indexing: Cannot index element that is not an array!");

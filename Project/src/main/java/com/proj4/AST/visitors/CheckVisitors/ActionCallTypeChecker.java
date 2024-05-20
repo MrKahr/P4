@@ -26,7 +26,7 @@ public class ActionCallTypeChecker extends TypeCheckVisitor{
         
         //check that arguments are the correct amount
         if (action.getParameterNames().size() != actionCall.getChildren().size()) {    //number of parameters must equal number of arguments (child nodes)
-            throw new ParameterMismatchExpection("Received" + (actionCall.getChildren().size()) + "arguments for action \"" + actionCall.getIdentifier() + "\" but needed " + action.getParameterNames().size() + "!");
+            throw new ParameterMismatchExpection("Received " + (actionCall.getChildren().size()) + " arguments for action \"" + actionCall.getIdentifier() + "\" but needed " + action.getParameterNames().size() + "!");
         }
 
         //check that arguments are well typed
