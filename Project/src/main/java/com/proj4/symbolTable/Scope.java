@@ -11,7 +11,7 @@ import com.proj4.symbolTable.symbols.SymbolTableEntry;
 //this class represents a scope in the programming language
 public class Scope implements Cloneable {
     // Field
-    private static boolean verbose = false;
+    private boolean verbose = false;
 
     // this table keeps track of variables
     private HashMap<String, SymbolTableEntry> variableTable = new HashMap<>();
@@ -85,7 +85,7 @@ public class Scope implements Cloneable {
         return inbuiltActions;
     }
 
-    public static void setVerbosity(Boolean verbosity) {
-        verbose = verbosity;
+    public void setVerbosity(Boolean verbosity) {
+        this.verbose = verbosity;
     }
 }

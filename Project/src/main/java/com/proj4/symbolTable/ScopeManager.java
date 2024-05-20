@@ -48,7 +48,7 @@ public class ScopeManager {
 
     public void enter() {
         Scope scope = new Scope();
-        Scope.setVerbosity(getVerbosity());
+        scope.setVerbosity(getVerbosity());
         scopeStack.push(scope);
         // We save the current scope if we want to use the scope in testing or debugging
         if (inDebugMode) {
