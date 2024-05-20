@@ -3,14 +3,14 @@
 Action Decl with parameters, without return
 */
 
-Action tad1(Integer a, Integer b) RESULTS IN Integer {
+Action tad3(Integer a, Integer b) RESULTS IN Integer {
     RESULT IN a+b;
 }
 
 
 
-Rule trd1 WHEN [tad1] IF(1 EQUALS 1){
-    Integer i IS tad1.RESULT + 5;
+Rule trd1 WHEN [tad3] IF(1 EQUALS 1){
+    Integer i IS tad3.RESULT + 5;
 }
 
-Integer ada IS tad1(1,2);
+Integer ada IS tad3(1,2);

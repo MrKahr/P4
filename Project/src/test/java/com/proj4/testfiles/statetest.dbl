@@ -1,0 +1,13 @@
+
+/* TEST 3
+Action Decl with parameters, without return
+*/
+Action tad2(Integer a, Integer b) RESULTS IN Integer {
+    Integer ada IS a+b;
+    RESULT IN ada;
+}
+
+State state1 ALLOWS [tad2]
+
+Integer ada IS 1;
+ada IS tad2(1,2);
