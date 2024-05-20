@@ -16,7 +16,7 @@ import com.proj4.symbolTable.symbols.SymbolTableEntry;
 import com.proj4.symbolTable.symbols.TemplateSymbol;
 
 public class ActionDeclTypeChecker extends TypeCheckVisitor{
-    
+
     public void visit(AST node){
         ActionDecl actionDecl = (ActionDecl) node;
         ScopeManager.getInstance().inherit();
@@ -25,7 +25,7 @@ public class ActionDeclTypeChecker extends TypeCheckVisitor{
         if(GlobalScope.getInstance().getInbuiltActions().contains(actionDecl.getIdentifier())){
             throw new VariableAlreadyDefinedException("Cannot redeclare inbuilt action \"" + actionDecl.getIdentifier());
         }
-        
+
         //Check whether action is already defined in scope
         if(GlobalScope.getInstance().getActionTable().containsKey(actionDecl.getIdentifier())){
             throw new VariableAlreadyDefinedException("Action \"" + actionDecl.getIdentifier() + "\" is already defined!");
@@ -37,14 +37,14 @@ public class ActionDeclTypeChecker extends TypeCheckVisitor{
 
         //Construct symbol to represent the action
         ActionSymbol action = new ActionSymbol(
-            actionDecl.getType(), 
-            actionDecl.getComplexReturnType(), 
+            actionDecl.getType(),
+            actionDecl.getComplexReturnType(),
             actionDecl.getBody(),
             actionDecl.getNestingLevel()
         );
 
         //Add declared action to action table so return node can see it
-        Scope.getActionTable().put(actionDecl.getIdentifier(), action);
+        GlobalScope.getInstance().getActionTable().put(actionDecl.getIdentifier(), action);
 
         //set the action body before checking children
         TypeCheckVisitor.setCurrentAction(actionDecl.getIdentifier());
@@ -59,7 +59,7 @@ public class ActionDeclTypeChecker extends TypeCheckVisitor{
         } catch (ClassCastException cce) {
             throw new MalformedAstException("Expected only declarations in children list of actionDecl!");
         }
-        
+
         //save the scope in the action symbol
         action.setInitialScope(ScopeManager.getInstance().getCurrent());
 
@@ -68,8 +68,8 @@ public class ActionDeclTypeChecker extends TypeCheckVisitor{
 
         //clear current action
         TypeCheckVisitor.setCurrentAction(null);
-    
-        //Add declared action to action table 
+
+        //Add declared action to action table
         GlobalScope.getInstance().getActionTable().put(actionDecl.getIdentifier(), action);
 
         //In this language, given some action "a", we can write a.RESULT to get the most recently returned value
@@ -86,10 +86,10 @@ public class ActionDeclTypeChecker extends TypeCheckVisitor{
         //To navigate a template, we need a map - NOTE not java map
         ArrayList<String> map = new ArrayList<>();
         map.add("RESULT");  //the one field we have is accessed with .RESULT
-        
+
         //Now let's add them to the appropriate tables
         //placing the action template in the program's scope
-        Scope.getCurrent().declareVariable(actionDecl.getIdentifier(), blueprint);
+        ScopeManager.getInstance().getCurrent().declareVariable(actionDecl.getIdentifier(), blueprint);
 
         GlobalScope.getInstance().getTemplateMapTable().put(actionDecl.getIdentifier(), map);
         GlobalScope.getInstance().getBlueprintTable().put(actionDecl.getIdentifier(), blueprint);

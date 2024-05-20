@@ -14,7 +14,7 @@ import com.proj4.AST.visitors.CheckDecider;
 import com.proj4.AST.visitors.InterpreterDecider;
 import com.proj4.antlrClass.DBLLexer;
 import com.proj4.antlrClass.DBLParser;
-import com.proj4.symbolTable.Scope;
+import com.proj4.symbolTable.ScopeManager;
 
 public class DBL {
     private Boolean debugMode = false;
@@ -112,9 +112,9 @@ public class DBL {
             }
 
             // Set debug status for type checker and interpreter
-            Scope.setDebugStatus(this.debugMode);
+            ScopeManager.getInstance().setDebugStatus(this.debugMode);
 
-            Scope.setVerbosity(this.verbose);
+            ScopeManager.getInstance().setVerbosity(this.verbose);
 
             // Typecheck AST
             CheckDecider checkDecider = new CheckDecider(this.verbose);

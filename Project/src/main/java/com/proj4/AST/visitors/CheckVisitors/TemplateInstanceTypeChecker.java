@@ -10,10 +10,10 @@ import com.proj4.exceptions.MismatchedTypeException;
 import com.proj4.symbolTable.symbols.ArraySymbol;
 import com.proj4.symbolTable.symbols.SymbolTableEntry;
 import com.proj4.symbolTable.symbols.TemplateSymbol;
-import com.proj4.symbolTable.Scope;
+import com.proj4.symbolTable.GlobalScope;
 
 public class TemplateInstanceTypeChecker extends TypeCheckVisitor{
-    
+
     public void visit(AST node){
         TemplateInstance templateInstance = (TemplateInstance) node;
 
@@ -22,7 +22,7 @@ public class TemplateInstanceTypeChecker extends TypeCheckVisitor{
         //we make assignments to the fields in the order the fields are declared
         if (templateInstance.getChildren().size() > 0) {
             //get the blueprint for comparing types
-            TemplateSymbol blueprint = Scope.getBlueprintTable().get(templateInstance.getType());
+            TemplateSymbol blueprint = GlobalScope.getInstance().getBlueprintTable().get(templateInstance.getType());
             ArrayList<SymbolTableEntry> content = blueprint.getContent();
 
             for (int index = 0; index < templateInstance.getChildren().size(); index++) {
