@@ -15,19 +15,6 @@ public class ActionDeclInterpreter extends InterpreterVisitor {
     }
 
     public void visit(AST node) {
-        ActionDecl actionDecl = (ActionDecl) node;
-
-        if(this.verbose){
-            System.out.println("Attempting to instantiate actionTemplate with identifier \"" + actionDecl.getIdentifier() + "\"");
-        }
-        //Create an instance of the action's corresponding template and bind it to the identifier so we can use .RESULT
-        ScopeManager.getInstance().getCurrent().declareVariable(
-            actionDecl.getIdentifier(), 
-            SymbolTableEntry.instantiateDefault(
-                actionDecl.getIdentifier(),
-                "Template",
-                0
-            )
-        );
+        //Nothing to do here. The type checker creates all the bindings we need, and action-templates are created before the rest of the program gets interpreted
     }
 }

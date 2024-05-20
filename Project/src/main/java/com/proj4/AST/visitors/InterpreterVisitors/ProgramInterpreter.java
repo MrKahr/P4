@@ -1,5 +1,6 @@
 package com.proj4.AST.visitors.InterpreterVisitors;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import com.proj4.AST.nodes.AST;
@@ -10,13 +11,34 @@ import com.proj4.symbolTable.GlobalScope;
 import com.proj4.symbolTable.ScopeManager;
 import com.proj4.symbolTable.symbols.ActionSymbol;
 import com.proj4.symbolTable.symbols.StateSymbol;
+import com.proj4.symbolTable.symbols.SymbolTableEntry;
 
 
 
 public class ProgramInterpreter extends InterpreterVisitor {
+    private Boolean verbose = false;
 
     public void visit(AST node) {
+        //a scope to put action-templates into
         ScopeManager.getInstance().enter();
+
+        //instantiate action-templates for every action
+        for (String identifier : GlobalScope.getInstance().getActionTable().keySet()) {
+            if(this.verbose){
+                System.out.println("Attempting to instantiate actionTemplate with identifier \"" + identifier + "\"");
+            }
+            //Create an instance of the action's corresponding template and bind it to the identifier so we can use .RESULT
+            ScopeManager.getInstance().getCurrent().declareVariable(
+                identifier, 
+                SymbolTableEntry.instantiateDefault(
+                    identifier,
+                    "Template",
+                    0
+                )
+            );
+        }
+
+        //interpret the body of the program
         Program program = (Program) node;
         node.visitChildren(new InterpreterDecider());
 
@@ -37,6 +59,29 @@ public class ProgramInterpreter extends InterpreterVisitor {
                 int selection = inputScan.nextInt();
                 //start selected action
                 ActionSymbol action = GlobalScope.getInstance().getActionTable().get(stateSymbol.getActionList().get(selection));
+                ArrayList<String> parameters = action.getParameterNames();
+                System.out.println("Action input parameters are: ");
+                for (int index = 0; index < parameters.size(); index++) {
+                    System.out.print(action.getInitialScope().getVariableTable().get(parameters.get(index)).getType() +" "+ parameters.get(index)+ ", ");
+                }
+                for (int index = 0; index < parameters.size(); index++) {
+                    System.out.println("Provide input for " + parameters.get(index));
+                    String input = inputScan.nextLine();
+                    switch (action.getInitialScope().getVariableTable().get(parameters.get(index)).getType()) {
+                        case "Integer":
+                            action.getInitialScope().getVariableTable().put(parameters.get(index), new IntegerSymbol(Integer.valueOf(input)));;
+                            break;
+                        case "Boolean":
+                            action.getInitialScope().getVariableTable().put(parameters.get(index), new BooleanSymbol(Boolean.valueOf(input)));
+                            break;
+                        case "String":
+                            action.getInitialScope().getVariableTable().put(parameters.get(index), new StringSymbol(input));
+                            break;
+                        default:
+                            throw new UnsupportedInputException("Error with input, parameter "+parameters.get(index)+" expected type "+action.getInitialScope().getVariableTable().get(parameters.get(index)).getType()+", which is not supported in state input!");
+                    }
+                }
+                
                 program.visitChild(new InterpreterDecider(), action.getBody());
                 inputScan.close();
             } else {

@@ -55,7 +55,7 @@ public class ActionCallInterpreter extends InterpreterVisitor {
         //check if the action is built-in or not
         if (GlobalScope.getInstance().getInbuiltActions().contains(actionCall.getIdentifier())) {
             //hand control to an InbuiltFunctionInterpreter and let it do its thing
-            InbuiltFunctionInterpreter inbuiltFunctionInterpreter = new InbuiltFunctionInterpreter();
+            InbuiltActionInterpreter inbuiltFunctionInterpreter = new InbuiltActionInterpreter();
             inbuiltFunctionInterpreter.visit(actionCall);
         } else {
             //set the scope and interpret the action. Also set the current action so return nodes target the right places

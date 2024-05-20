@@ -1,0 +1,4 @@
+setState(State state)
+remove(Card[] array)
+shuffle(Card[] array)
+write(String input)

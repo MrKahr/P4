@@ -13,7 +13,7 @@ import com.proj4.symbolTable.symbols.*;;
 //call this from an ActionCall when trying to interpret a built-in action
 //this interpreter uses the same node as ActionCall, so it doesn't have its own, or a spot in the decider
 //It's meant for built-in actions that need to do some low-level data manipulation
-public class InbuiltFunctionInterpreter extends InterpreterVisitor {
+public class InbuiltActionInterpreter extends InterpreterVisitor {
     public void visit(AST node) {
         ActionCall actionCall = (ActionCall) node;
         switch (actionCall.getIdentifier()) {
