@@ -7,16 +7,9 @@ import com.proj4.AST.nodes.Expression;
 import com.proj4.AST.nodes.TField;
 import com.proj4.AST.visitors.InterpreterDecider;
 import com.proj4.AST.visitors.InterpreterVisitor;
-import com.proj4.exceptions.UnexpectedTypeException;
-import com.proj4.symbolTable.Scope;
-import com.proj4.symbolTable.symbols.ArraySymbol;
-import com.proj4.symbolTable.symbols.BooleanSymbol;
-import com.proj4.symbolTable.symbols.ComplexSymbol;
-import com.proj4.symbolTable.symbols.IntegerSymbol;
-import com.proj4.symbolTable.symbols.PrimitiveSymbol;
-import com.proj4.symbolTable.symbols.StringSymbol;
-import com.proj4.symbolTable.symbols.SymbolTableEntry;
-import com.proj4.symbolTable.symbols.TemplateSymbol;
+import com.proj4.exceptions.*;
+import com.proj4.symbolTable.GlobalScope;
+import com.proj4.symbolTable.symbols.*;
 
 public class ExpressionInterpreter extends InterpreterVisitor {
     private Boolean verbose = false;
@@ -41,25 +34,17 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 SymbolTableEntry addArgOne = InterpreterVisitor.getReturnSymbol();
                 expression.visitChild(new InterpreterDecider(), expression.getSecondOperand());
                 SymbolTableEntry addArgTwo = InterpreterVisitor.getReturnSymbol();
-                if (addArgOne.getType().equals("String") || addArgTwo.getType().equals("String")) {
-                    @SuppressWarnings("rawtypes")
 
-                    String left = ((PrimitiveSymbol) addArgOne).getValue().toString();
-                    String right = ((PrimitiveSymbol) addArgTwo).getValue().toString();
-                    String concatenatedString = left + right;
-                    if(this.verbose){
-                        System.out.println(this.getClass().getSimpleName() + ": Result of string " + left + " + " + right + " is " + concatenatedString);
-                    }
-                    InterpreterVisitor.setReturnSymbol(new StringSymbol(concatenatedString));
-                } else {
-                    Integer left = ((IntegerSymbol) addArgOne).getValue();
-                    Integer right = ((IntegerSymbol) addArgTwo).getValue();
-                    integerResult = left + right;
-                    if(this.verbose){
-                        System.out.println(this.getClass().getSimpleName() + ": Result of " + left + " + " + right + " is " + integerResult);
-                    }
-                    InterpreterVisitor.setReturnSymbol(new IntegerSymbol(integerResult));
+                Integer left = ((IntegerSymbol) addArgOne).getValue();
+                Integer right = ((IntegerSymbol) addArgTwo).getValue();
+                integerResult = left + right;
+                if(this.verbose){
+                    System.out.println(this.getClass().getSimpleName() + ": Result of " + left + " + " + right + " is " + integerResult);
                 }
+               
+                InterpreterVisitor.setReturnSymbol(new IntegerSymbol(integerResult));
+                
+
                 break;
             case SUBTRACT:
                 operands = getIntegerOperands(expression);
@@ -240,7 +225,7 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 //remember the field to find in the template
                 String fieldName = ((TField) expression.getSecondOperand()).getFieldName();
 
-                ArrayList<String> map = Scope.getTemplateMapTable().get(template.getType());         //get the arraylist with the chosen template's fields
+                ArrayList<String> map = GlobalScope.getInstance().getTemplateMapTable().get(template.getType());         //get the arraylist with the chosen template's fields
 
                 SymbolTableEntry fieldContent = template.getContent().get(map.indexOf(fieldName));   //find the field we need with the map and get the content of the field
 
@@ -259,6 +244,15 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 if(this.verbose){
                     System.out.println(this.getClass().getSimpleName() + ": Indexing array with \"" + index + "\".");
                 }
+                break;
+            case CONCAT:
+                //the type checker has already set up typecasting for us, so all inputs here will be strings
+                expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
+                String stringOne = ((StringSymbol)InterpreterVisitor.getReturnSymbol()).getValue();
+                expression.visitChild(new InterpreterDecider(), expression.getSecondOperand());
+                String stringTwo = ((StringSymbol)InterpreterVisitor.getReturnSymbol()).getValue();
+
+                InterpreterVisitor.setReturnSymbol(new StringSymbol(stringOne + stringTwo));
                 break;
             default:
                 break;

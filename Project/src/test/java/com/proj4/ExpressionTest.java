@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.function.Executable;
 
-import com.proj4.symbolTable.Scope;
+import com.proj4.symbolTable.ScopeManager;
 import com.proj4.symbolTable.ScopeObserver;
 import com.proj4.symbolTable.symbols.IntegerSymbol;
 import com.proj4.symbolTable.symbols.SymbolTableEntry;
@@ -22,7 +22,7 @@ public class ExpressionTest extends TestingArgs {
     @BeforeAll
     public static void setup() {
         ScopeObserver scopeObserver = new ScopeObserver();
-        Scope.addObserver(scopeObserver);
+        ScopeManager.getInstance().addObserver(scopeObserver);
 
         DBL interpreter = new DBL();
         interpreter.setDebugMode(debugMode);

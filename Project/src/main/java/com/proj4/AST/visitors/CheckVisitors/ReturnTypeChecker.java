@@ -6,7 +6,7 @@ import com.proj4.AST.visitors.CheckDecider;
 import com.proj4.AST.visitors.TypeCheckVisitor;
 import com.proj4.exceptions.MalformedAstException;
 import com.proj4.exceptions.MismatchedTypeException;
-import com.proj4.symbolTable.Scope;
+import com.proj4.symbolTable.GlobalScope;
 import com.proj4.symbolTable.symbols.ActionSymbol;
 
 public class ReturnTypeChecker extends TypeCheckVisitor{
@@ -22,11 +22,13 @@ public class ReturnTypeChecker extends TypeCheckVisitor{
         Return returnNode = (Return) node;
         String actionIdentifier = TypeCheckVisitor.getCurrentAction();
 
+
         if(this.verbose) {
             System.out.println(this.getClass().getSimpleName() + ": Attempting to return from \"" + TypeCheckVisitor.getCurrentAction() + "\".");
         }
 
-        ActionSymbol action = Scope.getActionTable().get(actionIdentifier);
+        ActionSymbol action = GlobalScope.getInstance().getActionTable().get(actionIdentifier);
+
         if (action == null) {
             throw new MalformedAstException("Return-node with undeclared action found!");
         }

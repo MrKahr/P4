@@ -9,7 +9,7 @@ import com.proj4.AST.visitors.TypeCheckVisitor;
 import com.proj4.exceptions.MismatchedTypeException;
 import com.proj4.exceptions.ParameterMismatchExpection;
 import com.proj4.exceptions.UndefinedActionExpection;
-import com.proj4.symbolTable.Scope;
+import com.proj4.symbolTable.GlobalScope;
 import com.proj4.symbolTable.symbols.ActionSymbol;
 import com.proj4.symbolTable.symbols.SymbolTableEntry;
 
@@ -18,7 +18,7 @@ public class ActionCallTypeChecker extends TypeCheckVisitor{
     public void visit(AST node){
         ActionCall actionCall = (ActionCall) node;
 
-        ActionSymbol action = Scope.getActionTable().get(actionCall.getIdentifier());  //the action to call
+        ActionSymbol action = GlobalScope.getInstance().getActionTable().get(actionCall.getIdentifier());  //the action to call
 
         if (action == null) {
             throw new UndefinedActionExpection("Could not find action \"" + actionCall.getIdentifier() + "\"!");

@@ -6,7 +6,8 @@ import com.proj4.AST.nodes.AST;
 import com.proj4.AST.nodes.Program;
 import com.proj4.AST.visitors.InterpreterDecider;
 import com.proj4.AST.visitors.InterpreterVisitor;
-import com.proj4.symbolTable.Scope;
+import com.proj4.symbolTable.GlobalScope;
+import com.proj4.symbolTable.ScopeManager;
 import com.proj4.symbolTable.symbols.ActionSymbol;
 import com.proj4.symbolTable.symbols.StateSymbol;
 
@@ -15,13 +16,13 @@ import com.proj4.symbolTable.symbols.StateSymbol;
 public class ProgramInterpreter extends InterpreterVisitor {
 
     public void visit(AST node) {
-        Scope.enter();
+        ScopeManager.getInstance().enter();
         Program program = (Program) node;
         node.visitChildren(new InterpreterDecider());
 
         //when we're done interpreting the body of the program, begin evaluating states
         while (InterpreterVisitor.getCurrentState() != null) {
-            StateSymbol stateSymbol = Scope.getStateTable().get(InterpreterVisitor.getCurrentState());
+            StateSymbol stateSymbol = GlobalScope.getInstance().getStateTable().get(InterpreterVisitor.getCurrentState());
             if (stateSymbol.getBody() != null) {
                 program.visitChild(new InterpreterDecider(), stateSymbol.getBody());
             }
@@ -35,7 +36,7 @@ public class ProgramInterpreter extends InterpreterVisitor {
                 Scanner inputScan = new Scanner(System.in);
                 int selection = inputScan.nextInt();
                 //start selected action
-                ActionSymbol action = Scope.getActionTable().get(stateSymbol.getActionList().get(selection));
+                ActionSymbol action = GlobalScope.getInstance().getActionTable().get(stateSymbol.getActionList().get(selection));
                 program.visitChild(new InterpreterDecider(), action.getBody());
                 inputScan.close();
             } else {
@@ -43,13 +44,13 @@ public class ProgramInterpreter extends InterpreterVisitor {
                 System.out.println("Reached final state: No available actions! Stopping program.");
             }
         }
-
-        if (!Scope.getScopeStack().empty()) {
+        if (!ScopeManager.getInstance().empty()) {
             System.out.println("\nInterpreting done. Final scope: ");
-            Scope.getCurrent().printBindings();
+            ScopeManager.getInstance().getCurrent().printBindings();
         } else {
             System.out.println("\nInterpreting done. Final scope is empty!");
         }
-        Scope.exit();
+
+        ScopeManager.getInstance().exit();
     }
 }

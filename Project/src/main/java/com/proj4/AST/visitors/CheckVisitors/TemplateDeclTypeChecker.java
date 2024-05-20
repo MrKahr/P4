@@ -7,15 +7,17 @@ import com.proj4.AST.nodes.Declaration;
 import com.proj4.AST.nodes.TemplateDecl;
 import com.proj4.AST.visitors.TypeCheckVisitor;
 import com.proj4.exceptions.VariableAlreadyDefinedException;
-import com.proj4.symbolTable.Scope;
+import com.proj4.symbolTable.GlobalScope;
+import com.proj4.symbolTable.ScopeManager;
 import com.proj4.symbolTable.symbols.*;
 
 public class TemplateDeclTypeChecker extends TypeCheckVisitor{
     
     public void visit(AST node){
         TemplateDecl templateDecl = (TemplateDecl) node;
-        Scope.enter();
-        
+
+        ScopeManager.getInstance().enter();
+
         //the blueprint
         TemplateSymbol blueprint = new TemplateSymbol();
         blueprint.setType(templateDecl.getIdentifier());
@@ -40,13 +42,13 @@ public class TemplateDeclTypeChecker extends TypeCheckVisitor{
 
         }
         String identifier = templateDecl.getIdentifier();
-        if (Scope.getTemplateMapTable().get(identifier) == null && Scope.getBlueprintTable().get(identifier) == null) {
-            Scope.getTemplateMapTable().put(identifier, map);
-            Scope.getBlueprintTable().put(identifier, blueprint);
+        if (GlobalScope.getInstance().getTemplateMapTable().get(identifier) == null && GlobalScope.getInstance().getBlueprintTable().get(identifier) == null) {
+            GlobalScope.getInstance().getTemplateMapTable().put(identifier, map);
+            GlobalScope.getInstance().getBlueprintTable().put(identifier, blueprint);
         } else {
             throw new VariableAlreadyDefinedException("Template \"" + identifier + "\" is already defined!");
         }
-        Scope.exit();
+        ScopeManager.getInstance().exit();
     }
 
     //Note: templateDecls do NOT synthesize their scope. They only modify the global BTable and TTable.

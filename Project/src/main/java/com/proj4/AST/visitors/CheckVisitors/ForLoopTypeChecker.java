@@ -6,13 +6,13 @@ import com.proj4.AST.visitors.CheckDecider;
 import com.proj4.AST.visitors.TypeCheckVisitor;
 import com.proj4.exceptions.MalformedAstException;
 import com.proj4.exceptions.MismatchedTypeException;
-import com.proj4.symbolTable.Scope;
+import com.proj4.symbolTable.ScopeManager;
 
 public class ForLoopTypeChecker extends TypeCheckVisitor{
     
     public void visit(AST node){
         ForLoop forLoop = (ForLoop) node;
-        Scope.inherit();
+        ScopeManager.getInstance().inherit();
 
         try {
             forLoop.visitChild(new CheckDecider(), (AST)forLoop.getIterator());
@@ -34,6 +34,7 @@ public class ForLoopTypeChecker extends TypeCheckVisitor{
         //check the iteratoraction afterwards so it can use things declared in the loop
         forLoop.visitChild(new CheckDecider(), forLoop.getIteratorAction());
 
-        Scope.synthesize();
+        ScopeManager.getInstance().synthesize();
+
     }
 }

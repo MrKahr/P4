@@ -39,6 +39,10 @@ public class Expression extends Statement{
         return operator;
     }
 
+    public void setOperator(ExpressionOperator operator){
+        this.operator = operator;
+    }
+
     @SuppressWarnings("rawtypes")
     public PrimitiveSymbol getConstant(){
         return constant;

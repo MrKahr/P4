@@ -19,6 +19,7 @@ public enum ExpressionOperator {
     AND,                    //  a&&b
     NOT,                    //  !a
     //RETURNS STRING
+    CONCAT,     //  concatenate the string returned by the first child node with the string returned by the second
     //LITERAL,    //  print the string as it is stored in the expression's "constant"-field <- obsolete as CONSTANT exists
     VARIABLE,   //  return the value bound to the identifier in the "identifier"-field as a string
 //RETURNS ANY

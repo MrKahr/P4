@@ -4,14 +4,14 @@ import com.proj4.AST.nodes.AST;
 import com.proj4.AST.nodes.ForLoop;
 import com.proj4.AST.visitors.InterpreterDecider;
 import com.proj4.AST.visitors.InterpreterVisitor;
-import com.proj4.symbolTable.Scope;
+import com.proj4.symbolTable.ScopeManager;
 import com.proj4.symbolTable.symbols.BooleanSymbol;
 
 public class ForLoopInterpreter extends InterpreterVisitor {
 
     public void visit(AST node) {
         ForLoop forLoop = (ForLoop) node;
-        Scope.inherit();
+        ScopeManager.getInstance().inherit();
         //interpret the iterator
         forLoop.visitChild(new InterpreterDecider(), (AST)forLoop.getIterator());
         //interpret the condition
@@ -24,6 +24,6 @@ public class ForLoopInterpreter extends InterpreterVisitor {
             forLoop.visitChild(new InterpreterDecider(), forLoop.getCondition());
             Scope.synthesize();
         }
-        Scope.synthesize();
+        ScopeManager.getInstance().synthesize();
     }
 }
