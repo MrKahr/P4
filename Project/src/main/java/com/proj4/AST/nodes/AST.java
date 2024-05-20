@@ -6,6 +6,7 @@ import java.util.List;
 import com.proj4.AST.visitors.NodeVisitor;
 import com.proj4.AST.visitors.VisitorDecider;
 import com.proj4.symbolTable.Scope;
+import com.proj4.symbolTable.ScopeManager;
 
 public abstract class AST {
     //Field
@@ -24,20 +25,20 @@ public abstract class AST {
     public AST getParent(){
         return parent;
     }
-    
-    public Scope getScope(){
-        return Scope.getScopeStack().peek();
-    }
 
+    public Scope getScope(){
+        return ScopeManager.getInstance().getScopeStack().peek();
+    }
+ 
     //put a new child on the list of children
     public void addChild(AST newChild){
         children.add(newChild);
         // newChild.setParent(this);
     }
 
-    // public void setParent(AST parent){
-    //     this.parent = parent;
-    // }
+    public void setParent(AST parent){
+        this.parent = parent;
+    }
 /*
     public void setScope(Scope scope){
         this.scope = scope;

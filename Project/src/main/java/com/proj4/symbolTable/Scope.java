@@ -1,52 +1,20 @@
 package com.proj4.symbolTable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Stack;
 
 import com.proj4.exceptions.VariableAlreadyDefinedException;
-import com.proj4.symbolTable.symbols.TemplateSymbol;
-import com.proj4.symbolTable.symbols.ActionSymbol;
-import com.proj4.symbolTable.symbols.RuleSymbol;
-import com.proj4.symbolTable.symbols.StateSymbol;
 import com.proj4.symbolTable.symbols.SymbolTableEntry;
 
 //this class represents a scope in the programming language
 public class Scope implements Cloneable{
     //Field
-    private static Stack<Scope> scopeStack = new Stack<>();
-
-    //this table keeps track of template blueprints and their default values, to be used when instantiating them
-    private static HashMap<String, TemplateSymbol> blueprintTable = new HashMap<>();
-
-    //this table keeps a map of every declared template in order to properly index them
-    private static HashMap<String, ArrayList<String>> templateMapTable = new HashMap<>();
-
-    //this table keeps track of actions
-    private static HashMap<String, ActionSymbol> actionTable = new HashMap<>();
-
-    //this table keeps track of which states have been declared in the current scope
-    private static HashMap<String, StateSymbol> stateTable = new HashMap<>();    //TODO: stateTable contains rulesymbols for now 
-  
-    //this table keeps track of which rules have been declared 
-    private static HashMap<String, ArrayList<RuleSymbol>> ruleTable = new HashMap<>();
 
     //this table keeps track of variables
     private HashMap<String, SymbolTableEntry> variableTable = new HashMap<>();
 
     //this table keeps track of whether or not a variable or function has been declared in this scope
     private HashSet<String> declaredTable = new HashSet<>();
-
-    // TODO: create hashmap of observers instead of arrayList
-    private static ArrayList<InterpreterObserver> currentObservers = new ArrayList<InterpreterObserver>();
-
-    // Flags whether the interpreter should copy scopes to its observers //TODO: Use debug flag to restrict interpreter's printing   
-    private static boolean inDebugMode = false;
-
-    // Inbuilt actions are hard coded
-    private static ArrayList<String> inbuiltActions = new ArrayList<>(Arrays.asList("setState", "draw", "shuffle"));
 
     //these strings are not allowed to be used as identifiers anywhere
     //TODO: the parser seemingly already handles this
@@ -55,12 +23,12 @@ public class Scope implements Cloneable{
     "LESS THAN", "LESS OR EQUALS", "EQUALS", "NOT EQUALS", "RESULT", "RESULT IN", "RESULTS IN", "CONTAINS", "ALLOWS","WHEN", "WITH LOOP",
     "IS", "NOT", "NEW")); */
     
-    
+ 
     //Method
     public HashMap<String, SymbolTableEntry> getVariableTable(){
         return variableTable;
     }
-
+   /*
     public static HashMap<String, ActionSymbol> getActionTable(){
         return actionTable;
     }
@@ -72,11 +40,11 @@ public class Scope implements Cloneable{
     public static HashMap<String, ArrayList<String>> getTemplateMapTable(){
         return templateMapTable;
     }
-
+ */
     public HashSet<String> getDeclaredTable(){
         return declaredTable;
     }
-
+/*
     public static HashMap<String, StateSymbol> getStateTable(){
         return stateTable;
     }
@@ -84,11 +52,11 @@ public class Scope implements Cloneable{
     public static HashMap<String, ArrayList<RuleSymbol>> getRuleTable(){
         return ruleTable;
     }
-
+ */
     public void setVariableTable(HashMap<String, SymbolTableEntry> table){
         variableTable = table;
     }
-
+/*
     public static void setActionTable(HashMap<String, ActionSymbol> table){
         actionTable = table;
     }
@@ -96,11 +64,11 @@ public class Scope implements Cloneable{
     public static void setBlueprintTable(HashMap<String, TemplateSymbol> table){
         blueprintTable = table;
     }
-
+ */
     public void setDeclaredTable(HashSet<String> table){
         declaredTable = table;
     }
-
+/*
     public static void setStateTable(HashMap<String, StateSymbol> table){
         stateTable = table;
     }
@@ -116,7 +84,7 @@ public class Scope implements Cloneable{
         }
         ruleTable.get(triggerAction).add(ruleSymbol);
     }
-
+ */
     //Copy all mappings from the specified scope to this scope, overwriting duplicates with mappings from the other scope
     public void putAll(Scope other){
         variableTable.putAll(other.getVariableTable());
@@ -141,7 +109,7 @@ public class Scope implements Cloneable{
             declaredTable.add(identifier);
         }
     }
-
+/*
     public static void declareState(String identifier, StateSymbol stateSymbol){
         stateTable.put(identifier, stateSymbol);
     }
@@ -214,6 +182,7 @@ public class Scope implements Cloneable{
     }
      * 
      */
+    /*
     // OBSERVER PART
     public static void addObserver(InterpreterObserver interpreterObserver){
         currentObservers.add(interpreterObserver);
@@ -238,4 +207,5 @@ public class Scope implements Cloneable{
         stackCopy.addAll(scopeStack);
         return stackCopy;
     }
+     */
 }

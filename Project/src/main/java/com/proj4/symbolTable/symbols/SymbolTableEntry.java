@@ -2,7 +2,7 @@ package com.proj4.symbolTable.symbols;
 
 import com.proj4.AST.nodes.Typed;
 import com.proj4.exceptions.UndefinedTypeException;
-import com.proj4.symbolTable.Scope;
+import com.proj4.symbolTable.GlobalScope;
 
 public abstract class SymbolTableEntry implements Typed{
     //Field
@@ -21,7 +21,7 @@ public abstract class SymbolTableEntry implements Typed{
                     case "Array":
                         return new ArraySymbol(type, 0);
                     case "Template":
-                        return new TemplateSymbol(Scope.getBlueprintTable().get(type));
+                        return new TemplateSymbol(GlobalScope.getInstance().getBlueprintTable().get(type));
                     case "Primitive":
                         return instantiateDefault(type);
                     default:

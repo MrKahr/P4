@@ -5,13 +5,13 @@ import com.proj4.AST.nodes.ForLoop;
 import com.proj4.AST.visitors.CheckDecider;
 import com.proj4.AST.visitors.TypeCheckVisitor;
 import com.proj4.exceptions.MismatchedTypeException;
-import com.proj4.symbolTable.Scope;
+import com.proj4.symbolTable.ScopeManager;
 
 public class ForLoopTypeChecker extends TypeCheckVisitor{
     
     public void visit(AST node){
         ForLoop forLoop = (ForLoop) node;
-        Scope.inherit();
+        ScopeManager.getInstance().inherit();
 
         forLoop.visitChild(new CheckDecider(), forLoop.getCondition());
         if (!TypeCheckVisitor.getFoundType().equals("Boolean")) {
@@ -23,6 +23,6 @@ public class ForLoopTypeChecker extends TypeCheckVisitor{
         
         //Make sure everything in the loop is well typed
         forLoop.visitChildren(new CheckDecider());
-        Scope.synthesize();
+        ScopeManager.getInstance().synthesize();
     }
 }

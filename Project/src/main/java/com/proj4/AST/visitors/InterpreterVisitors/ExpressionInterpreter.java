@@ -8,7 +8,7 @@ import com.proj4.AST.nodes.TField;
 import com.proj4.AST.visitors.InterpreterDecider;
 import com.proj4.AST.visitors.InterpreterVisitor;
 import com.proj4.exceptions.*;
-import com.proj4.symbolTable.Scope;
+import com.proj4.symbolTable.GlobalScope;
 import com.proj4.symbolTable.symbols.*;
 
 public class ExpressionInterpreter extends InterpreterVisitor {
@@ -29,14 +29,10 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 SymbolTableEntry addArgOne = InterpreterVisitor.getReturnSymbol();
                 expression.visitChild(new InterpreterDecider(), expression.getSecondOperand());
                 SymbolTableEntry addArgTwo = InterpreterVisitor.getReturnSymbol();
-                if (addArgOne.getType().equals("String") || addArgTwo.getType().equals("String")) {
-                    @SuppressWarnings("rawtypes")
-                    String concatenatedString = ((PrimitiveSymbol) addArgOne).getValue().toString() + ((PrimitiveSymbol) addArgTwo).getValue().toString();
-                    InterpreterVisitor.setReturnSymbol(new StringSymbol(concatenatedString));
-                } else {
-                    integerResult = ((IntegerSymbol) addArgOne).getValue() + ((IntegerSymbol) addArgTwo).getValue();
-                    InterpreterVisitor.setReturnSymbol(new IntegerSymbol(integerResult));
-                }
+
+                integerResult = ((IntegerSymbol) addArgOne).getValue() + ((IntegerSymbol) addArgTwo).getValue();
+                InterpreterVisitor.setReturnSymbol(new IntegerSymbol(integerResult));
+                
                 break;
             case SUBTRACT:
                 operands = getIntegerOperands(expression);
@@ -183,7 +179,7 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 //remember the field to find in the template
                 String fieldName = ((TField) expression.getSecondOperand()).getFieldName();
 
-                ArrayList<String> map = Scope.getTemplateMapTable().get(template.getType());         //get the arraylist with the chosen template's fields
+                ArrayList<String> map = GlobalScope.getInstance().getTemplateMapTable().get(template.getType());         //get the arraylist with the chosen template's fields
 
                 SymbolTableEntry fieldContent = template.getContent().get(map.indexOf(fieldName));   //find the field we need with the map and get the content of the field
                 System.out.println("Accessing template with \"" + fieldName + "\".");
@@ -197,6 +193,15 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 Integer index = ((IntegerSymbol)InterpreterVisitor.getReturnSymbol()).getValue();
                 InterpreterVisitor.setReturnSymbol(content.get(index));
                 System.out.println("Indexing array with \"" + index + "\".");
+                break;
+            case CONCAT:
+                //the type checker has already set up typecasting for us, so all inputs here will be strings
+                expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
+                String stringOne = ((StringSymbol)InterpreterVisitor.getReturnSymbol()).getValue();
+                expression.visitChild(new InterpreterDecider(), expression.getSecondOperand());
+                String stringTwo = ((StringSymbol)InterpreterVisitor.getReturnSymbol()).getValue();
+
+                InterpreterVisitor.setReturnSymbol(new StringSymbol(stringOne + stringTwo));
                 break;
             default:
                 break;
