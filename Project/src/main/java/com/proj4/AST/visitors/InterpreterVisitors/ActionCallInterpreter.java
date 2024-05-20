@@ -69,11 +69,15 @@ public class ActionCallInterpreter extends InterpreterVisitor {
         //finally, trigger any rules bound to his action
         ArrayList<RuleSymbol> rules = GlobalScope.getInstance().getRuleTable().get(actionCall.getIdentifier());
         if (rules != null) {
+            SymbolTableEntry returnSymbol = InterpreterVisitor.getReturnSymbol(); // Quick fix to prevent rules from overwriting return symbol of the action call
             for (RuleSymbol rule : rules) {
-                 ScopeManager.getInstance().inherit();    //rule evaluation will have dynamic scope rules. Swap these to enter() and exit() for static scope rules
+                //ScopeManager.getInstance().inherit();    //rule evaluation will have dynamic scope rules. Swap these to enter() and exit() for static scope rules
+                ScopeManager.getInstance().getScopeStack().push(rule.getInitialScope());
                 actionCall.visitChild(new InterpreterDecider(), rule.getBody());    //pretend the rules' bodies are children
-                 ScopeManager.getInstance().synthesize();
+                ScopeManager.getInstance().exit();
+                //ScopeManager.getInstance().synthesize();
             }
+            InterpreterVisitor.setReturnSymbol(returnSymbol);
         }
     }
 }

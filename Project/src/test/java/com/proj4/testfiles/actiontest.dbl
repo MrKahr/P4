@@ -1,32 +1,39 @@
 /* TEST 1
-Action call
+Action decl
 - without parameters
 - without return
-
-ACTION ta() RESULTS IN Integer {
-    RESULT IN 3;
-}
-Integer a IS ta();
 */
+Action ta() {
+    Integer v1 IS 3;
+}
+
 
 /* TEST 2
-Action call 
+Action decl
 - with parameters
-- without return
-
-ACTION tb() {
-    Integer a IS 4;
-}
-Integer b IS tb();
+- with return
 */
+Action tb(Integer a, Integer b, Integer c) RESULTS IN Integer {
+    RESULT IN a+b+c;
+}
+
 
 /* TEST 3
-Action Decl with parameters, without return
+Action Decl - Arrays
+- with parameters
+- without return
 */
-Action tad1(Integer a, Integer b) RESULTS IN Integer {
-    Integer ada IS a+b;
-    RESULT IN ada;
+Action tad1(Integer[] a, Integer[] b) RESULTS IN Integer[][] {
+    a[0] IS b;
+    RESULT IN a;
 }
 
-Integer ada IS 1;
-ada IS tad1(1,2);
+
+// Test 1
+Integer undefined IS ta();
+
+// Test 2
+Integer vtb IS tb(1, 2, 3);
+
+// Test 3
+Integer[][] arr2D IS tad1([1], [2]);

@@ -11,7 +11,7 @@ import com.proj4.symbolTable.symbols.ActionSymbol;
 import com.proj4.symbolTable.symbols.RuleSymbol;
 
 public class RuleDeclTypeChecker extends TypeCheckVisitor{
-    
+
     public void visit(AST node){
         RuleDecl ruleDecl = (RuleDecl) node;
         ScopeManager.getInstance().inherit();
@@ -28,9 +28,10 @@ public class RuleDeclTypeChecker extends TypeCheckVisitor{
 
         //bind the rule to the actions that trigger it
         for (String identifier : ruleDecl.getTriggerActions()) {
-            GlobalScope.getInstance().declareRule(identifier, new RuleSymbol(ruleDecl.getRuleBody()));
+            RuleSymbol ruleSymbol = new RuleSymbol(ruleDecl.getRuleBody());
+            ruleSymbol.setInitialScope(ScopeManager.getInstance().getCurrent());
+            GlobalScope.getInstance().declareRule(identifier, ruleSymbol);
         }
-
         ScopeManager.getInstance().exit();
     }
 }

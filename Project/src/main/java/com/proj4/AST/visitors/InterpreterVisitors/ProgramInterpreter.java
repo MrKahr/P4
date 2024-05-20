@@ -44,13 +44,14 @@ public class ProgramInterpreter extends InterpreterVisitor {
                 System.out.println("Reached final state: No available actions! Stopping program.");
             }
         }
-        if (!ScopeManager.getInstance().getScopeStack().empty()) {
-            System.out.println("\nInterpreting done. Final scope: ");
-            ScopeManager.getInstance().printBindings();
-        } else {
-            System.out.println("\nInterpreting done. Final scope is empty!");
+        if(ScopeManager.getInstance().getVerbosity()){
+            if (!ScopeManager.getInstance().getScopeStack().empty()) {
+                System.out.println("\nInterpreting done. Final scope: ");
+                ScopeManager.getInstance().printBindings();
+            } else {
+                System.out.println("\nInterpreting done. Final scope is empty!");
+            }
         }
-
         ScopeManager.getInstance().exit();
     }
 }

@@ -90,7 +90,6 @@ public class ActionDeclTypeChecker extends TypeCheckVisitor{
         //Now let's add them to the appropriate tables
         //placing the action template in the program's scope
         ScopeManager.getInstance().getCurrent().declareVariable(actionDecl.getIdentifier(), blueprint);
-
         GlobalScope.getInstance().getTemplateMapTable().put(actionDecl.getIdentifier(), map);
         GlobalScope.getInstance().getBlueprintTable().put(actionDecl.getIdentifier(), blueprint);
 

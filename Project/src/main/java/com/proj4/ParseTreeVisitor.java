@@ -250,34 +250,11 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     }
 
     @Override
-    public Assignment visitArrayInitAssign(DBLParser.ArrayInitAssignContext ctx) {
-        Assignment node = new Assignment((Expression) visit(ctx.expr()), (Expression) visit(ctx.arrayInit()));
-        return node;
+    public Expression visitArrayInitExpr(DBLParser.ArrayInitExprContext ctx) {
+        return (Expression) visit(ctx.arrayInit());
     }
 
     /*** ARRAY DECLARATION ***/
-    @Override
-    /**
-     * Declaration of an array - can happen everywhere
-     */
-    public Declaration visitArrayDecl(DBLParser.ArrayDeclContext ctx) {
-        ArrayList<String> arr = (ArrayList<String>) visit(ctx.arrayType());
-        String arrayType = arr.get(0);
-        Integer nestingLevel = Integer.valueOf(arr.get(1)); // Get nesting level from declaration
-        String identifier = ctx.IDENTIFIER().getText();
-
-        Declaration node;
-        if(ctx.arrayInit() != null){ // This node instantiates an array
-            ArrayInstance arrayInstance = (ArrayInstance) visit(ctx.arrayInit());
-            Assignment assNode = new Assignment(new Variable(identifier), arrayInstance);
-            node = new Declaration(identifier, arrayType, "Array", nestingLevel);
-            node.addChild(assNode);
-        } else { // This node does not instantiate an array
-            node = new Declaration(identifier, arrayType, "Array", nestingLevel);
-        }
-        return node;
-    }
-
     @Override
     public ArrayList<String> visitArrayType(DBLParser.ArrayTypeContext ctx) {
         String type = null;
@@ -298,8 +275,29 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     /**
      * Declaration of an array - this instance is declared alone, i.e. on a line for itself
      */
+    public Declaration visitDeclArrayInit(DBLParser.DeclArrayInitContext ctx) {
+        ArrayList<String> arr = (ArrayList<String>) visit(ctx.arrayType());
+        String arrayType = arr.get(0);
+        Integer nestingLevel = Integer.valueOf(arr.get(1)); // Get nesting level from declaration
+
+        Assignment assignNode = (Assignment) visit(ctx.assignment());
+        Variable variableNode = (Variable) assignNode.getSymbolExpression(); // Get left side of assign
+
+        Declaration node = new Declaration(variableNode.getIdentifier(), arrayType, "Array", nestingLevel);
+        node.addChild(assignNode);
+        return node;
+    }
+
+
+    @Override
     public Declaration visitDeclArrayDecl(DBLParser.DeclArrayDeclContext ctx) {
-        return (Declaration) visit(ctx.arrayDecl());
+        ArrayList<String> arr = (ArrayList<String>) visit(ctx.arrayType());
+        String arrayType = arr.get(0);
+        Integer nestingLevel = Integer.valueOf(arr.get(1)); // Get nesting level from declaration
+        String identifier = ctx.IDENTIFIER().getText();
+
+        Declaration node = new Declaration(identifier, arrayType, "Array", nestingLevel);
+        return node;
     }
 
     /*** ARRAY Access ***/
