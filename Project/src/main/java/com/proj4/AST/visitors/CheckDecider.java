@@ -2,7 +2,7 @@ package com.proj4.AST.visitors;
 
 import com.proj4.AST.nodes.*;
 import com.proj4.AST.visitors.CheckVisitors.*;
-import com.proj4.symbolTable.Scope;
+import com.proj4.symbolTable.ScopeManager;
 
 public class CheckDecider implements VisitorDecider {
     private static Boolean verbose = false;
@@ -16,8 +16,8 @@ public class CheckDecider implements VisitorDecider {
      public void decideVisitor(AST node){
         if(verbose){
             System.out.println("\n\nType checking " + node.getClass().getSimpleName() + ".");
-            if (!Scope.getScopeStack().empty()) {
-                Scope.getCurrent().printBindings();
+            if (!ScopeManager.getInstance().getScopeStack().empty()) {
+                ScopeManager.getInstance().printBindings();
             }
         }
         switch (node.getClass().getSimpleName()) {
