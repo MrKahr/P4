@@ -17,6 +17,7 @@ public class InbuiltActionDefiner {
 
     // Constructor 
     private InbuiltActionDefiner(){
+        map = new ArrayList<String>();
         map.add("RESULT");
         defineActions();
     }

@@ -23,6 +23,8 @@ public abstract class SymbolTableEntry implements Typed{
                     return new TemplateSymbol(GlobalScope.getInstance().getBlueprintTable().get(type));
                 case "Primitive":
                     return instantiateDefault(type);
+                case "Null":
+                    return instantiateDefault(complexType);
                 default:
                     throw new UndefinedTypeException("The complex type \"" + complexType + "\" is undefined!");
             }
@@ -36,6 +38,8 @@ public abstract class SymbolTableEntry implements Typed{
                 return new BooleanSymbol(false);
             case "String":
                 return new StringSymbol("");
+            case "Null":
+                return new NullSymbol("Undefined");
             default:
                 throw new UndefinedTypeException("The type \"" + type + "\" is not a primtive!");
         }
