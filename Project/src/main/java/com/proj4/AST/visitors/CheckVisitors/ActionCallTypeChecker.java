@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.proj4.AST.nodes.AST;
 import com.proj4.AST.nodes.ActionCall;
 import com.proj4.AST.visitors.CheckDecider;
+import com.proj4.AST.visitors.NodeVisitor;
 import com.proj4.AST.visitors.TypeCheckVisitor;
 import com.proj4.exceptions.MismatchedTypeException;
 import com.proj4.exceptions.ParameterMismatchExpection;
@@ -13,7 +14,7 @@ import com.proj4.symbolTable.GlobalScope;
 import com.proj4.symbolTable.symbols.ActionSymbol;
 import com.proj4.symbolTable.symbols.SymbolTableEntry;
 
-public class ActionCallTypeChecker extends TypeCheckVisitor{
+public class ActionCallTypeChecker implements NodeVisitor{
     
     public void visit(AST node){
         ActionCall actionCall = (ActionCall) node;
@@ -36,16 +37,16 @@ public class ActionCallTypeChecker extends TypeCheckVisitor{
 
             SymbolTableEntry parameter = action.getInitialScope().getVariableTable().get(parameterNames.get(index));
 
-            if (!TypeCheckVisitor.getFoundType().equals(parameter.getType())){
-                throw new MismatchedTypeException("Error for \""+ actionCall.getIdentifier() + "\"Expected type: \"" + parameter.getType() + "\"" + "but got \"" + TypeCheckVisitor.getFoundType());                 
+            if (!TypeCheckVisitor.getInstance().getFoundType().equals(parameter.getType())){
+                throw new MismatchedTypeException("Error for \""+ actionCall.getIdentifier() + "\"Expected type: \"" + parameter.getType() + "\"" + "but got \"" + TypeCheckVisitor.getInstance().getFoundType());                 
             }
-            if (!TypeCheckVisitor.getFoundComplexType().equals(parameter.getComplexType())) {
-                throw new MismatchedTypeException("Error for \"" + actionCall.getIdentifier() + "\" + Expected complex type \"" + parameter.getComplexType() + "\" but got \"" + TypeCheckVisitor.getFoundComplexType() + "\"!");
+            if (!TypeCheckVisitor.getInstance().getFoundComplexType().equals(parameter.getComplexType())) {
+                throw new MismatchedTypeException("Error for \"" + actionCall.getIdentifier() + "\" + Expected complex type \"" + parameter.getComplexType() + "\" but got \"" + TypeCheckVisitor.getInstance().getFoundComplexType() + "\"!");
             }
         }
 
         //arguments are all well typed and we pretend to have gotten a return value
-        TypeCheckVisitor.setFoundType(action.getReturnType(), action.getComplexReturnType(), action.getNestingLevel());
+        TypeCheckVisitor.getInstance().setFoundType(action.getReturnType(), action.getComplexReturnType(), action.getNestingLevel());
 
     }
 }

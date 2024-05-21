@@ -1,10 +1,8 @@
 package com.proj4.AST.visitors.InterpreterVisitors;
 
-import com.proj4.AST.nodes.AST;
-import com.proj4.AST.nodes.Assignment;
-import com.proj4.AST.nodes.TemplateDecl;
 import com.proj4.AST.visitors.InterpreterDecider;
 import com.proj4.AST.visitors.InterpreterVisitor;
+import com.proj4.AST.visitors.NodeVisitor;
 import com.proj4.symbolTable.GlobalScope;
 import com.proj4.symbolTable.symbols.SymbolTableEntry;
 import com.proj4.symbolTable.symbols.TemplateSymbol;
@@ -13,7 +11,7 @@ import com.proj4.AST.nodes.*;
 import java.util.ArrayList;
 
 
-public class TemplateDeclInterpreter extends InterpreterVisitor {
+public class TemplateDeclInterpreter implements NodeVisitor {
 
     public void visit(AST node) {
         TemplateDecl templateDecl  = (TemplateDecl) node;
@@ -26,7 +24,7 @@ public class TemplateDeclInterpreter extends InterpreterVisitor {
             if(decl.getChildren().size() != 0){
                 Assignment assignment = decl.getInitialAssignment();
                 assignment.visitChild(new InterpreterDecider(), assignment.getValueExpression());
-                content.set(index,InterpreterVisitor.getReturnSymbol());
+                content.set(index,InterpreterVisitor.getInstance().getReturnSymbol());
                 // TEMPLATE CHILDREN NOT 0 HERE FOR C3
             }
         }
