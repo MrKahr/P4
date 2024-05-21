@@ -2,7 +2,7 @@ package com.proj4.symbolTable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.HashSet;
 
 import com.proj4.symbolTable.symbols.ActionSymbol;
 import com.proj4.symbolTable.symbols.StringSymbol;
@@ -14,6 +14,7 @@ public class InbuiltActionDefiner {
     private static InbuiltActionDefiner definerInstance;
     private ArrayList<ActionSymbol> inbuiltActions;
     private ArrayList<String> map;
+    private HashSet<String> actionIdentifiers;
 
     // Constructor 
     private InbuiltActionDefiner(){
@@ -71,5 +72,11 @@ public class InbuiltActionDefiner {
         GlobalScope.getInstance().getBlueprintTable().put(functionName, functionBlueprint);
         GlobalScope.getInstance().getActionTable().put(functionName, function);
         GlobalScope.getInstance().getTemplateMapTable().put(functionName, map);
+        // Put identifier in list of inbuilt action identifiers
+        actionIdentifiers.add(functionName);
+    }
+
+    public HashSet<String> getIdentifiers(){
+        return actionIdentifiers;
     }
 }

@@ -8,6 +8,7 @@ import com.proj4.AST.visitors.InterpreterDecider;
 import com.proj4.AST.visitors.InterpreterVisitor;
 import com.proj4.exceptions.MismatchedTypeException;
 import com.proj4.symbolTable.GlobalScope;
+import com.proj4.symbolTable.InbuiltActionDefiner;
 import com.proj4.symbolTable.ScopeManager;
 import com.proj4.symbolTable.symbols.*;
 
@@ -53,7 +54,7 @@ public class ActionCallInterpreter extends InterpreterVisitor {
         }
 
         //check if the action is built-in or not
-        if (GlobalScope.getInstance().getInbuiltActions().contains(actionCall.getIdentifier())) {
+        if (InbuiltActionDefiner.getDefinerInstance().getIdentifiers().contains(actionCall.getIdentifier())) {
             //hand control to an InbuiltFunctionInterpreter and let it do its thing
             InbuiltActionInterpreter inbuiltFunctionInterpreter = new InbuiltActionInterpreter();
             inbuiltFunctionInterpreter.visit(actionCall);
