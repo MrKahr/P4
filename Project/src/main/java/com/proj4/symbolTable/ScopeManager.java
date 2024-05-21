@@ -3,8 +3,15 @@ package com.proj4.symbolTable;
 import java.util.ArrayList;
 import java.util.Stack;
 
+import com.proj4.symbolTable.symbols.ActionSymbol;
+import com.proj4.symbolTable.symbols.ArraySymbol;
+import com.proj4.symbolTable.symbols.BooleanSymbol;
+import com.proj4.symbolTable.symbols.IntegerSymbol;
+import com.proj4.symbolTable.symbols.NullSymbol;
 import com.proj4.symbolTable.symbols.PrimitiveSymbol;
+import com.proj4.symbolTable.symbols.StringSymbol;
 import com.proj4.symbolTable.symbols.SymbolTableEntry;
+import com.proj4.symbolTable.symbols.TemplateSymbol;
 
 //this class manages the stack of scopes in a DBL-program
 public class ScopeManager {
@@ -137,15 +144,39 @@ public class ScopeManager {
             System.out.println("--------Bindings--------");
             for (String identifier : getScopeStack().peek().getVariableTable().keySet()) {
                 SymbolTableEntry variable = getScopeStack().peek().getVariableTable().get(identifier);
-                String value;
+                String value = "";
                 if (variable instanceof PrimitiveSymbol) {
+                    System.out.println("PRIMITIVE");
                     value = ((PrimitiveSymbol) variable).getValue().toString();
-                } else {
-                    value = "Content";
+                } else if(variable instanceof ArraySymbol) {
+                    System.out.println("ARRAY");
+                    value = parseContent(((ArraySymbol) variable).getContent());
+                } else if(variable instanceof TemplateSymbol) {
+                    System.out.println("TEMPLATE");
                 }
                 System.out.println(identifier + " |-> " + value);
             }
             System.out.println("------------------------");
         }
+    }
+
+    private String parseContent(ArrayList<SymbolTableEntry> content) {
+        String output = "";
+        for(SymbolTableEntry entry : content){
+            if(entry instanceof IntegerSymbol){
+                output += ((IntegerSymbol) entry).getType() + ": ";
+                output += ((IntegerSymbol) entry).getValue() + ", ";
+            } else if(entry instanceof StringSymbol){
+                output += ((StringSymbol) entry).getType() + ": ";
+                output += ((StringSymbol) entry).getValue() + ", ";
+            } else if(entry instanceof BooleanSymbol){
+                output += ((BooleanSymbol) entry).getType() + ": ";
+                output += ((BooleanSymbol) entry).getValue() + ", ";
+            } else if(entry instanceof NullSymbol){
+                output += ((NullSymbol) entry).getType() + ": ";
+                output += ((NullSymbol) entry).getValue() + ", ";
+            }
+        }
+        return output;
     }
 }
