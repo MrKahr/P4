@@ -2,11 +2,11 @@ package com.proj4.AST.visitors.InterpreterVisitors;
 
 import com.proj4.AST.nodes.AST;
 import com.proj4.AST.nodes.ActionDecl;
-import com.proj4.AST.visitors.InterpreterVisitor;
+import com.proj4.AST.visitors.NodeVisitor;
 import com.proj4.symbolTable.ScopeManager;
 import com.proj4.symbolTable.symbols.SymbolTableEntry;
 
-public class ActionDeclInterpreter extends InterpreterVisitor {
+public class ActionDeclInterpreter implements NodeVisitor {
     private Boolean verbose = false;
 
     public ActionDeclInterpreter(){}

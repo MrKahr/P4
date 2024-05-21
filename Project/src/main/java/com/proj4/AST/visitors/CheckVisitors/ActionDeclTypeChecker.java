@@ -6,6 +6,7 @@ import com.proj4.AST.nodes.AST;
 import com.proj4.AST.nodes.ActionDecl;
 import com.proj4.AST.nodes.Declaration;
 import com.proj4.AST.visitors.CheckDecider;
+import com.proj4.AST.visitors.NodeVisitor;
 import com.proj4.AST.visitors.TypeCheckVisitor;
 import com.proj4.exceptions.MalformedAstException;
 import com.proj4.exceptions.VariableAlreadyDefinedException;
@@ -15,7 +16,7 @@ import com.proj4.symbolTable.symbols.ActionSymbol;
 import com.proj4.symbolTable.symbols.SymbolTableEntry;
 import com.proj4.symbolTable.symbols.TemplateSymbol;
 
-public class ActionDeclTypeChecker extends TypeCheckVisitor{
+public class ActionDeclTypeChecker implements NodeVisitor{
 
     public void visit(AST node){
         ActionDecl actionDecl = (ActionDecl) node;
@@ -47,7 +48,7 @@ public class ActionDeclTypeChecker extends TypeCheckVisitor{
         GlobalScope.getInstance().getActionTable().put(actionDecl.getIdentifier(), action);
 
         //set the action body before checking children
-        TypeCheckVisitor.setCurrentAction(actionDecl.getIdentifier());
+        TypeCheckVisitor.getInstance().setCurrentAction(actionDecl.getIdentifier());
 
         //make sure all child declarations (parameters) are well-typed and in this scope, and add their names to the parameter list
         try {
@@ -67,7 +68,7 @@ public class ActionDeclTypeChecker extends TypeCheckVisitor{
         actionDecl.visitChild(new CheckDecider(), actionDecl.getBody());
 
         //clear current action
-        TypeCheckVisitor.setCurrentAction(null);
+        TypeCheckVisitor.getInstance().setCurrentAction(null);
 
         //Add declared action to action table
         GlobalScope.getInstance().getActionTable().put(actionDecl.getIdentifier(), action);

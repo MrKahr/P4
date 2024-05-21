@@ -3,13 +3,13 @@ package com.proj4.AST.visitors.CheckVisitors;
 import com.proj4.AST.nodes.AST;
 import com.proj4.AST.nodes.StateDecl;
 import com.proj4.AST.visitors.CheckDecider;
-import com.proj4.AST.visitors.TypeCheckVisitor;
+import com.proj4.AST.visitors.NodeVisitor;
 import com.proj4.exceptions.*;
 import com.proj4.symbolTable.GlobalScope;
 import com.proj4.symbolTable.ScopeManager;
 import com.proj4.symbolTable.symbols.StateSymbol;
 
-public class StateDeclTypeChecker extends TypeCheckVisitor{
+public class StateDeclTypeChecker implements NodeVisitor{
 
 
     public void visit(AST node){

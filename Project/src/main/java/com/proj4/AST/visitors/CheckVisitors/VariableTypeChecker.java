@@ -2,12 +2,13 @@ package com.proj4.AST.visitors.CheckVisitors;
 
 import com.proj4.AST.nodes.AST;
 import com.proj4.AST.nodes.Variable;
+import com.proj4.AST.visitors.NodeVisitor;
 import com.proj4.AST.visitors.TypeCheckVisitor;
 import com.proj4.exceptions.UndefinedVariableException;
 import com.proj4.symbolTable.symbols.ArraySymbol;
 import com.proj4.symbolTable.symbols.SymbolTableEntry;
 
-public class VariableTypeChecker extends TypeCheckVisitor{
+public class VariableTypeChecker implements NodeVisitor{
 
     public void visit(AST node){
         Variable variable = (Variable) node;
@@ -17,9 +18,9 @@ public class VariableTypeChecker extends TypeCheckVisitor{
         } else {
             if (entry.getComplexType().equals("Array")) {
                 ArraySymbol arrayEntry = (ArraySymbol) entry;   //Branching to ensure nesting level gets set correctly in typchecker
-                setFoundType(entry.getType(), entry.getComplexType(), arrayEntry.getNestingLevel());
+                TypeCheckVisitor.getInstance().setFoundType(entry.getType(), entry.getComplexType(), arrayEntry.getNestingLevel());
             } else {
-                setFoundType(entry.getType(), entry.getComplexType(), 0); 
+                TypeCheckVisitor.getInstance().setFoundType(entry.getType(), entry.getComplexType(), 0); 
             }  
         }
     }
