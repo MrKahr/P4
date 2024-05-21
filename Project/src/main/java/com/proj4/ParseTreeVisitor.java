@@ -106,8 +106,8 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     public ActionDecl visitReturnActionDecl(DBLParser.ReturnActionDeclContext ctx) {
         ParseTree resultsIn = ctx.resultsIn();
         String resultComplexType;
-        String resultType = (String)visit(ctx.resultsIn());
-        Integer nestingLevel = 0;
+        String resultType = (String) visit(ctx.resultsIn());
+        Integer nestingLevel = -1;
         if (resultsIn.getClass().getSimpleName().equals("TypedefUserContext")) {
             resultComplexType = "Template";
         }
@@ -121,11 +121,11 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         Body body = (Body) visit(ctx.body());
         body.addChild((Return) visit(ctx.return_()));
         String identifier = ctx.typedefUser().getText();
-        ActionDecl node = new ActionDecl(identifier, resultType, resultComplexType, body, Math.max(0, nestingLevel));
+        ActionDecl node = new ActionDecl(identifier, resultType, resultComplexType, body, nestingLevel);
 
         ArrayList<Declaration> parameterList = (ArrayList<Declaration>) visit(ctx.parameterList());
         for (Declaration parameter : (ArrayList<Declaration>) parameterList) {
-            node.addChild((AST) parameter);
+            node.addChild(parameter);
         }
         return node;
     }
@@ -158,27 +158,31 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     @Override
     public ArrayList<Declaration> visitParameterList(DBLParser.ParameterListContext ctx) {
         ArrayList<Declaration> parameterNodes = new ArrayList<Declaration>();
-        ParseTree type = null;
-        String complexType = null;
+        ParseTree abstractType = null;
+        String type = "parseTreeVisitor";
+        String complexType = "parseTreeVisitor";
         Integer nestingLevel = -1;
         //modulo expressions here separate parameters as each parameter is in the form: Type - Identifier - ,
         for (int i = 0; i < ctx.getChildCount(); i++){
             if((i)%3 == 0){ // Get type
-                type = ctx.getChild(i);
-                if (type.getClass().getSimpleName().equals("TypedefUserContext")) {
+                abstractType = ctx.getChild(i);
+                if (abstractType.getClass().getSimpleName().equals("TypedefUserContext")) {
+                    type = abstractType.getText();
                     complexType = "Template";
                 }
-                else if(type.getText().contains("[")) {
+                else if(abstractType.getText().contains("[")) {
+                    type = abstractType.getText().replaceAll("\\[\\]", "");
                     complexType = "Array";
-                    nestingLevel = (int) type.getText().chars().filter(ch -> ch == '[').count()-1; // Count number of "[" to find nestinglevel
+                    nestingLevel = (int) abstractType.getText().chars().filter(ch -> ch == '[').count()-1; // Count number of "[" to find nestinglevel
                 }
                 else {
+                    type = abstractType.getText();
                     complexType = "Primitive";
                 }
             }
             if((i)%3 == 1){ // Get identifier of type
                 String identifier = ctx.getChild(i).getText();
-                Declaration node = nestingLevel > -1 ? new Declaration(identifier, type.getText(),complexType, Math.max(0, nestingLevel)) : new Declaration(identifier, type.getText(),complexType);
+                Declaration node = nestingLevel > -1 ? new Declaration(identifier, type, complexType, nestingLevel) : new Declaration(identifier, type, complexType);
                 parameterNodes.add(node);
             }
         }
@@ -264,7 +268,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         if(ctx.typedefUser() != null) {
             type = ctx.typedefUser().getText();
         }
-        String nestingLevel = String.format("%d", Math.max(ctx.SQB_START().size()-1, 0));
+        String nestingLevel = String.format("%d", ctx.SQB_START().size()-1);
         ArrayList<String> arr = new ArrayList<String>();
         arr.add(type);
         arr.add(nestingLevel);
@@ -311,7 +315,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     public ArrayInstance visitArrayInit(DBLParser.ArrayInitContext ctx) {
         ArrayInstance node = new ArrayInstance();
         for (int i = 0; i < ctx.getChildCount(); i++){
-            var childnode = (Expression) visit(ctx.getChild(i));
+            Expression childnode = (Expression) visit(ctx.getChild(i));
             if (childnode != null) {
                 node.addChild(childnode);
             }
@@ -619,7 +623,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         } else if(ctx.typePrimitive() != null) {
             type = ctx.typePrimitive().getText();
         } else if(ctx.arrayType() != null) {
-            type = ctx.arrayType().getText();
+            type = ctx.arrayType().getText().replaceAll("\\[\\]", "");;
         }
         return type;
     }

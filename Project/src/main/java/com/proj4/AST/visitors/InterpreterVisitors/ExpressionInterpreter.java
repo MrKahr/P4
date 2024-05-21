@@ -41,9 +41,9 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 if(this.verbose){
                     System.out.println(this.getClass().getSimpleName() + ": Result of " + left + " + " + right + " is " + integerResult);
                 }
-               
+
                 InterpreterVisitor.setReturnSymbol(new IntegerSymbol(integerResult));
-                
+
 
                 break;
             case SUBTRACT:
@@ -208,7 +208,7 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 //TODO: figure out how to handle this in the interpreter!
                 //at the time of writing, there is no syntactic support for this operator
                 if(this.verbose){
-                    System.out.println(this.getClass().getSimpleName() + ": Converting variable to string.");
+                    System.out.println(this.getClass().getSimpleName() + ": Unsupported Operation: Converting variable to string.");
                 }
                 break;
             case CONSTANT:
@@ -236,9 +236,9 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 break;
             case INDEX:
                 expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
-                ArrayList<SymbolTableEntry> content = ((ArraySymbol)InterpreterVisitor.getReturnSymbol()).getContent();
+                ArrayList<SymbolTableEntry> content = ((ArraySymbol) InterpreterVisitor.getReturnSymbol()).getContent();
                 expression.visitChild(new InterpreterDecider(), expression.getSecondOperand());
-                Integer index = ((IntegerSymbol)InterpreterVisitor.getReturnSymbol()).getValue();
+                Integer index = ((IntegerSymbol) InterpreterVisitor.getReturnSymbol()).getValue();
                 InterpreterVisitor.setReturnSymbol(content.get(index));
 
                 if(this.verbose){

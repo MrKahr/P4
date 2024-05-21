@@ -39,9 +39,9 @@ public abstract class SymbolTableEntry implements Typed{
             case "String":
                 return new StringSymbol("");
             case "Null":
-                return new NullSymbol("Undefined");
+                return new NullSymbol("Null");
             default:
-                throw new UndefinedTypeException("The type \"" + type + "\" is not a primtive!");
+                throw new UndefinedTypeException("The type \"" + type + "\" is not a primitive!");
         }
     }
 

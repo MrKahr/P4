@@ -3,7 +3,6 @@ package com.proj4.symbolTable;
 import java.util.ArrayList;
 import java.util.Stack;
 
-import com.proj4.symbolTable.symbols.ActionSymbol;
 import com.proj4.symbolTable.symbols.ArraySymbol;
 import com.proj4.symbolTable.symbols.BooleanSymbol;
 import com.proj4.symbolTable.symbols.IntegerSymbol;
@@ -141,7 +140,7 @@ public class ScopeManager {
 
     public void printBindings() {
         if (verbose) {
-            System.out.println("--------Bindings--------");
+            System.out.println("----------Bindings----------");
             for (String identifier : getScopeStack().peek().getVariableTable().keySet()) {
                 SymbolTableEntry variable = getScopeStack().peek().getVariableTable().get(identifier);
                 String value = "";
@@ -150,33 +149,43 @@ public class ScopeManager {
                     value = ((PrimitiveSymbol) variable).getValue().toString();
                 } else if(variable instanceof ArraySymbol) {
                     System.out.println("ARRAY");
-                    value = parseContent(((ArraySymbol) variable).getContent());
+                    value += "[";
+                    value += parseContent(((ArraySymbol) variable).getContent());
+                    value += "]";
                 } else if(variable instanceof TemplateSymbol) {
                     System.out.println("TEMPLATE");
+                    value = parseContent(((TemplateSymbol) variable).getContent());
                 }
-                System.out.println(identifier + " |-> " + value);
+                System.out.println(identifier + " |-> " + value + "\n");
             }
-            System.out.println("------------------------");
+            System.out.println("----------------------------");
         }
     }
 
     private String parseContent(ArrayList<SymbolTableEntry> content) {
         String output = "";
-        for(SymbolTableEntry entry : content){
+        for(int i = 0; i < content.size(); i++){
+            SymbolTableEntry entry = content.get(i);
             if(entry instanceof IntegerSymbol){
-                output += ((IntegerSymbol) entry).getType() + ": ";
-                output += ((IntegerSymbol) entry).getValue() + ", ";
+                output += ((IntegerSymbol) entry).getValue().toString();
             } else if(entry instanceof StringSymbol){
-                output += ((StringSymbol) entry).getType() + ": ";
-                output += ((StringSymbol) entry).getValue() + ", ";
+                output += ((StringSymbol) entry).getValue();
             } else if(entry instanceof BooleanSymbol){
-                output += ((BooleanSymbol) entry).getType() + ": ";
-                output += ((BooleanSymbol) entry).getValue() + ", ";
+                output += ((BooleanSymbol) entry).getValue().toString();
             } else if(entry instanceof NullSymbol){
-                output += ((NullSymbol) entry).getType() + ": ";
-                output += ((NullSymbol) entry).getValue() + ", ";
+                output += ((NullSymbol) entry).getValue();
+            } else if(entry instanceof ArraySymbol){
+                output += "[";
+                output += parseContent(((ArraySymbol) entry).getContent());
+                output += "]";
+            } else if(entry instanceof TemplateSymbol){
+                output += parseContent(((TemplateSymbol) entry).getContent());
+            }
+            if(i < content.size()-1) {
+                output += ", ";
             }
         }
-        return output;
+        output += "";
+        return output != "" ? output : content.toString();
     }
 }

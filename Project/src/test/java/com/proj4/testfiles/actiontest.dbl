@@ -23,17 +23,17 @@ Action Decl - Arrays
 - with parameters
 - without return
 */
-Action tad1(Integer[] a, Integer[] b) RESULTS IN Integer[][] {
-    a[0] IS b;
-    RESULT IN a;
+Action tad1(Integer[] arrA, Integer[] arrB) RESULTS IN Integer[][] {
+    Integer[][] arrC;// IS [arrA, arrB];
+    RESULT IN arrC;
 }
 
 
 // Test 1
-Integer undefined IS ta();
+Integer varNull IS ta(); // This one gets the value of the Action despite it not returning anything
 
 // Test 2
-Integer vtb IS tb(1, 2, 3);
+Integer vtb IS tb(1, 2, 3); // This works as intended
 
 // Test 3
 Integer[][] arr2D IS tad1([1], [2]);

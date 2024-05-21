@@ -43,8 +43,8 @@ program
 stmt
     :   ifBlock
     |   forLoop
-    |   declaration
     |   assignment SEMICOLON
+    |   declaration
     |   actionCall SEMICOLON
     ;
 
@@ -54,10 +54,10 @@ stmtList
 
 expr
     :   BRAC_START expr BRAC_END   # parExpr
-    |   expr multOp expr           # multExpr
-    |   expr addOp expr            # addExpr
     |   expr DOT IDENTIFIER        # templateAccessExpr
     |   expr SQB_START expr SQB_END# arrayAccessExpr
+    |   expr multOp expr           # multExpr
+    |   expr addOp expr            # addExpr
     |   templateInit               #templateInitExpr
     |   arrayInit                  # arrayInitExpr
     |   actionResult               # actionResultExpr
@@ -179,7 +179,7 @@ arrayType
     ;
 
 arrayInit
-    :   (SQB_START ((stringExpr | expr | arrayInit) (COMMA (stringExpr | expr | arrayInit))*)? SQB_END)+
+    :   SQB_START ((stringExpr | expr | arrayInit) (COMMA (stringExpr | expr | arrayInit))*)? SQB_END
     ;
 
 return

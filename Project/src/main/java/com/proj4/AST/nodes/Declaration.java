@@ -14,7 +14,7 @@ public class Declaration extends Statement implements Identifiable, Typed{
         this.identifier = identifier;
         this.type = type;
         this.complexType = complexType;
-        this.nestingLevel = 0;
+        this.nestingLevel = -1; // Means no nesting level
     }
 
     public Declaration(String identifier, String type, String complexType, int nestingLevel){

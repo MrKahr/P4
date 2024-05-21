@@ -6,7 +6,7 @@ public abstract class TypeCheckVisitor implements NodeVisitor {
     private static String foundType;        //this holds the most recent type we have found. Used to circumvent visitors not being able to return anything
     private static String foundComplexType; //this holds the most recent complex type we have found. Used for differentiating between arrays, templates, and primitives
     private static String currentAction;    //if we're inside an action body, this will hold the action's name
-    private static Integer nestingLevel = 0;
+    private static Integer nestingLevel = -1;
 
     //Method
     public static String getFoundType(){
@@ -30,7 +30,7 @@ public abstract class TypeCheckVisitor implements NodeVisitor {
         foundComplexType = complexType;
         nestingLevel = nesting;
         // Debug printing
-        //System.out.println("setFoundType("+type+", "+complexType+","+nesting+")");
+        System.out.println("TypeCheckVisitor: setFoundType(Type = "+type+" | Complex type = "+complexType+" | Nesting Level = "+nesting+")");
     }
 
     public static void setCurrentAction(String actionName){
@@ -38,7 +38,8 @@ public abstract class TypeCheckVisitor implements NodeVisitor {
     }
 
     public static void setNestingLevel(Integer level){
-       nestingLevel = level;
+        //System.out.println("TypeCheckVisitor: DEBUG Setting nesting level = " + level);
+        nestingLevel = level;
     }
 
 }

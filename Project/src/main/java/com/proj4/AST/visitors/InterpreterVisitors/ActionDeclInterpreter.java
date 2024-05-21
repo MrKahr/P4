@@ -22,11 +22,11 @@ public class ActionDeclInterpreter extends InterpreterVisitor {
         }
         //Create an instance of the action's corresponding template and bind it to the identifier so we can use .RESULT
         ScopeManager.getInstance().getCurrent().declareVariable(
-            actionDecl.getIdentifier(), 
+            actionDecl.getIdentifier(),
             SymbolTableEntry.instantiateDefault(
                 actionDecl.getIdentifier(),
                 "Template",
-                0
+                -1
             )
         );
     }

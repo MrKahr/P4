@@ -8,7 +8,7 @@ import com.proj4.exceptions.MismatchedTypeException;
 import com.proj4.exceptions.UndefinedTypeException;
 
 public class ArrayInstanceTypeChecker extends TypeCheckVisitor{
-    
+
     public void visit(AST node){
         ArrayInstance arrayInstance = (ArrayInstance) node;
 
@@ -23,11 +23,13 @@ public class ArrayInstanceTypeChecker extends TypeCheckVisitor{
         String expectedComplexType = TypeCheckVisitor.getFoundComplexType();
         Integer expectedNestingLevel = TypeCheckVisitor.getNestingLevel();
 
-        // Typecheck every child 
+        //System.out.println(this.getClass().getSimpleName() + ": DEBUG ARRAY TYPE = " + expectedType);
+        // Typecheck every child
         for (int i = 1; i < arrayInstance.getChildren().size(); i++) {
             arrayInstance.visitChild(new CheckDecider(), arrayInstance.getChildren().get(i));
+
             if (!TypeCheckVisitor.getFoundType().equals(expectedType)) {
-                throw new MismatchedTypeException("Array element does not match expected array type! Found \"" + TypeCheckVisitor.getFoundType() + "\" at index " + i + ". Expected \"" + expectedType + "\"."); 
+                throw new MismatchedTypeException("Array element does not match expected array type! Found \"" + TypeCheckVisitor.getFoundType() + "\" at index " + i + ". Expected \"" + expectedType + "\".");
             }
             if (!(TypeCheckVisitor.getFoundComplexType().equals(expectedComplexType))){
                 throw new MismatchedTypeException("Array element does not match expected complex type! Found \"" + TypeCheckVisitor.getFoundType() + "\" at index " + i + ". Expected \"" + expectedComplexType + "\".");
@@ -41,8 +43,7 @@ public class ArrayInstanceTypeChecker extends TypeCheckVisitor{
                 TypeCheckVisitor.setFoundType(expectedType, "Array", TypeCheckVisitor.getNestingLevel() + 1);
 
             } else {
-                TypeCheckVisitor.setNestingLevel(0);
-                TypeCheckVisitor.setFoundType(expectedType, "Array", 0);
+                TypeCheckVisitor.setFoundType(expectedType, "Array", -1);
             }
     }
 }
