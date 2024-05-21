@@ -40,7 +40,7 @@ public class ProgramInterpreter extends InterpreterVisitor {
         //interpret the body of the program
         Program program = (Program) node;
         node.visitChildren(new InterpreterDecider());
-
+        Scanner inputScan = new Scanner(System.in);
         //when we're done interpreting the body of the program, begin evaluating states
         while (InterpreterVisitor.getCurrentState() != null) {
             StateSymbol stateSymbol = GlobalScope.getInstance().getStateTable().get(InterpreterVisitor.getCurrentState());
@@ -54,13 +54,14 @@ public class ProgramInterpreter extends InterpreterVisitor {
                     System.out.println("[" + i + "] " + stateSymbol.getActionList().get(i));
                 }
                 //get input
-                Scanner inputScan = new Scanner(System.in);
+                
                 int selection = -1;
                 try {
-                    selection = Integer.valueOf(inputScan.nextLine());
+                    String input = inputScan.nextLine();
+                    selection = Integer.valueOf(input);
                 } catch (Exception e) {
                     inputScan.close();
-                    throw new UnsupportedInputException("Error with input, did not read integer");
+                    throw new UnsupportedInputException("Error with input, did not read integer:+ " + e.getMessage() );
                     
                 }
                 
@@ -88,9 +89,10 @@ public class ProgramInterpreter extends InterpreterVisitor {
                             throw new UnsupportedInputException("Error with input, parameter "+parameters.get(index)+" expected type "+action.getInitialScope().getVariableTable().get(parameters.get(index)).getType()+", which is not supported in state input!");
                     }
                 }
+                InterpreterVisitor.setCurrentAction(stateSymbol.getActionList().get(selection));
                 ScopeManager.getInstance().getScopeStack().push(action.getInitialScope());
                 program.visitChild(new InterpreterDecider(), action.getBody());
-                inputScan.close(); //TODO: If problems with input, move me to the outermost scope of this method.
+                
             } else {
                 InterpreterVisitor.setCurrentState(null);
                 System.out.println("Reached final state: No available actions! Stopping program.");
@@ -102,7 +104,7 @@ public class ProgramInterpreter extends InterpreterVisitor {
         } else {
             System.out.println("\nInterpreting done. Final scope is empty!");
         }
-
+        inputScan.close(); //TODO: If problems with input, move me to the outermost scope of this method.
         ScopeManager.getInstance().exit();
     }
 }
