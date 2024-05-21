@@ -11,3 +11,4 @@ State state1 ALLOWS [tad2]
 
 Integer ada IS 1;
 ada IS tad2(1,2);
+setState(state1);

@@ -8,6 +8,7 @@ import com.proj4.AST.nodes.ActionCall;
 import com.proj4.AST.visitors.InterpreterDecider;
 import com.proj4.AST.visitors.InterpreterVisitor;
 import com.proj4.exceptions.UndefinedActionExpection;
+import com.proj4.symbolTable.GlobalScope;
 import com.proj4.symbolTable.symbols.*;;
 
 //call this from an ActionCall when trying to interpret a built-in action
@@ -17,27 +18,22 @@ public class InbuiltActionInterpreter extends InterpreterVisitor {
     public void visit(AST node) {
         ActionCall actionCall = (ActionCall) node;
         switch (actionCall.getIdentifier()) {
-            case "setState":    //sets the state to the given string
-                actionCall.visitChild(new InterpreterDecider(), actionCall.getChild(0));
-                InterpreterVisitor.setCurrentState(((StringSymbol)InterpreterVisitor.getReturnSymbol()).getValue());
+            case "setState":    //sets current the state to the given string
+                ActionSymbol setState = GlobalScope.getInstance().getActionTable().get(actionCall.getIdentifier());
+                StringSymbol paramOneState = (StringSymbol) setState.getInitialScope().getVariableTable().get("state");
+                InterpreterVisitor.setCurrentState(paramOneState.getValue());
                 break;
             case "shuffle":     //randomize the given array
-                actionCall.visitChild(new InterpreterDecider(), actionCall.getChild(0));
-                Collections.shuffle(((ArraySymbol)InterpreterVisitor.getReturnSymbol()).getContent());
-                break;
+                throw new UnsupportedOperationException("shuffle is not implemented yet.");
             case "draw":
-                actionCall.visitChild(new InterpreterDecider(), actionCall.getChild(0));
-                ArrayList<SymbolTableEntry> deck = ((ArraySymbol)InterpreterVisitor.getReturnSymbol()).getContent();
-                actionCall.visitChild(new InterpreterDecider(), actionCall.getChild(1));
-                SymbolTableEntry drawn = deck.remove((int)((IntegerSymbol)InterpreterVisitor.getReturnSymbol()).getValue());
-                InterpreterVisitor.setReturnSymbol(drawn);
-                break;
+                throw new UnsupportedOperationException("draw is not implemented yet.");
             case "put":
-                actionCall.visitChild(new InterpreterDecider(), actionCall.getChild(0)); 
-                ArrayList<SymbolTableEntry> targetDeck = ((ArraySymbol)InterpreterVisitor.getReturnSymbol()).getContent();
-                actionCall.visitChild(new InterpreterDecider(), actionCall.getChild(1));
-                targetDeck.add(InterpreterVisitor.getReturnSymbol());
-                break; 
+                throw new UnsupportedOperationException("put is not implemented yet.");
+            case "write":
+                ActionSymbol write = GlobalScope.getInstance().getActionTable().get(actionCall.getIdentifier());
+                StringSymbol parameterOne = (StringSymbol) write.getInitialScope().getVariableTable().get("toWrite");
+                System.out.println("OUTPUT: " + parameterOne.getValue());
+            break;
             default:
                 throw new UndefinedActionExpection("Action \"" + actionCall.getIdentifier() + "\"is not an inbuilt action!");
         }

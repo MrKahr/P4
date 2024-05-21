@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import com.proj4.symbolTable.symbols.ActionSymbol;
+import com.proj4.symbolTable.symbols.StringSymbol;
 import com.proj4.symbolTable.symbols.SymbolTableEntry;
 import com.proj4.symbolTable.symbols.TemplateSymbol;
 
@@ -37,14 +38,14 @@ public class InbuiltActionDefiner {
     }
 
     //these actions are hardcoded anyways, so we can get away with doing it stupid
-    private void defineActions(){ 
+    public void defineActions(){ 
         // TODO: Here we could have a "Type"-object that collects type, complextype, and nestinglevel into one convenient package
         // TODO: This would require a big overhaul of most of the type checker
         // TODO: add print - USE CONVERSION NODE TO PRINT OUTPUT?
-        defineAction("setState", "String", "Primitive", Arrays.asList(""));
-        defineAction("remove", "Null", "Null");
-        defineAction("shuffle", "Null", "Null");
-        defineAction("write", "Null", "Null");
+        defineAction("setState", "String", "Primitive", new ArrayList<String>(Arrays.asList("state")), new ArrayList<SymbolTableEntry>(Arrays.asList(new StringSymbol(""))));
+        //defineAction("remove", "Null", "Null");
+        //defineAction("shuffle", "Null", "Null");
+        defineAction("write", "Null", "Null", new ArrayList<String>(Arrays.asList("toWrite")), new ArrayList<SymbolTableEntry>(Arrays.asList(new StringSymbol(""))));
     }
 
     private void defineAction(String functionName, String returnType, String complexReturnType, ArrayList<String> paramNames, ArrayList<SymbolTableEntry> startingParams){

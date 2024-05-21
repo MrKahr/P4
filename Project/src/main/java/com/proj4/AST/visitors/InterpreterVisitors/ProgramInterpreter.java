@@ -7,11 +7,10 @@ import com.proj4.AST.nodes.AST;
 import com.proj4.AST.nodes.Program;
 import com.proj4.AST.visitors.InterpreterDecider;
 import com.proj4.AST.visitors.InterpreterVisitor;
+import com.proj4.exceptions.UnsupportedInputException;
 import com.proj4.symbolTable.GlobalScope;
 import com.proj4.symbolTable.ScopeManager;
-import com.proj4.symbolTable.symbols.ActionSymbol;
-import com.proj4.symbolTable.symbols.StateSymbol;
-import com.proj4.symbolTable.symbols.SymbolTableEntry;
+import com.proj4.symbolTable.symbols.*;
 
 
 
@@ -83,7 +82,7 @@ public class ProgramInterpreter extends InterpreterVisitor {
                 }
                 
                 program.visitChild(new InterpreterDecider(), action.getBody());
-                inputScan.close();
+                inputScan.close(); //TODO: If problems with input, move me to the outermost scope of this function.
             } else {
                 InterpreterVisitor.setCurrentState(null);
                 System.out.println("Reached final state: No available actions! Stopping program.");

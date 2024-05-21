@@ -30,3 +30,4 @@ Action tad1(Integer a, Integer b) RESULTS IN Integer {
 
 Integer ada IS 1;
 ada IS tad1(1,2);
+write("hej");
