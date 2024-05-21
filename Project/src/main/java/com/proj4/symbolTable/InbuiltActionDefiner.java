@@ -19,6 +19,7 @@ public class InbuiltActionDefiner {
     // Constructor 
     private InbuiltActionDefiner(){
         map = new ArrayList<String>();
+        actionIdentifiers = new HashSet<String>();
         map.add("RESULT");
         defineActions();
     }

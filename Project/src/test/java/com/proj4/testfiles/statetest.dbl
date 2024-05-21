@@ -9,6 +9,4 @@ Action tad2(Integer a, Integer b) RESULTS IN Integer {
 
 State state1 ALLOWS [tad2]
 
-Integer ada IS 1;
-ada IS tad2(1,2);
-setState(state1);
+setState("state1");

@@ -55,7 +55,15 @@ public class ProgramInterpreter extends InterpreterVisitor {
                 }
                 //get input
                 Scanner inputScan = new Scanner(System.in);
-                int selection = inputScan.nextInt();
+                int selection = -1;
+                try {
+                    selection = Integer.valueOf(inputScan.nextLine());
+                } catch (Exception e) {
+                    inputScan.close();
+                    throw new UnsupportedInputException("Error with input, did not read integer");
+                    
+                }
+                
                 //start selected action
                 ActionSymbol action = GlobalScope.getInstance().getActionTable().get(stateSymbol.getActionList().get(selection));
                 ArrayList<String> parameters = action.getParameterNames();
@@ -82,7 +90,7 @@ public class ProgramInterpreter extends InterpreterVisitor {
                 }
                 
                 program.visitChild(new InterpreterDecider(), action.getBody());
-                inputScan.close(); //TODO: If problems with input, move me to the outermost scope of this function.
+                inputScan.close(); //TODO: If problems with input, move me to the outermost scope of this method.
             } else {
                 InterpreterVisitor.setCurrentState(null);
                 System.out.println("Reached final state: No available actions! Stopping program.");

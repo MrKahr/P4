@@ -57,7 +57,13 @@ public class ActionCallInterpreter extends InterpreterVisitor {
         if (InbuiltActionDefiner.getDefinerInstance().getIdentifiers().contains(actionCall.getIdentifier())) {
             //hand control to an InbuiltFunctionInterpreter and let it do its thing
             InbuiltActionInterpreter inbuiltFunctionInterpreter = new InbuiltActionInterpreter();
+            //TODO: document the reason for thisAction
+            String thisAction = InterpreterVisitor.getCurrentActionIdentifier();
+            InterpreterVisitor.setCurrentAction(actionCall.getIdentifier());
+            ScopeManager.getInstance().getScopeStack().push(action.getInitialScope());
             inbuiltFunctionInterpreter.visit(actionCall);
+            ScopeManager.getInstance().exit();
+            InterpreterVisitor.setCurrentAction(thisAction);
         } else {
             //set the scope and interpret the action. Also set the current action so return nodes target the right places
             String thisAction = InterpreterVisitor.getCurrentActionIdentifier();

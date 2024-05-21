@@ -43,8 +43,6 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 }
                
                 InterpreterVisitor.setReturnSymbol(new IntegerSymbol(integerResult));
-                
-
                 break;
             case SUBTRACT:
                 operands = getIntegerOperands(expression);
