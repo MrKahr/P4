@@ -5,6 +5,7 @@ import com.proj4.AST.nodes.AST;
 import com.proj4.AST.nodes.Assignment;
 import com.proj4.AST.visitors.InterpreterDecider;
 import com.proj4.AST.visitors.InterpreterVisitor;
+import com.proj4.AST.visitors.NodeVisitor;
 import com.proj4.symbolTable.symbols.ArraySymbol;
 import com.proj4.symbolTable.symbols.BooleanSymbol;
 import com.proj4.symbolTable.symbols.IntegerSymbol;
@@ -12,7 +13,7 @@ import com.proj4.symbolTable.symbols.StringSymbol;
 import com.proj4.symbolTable.symbols.SymbolTableEntry;
 import com.proj4.symbolTable.symbols.TemplateSymbol;
 
-public class AssignmentInterpreter extends InterpreterVisitor {
+public class AssignmentInterpreter implements NodeVisitor {
     private Boolean verbose = false;
 
     public AssignmentInterpreter(){}
@@ -23,9 +24,9 @@ public class AssignmentInterpreter extends InterpreterVisitor {
     public void visit(AST node) {
         Assignment assignment = (Assignment) node;
         assignment.visitChild(new InterpreterDecider(), assignment.getSymbolExpression());
-        SymbolTableEntry symbol = InterpreterVisitor.getReturnSymbol(); //save a pointer to the symbol
+        SymbolTableEntry symbol = InterpreterVisitor.getInstance().getReturnSymbol(); //save a pointer to the symbol
         assignment.visitChild(new InterpreterDecider(), assignment.getValueExpression());
-        SymbolTableEntry value = InterpreterVisitor.getReturnSymbol();
+        SymbolTableEntry value = InterpreterVisitor.getInstance().getReturnSymbol();
 
         switch (value.getComplexType()) {
             case "Primitive":

@@ -1,9 +1,9 @@
 package com.proj4.AST.visitors.InterpreterVisitors;
 
 import com.proj4.AST.nodes.AST;
-import com.proj4.AST.visitors.InterpreterVisitor;
+import com.proj4.AST.visitors.NodeVisitor;
 
-public class StateDeclInterpreter extends InterpreterVisitor {
+public class StateDeclInterpreter implements NodeVisitor {
 
     public void visit(AST node) {
         //there's nothing to interpret in a state declaration. The type checker handles the bindings

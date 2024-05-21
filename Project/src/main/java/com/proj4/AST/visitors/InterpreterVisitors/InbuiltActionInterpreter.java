@@ -7,6 +7,7 @@ import com.proj4.AST.nodes.AST;
 import com.proj4.AST.nodes.ActionCall;
 import com.proj4.AST.visitors.InterpreterDecider;
 import com.proj4.AST.visitors.InterpreterVisitor;
+import com.proj4.AST.visitors.NodeVisitor;
 import com.proj4.exceptions.UndefinedActionExpection;
 import com.proj4.symbolTable.GlobalScope;
 import com.proj4.symbolTable.symbols.*;;
@@ -14,14 +15,14 @@ import com.proj4.symbolTable.symbols.*;;
 //call this from an ActionCall when trying to interpret a built-in action
 //this interpreter uses the same node as ActionCall, so it doesn't have its own, or a spot in the decider
 //It's meant for built-in actions that need to do some low-level data manipulation
-public class InbuiltActionInterpreter extends InterpreterVisitor {
+public class InbuiltActionInterpreter implements NodeVisitor {
     public void visit(AST node) {
         ActionCall actionCall = (ActionCall) node;
         switch (actionCall.getIdentifier()) {
             case "setState":    //sets current the state to the given string
                 ActionSymbol setState = GlobalScope.getInstance().getActionTable().get(actionCall.getIdentifier());
                 StringSymbol paramOneState = (StringSymbol) setState.getInitialScope().getVariableTable().get("state");
-                InterpreterVisitor.setCurrentState(paramOneState.getValue());
+                InterpreterVisitor.getInstance().setCurrentState(paramOneState.getValue());
                 break;
             case "shuffle":     //randomize the given array
                 throw new UnsupportedOperationException("shuffle is not implemented yet.");

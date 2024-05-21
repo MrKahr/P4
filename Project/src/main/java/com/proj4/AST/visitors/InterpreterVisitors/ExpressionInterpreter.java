@@ -7,11 +7,12 @@ import com.proj4.AST.nodes.Expression;
 import com.proj4.AST.nodes.TField;
 import com.proj4.AST.visitors.InterpreterDecider;
 import com.proj4.AST.visitors.InterpreterVisitor;
+import com.proj4.AST.visitors.NodeVisitor;
 import com.proj4.exceptions.*;
 import com.proj4.symbolTable.GlobalScope;
 import com.proj4.symbolTable.symbols.*;
 
-public class ExpressionInterpreter extends InterpreterVisitor {
+public class ExpressionInterpreter implements NodeVisitor {
     private Boolean verbose = false;
 
     public ExpressionInterpreter(){}
@@ -19,7 +20,7 @@ public class ExpressionInterpreter extends InterpreterVisitor {
         this.verbose = verbose;
     }
 
-    @SuppressWarnings("unchecked")  //typecasting without respecting generics is ok here, because we've already typechecked the program at this point
+    @SuppressWarnings({ "rawtypes" })  //typecasting without respecting generics is ok here, because we've already typechecked the program at this point
     public void visit(AST node) {
         // Expression: primitive symbol + expression operator left operand, right operand.
         Expression expression = (Expression) node;
@@ -31,9 +32,9 @@ public class ExpressionInterpreter extends InterpreterVisitor {
             case ADD:
                 //this handles both concatenation and addition. We concatenate if at least one operand is a string
                 expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
-                SymbolTableEntry addArgOne = InterpreterVisitor.getReturnSymbol();
+                SymbolTableEntry addArgOne = InterpreterVisitor.getInstance().getReturnSymbol();
                 expression.visitChild(new InterpreterDecider(), expression.getSecondOperand());
-                SymbolTableEntry addArgTwo = InterpreterVisitor.getReturnSymbol();
+                SymbolTableEntry addArgTwo = InterpreterVisitor.getInstance().getReturnSymbol();
 
                 Integer left = ((IntegerSymbol) addArgOne).getValue();
                 Integer right = ((IntegerSymbol) addArgTwo).getValue();
@@ -42,7 +43,9 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                     System.out.println(this.getClass().getSimpleName() + ": Result of " + left + " + " + right + " is " + integerResult);
                 }
                
-                InterpreterVisitor.setReturnSymbol(new IntegerSymbol(integerResult));
+                InterpreterVisitor.getInstance().setReturnSymbol(new IntegerSymbol(integerResult));
+                
+
                 break;
             case SUBTRACT:
                 operands = getIntegerOperands(expression);
@@ -51,7 +54,7 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 if(this.verbose){
                     System.out.println(this.getClass().getSimpleName() + ": Result of " + operands[0] + " - " + operands[1] + " is " + integerResult);
                 }
-                InterpreterVisitor.setReturnSymbol(new IntegerSymbol(integerResult));
+                InterpreterVisitor.getInstance().setReturnSymbol(new IntegerSymbol(integerResult));
                 break;
             case DIVIDE:
                 operands = getIntegerOperands(expression);
@@ -64,7 +67,7 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 if(this.verbose){
                     System.out.println(this.getClass().getSimpleName() + ": Result of " + operands[0] + " / " + operands[1] + " is " + integerResult);
                 }
-                InterpreterVisitor.setReturnSymbol(new IntegerSymbol(integerResult));
+                InterpreterVisitor.getInstance().setReturnSymbol(new IntegerSymbol(integerResult));
                 break;
             case MULTIPLY:
                 operands = getIntegerOperands(expression);
@@ -73,16 +76,16 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 if(this.verbose){
                     System.out.println(this.getClass().getSimpleName() + ": Result of " + operands[0] + " * " + operands[1] + " is " + integerResult);
                 }
-                InterpreterVisitor.setReturnSymbol(new IntegerSymbol(integerResult));
+                InterpreterVisitor.getInstance().setReturnSymbol(new IntegerSymbol(integerResult));
                 break;
             case NEGATE:
                 expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
-                integerResult = -((IntegerSymbol)InterpreterVisitor.getReturnSymbol()).getValue();
+                integerResult = -((IntegerSymbol)InterpreterVisitor.getInstance().getReturnSymbol()).getValue();
 
                 if(this.verbose){
                     System.out.println(this.getClass().getSimpleName() + ": Result of -" + -integerResult + " is " + integerResult);    //funky, but it works
                 }
-                InterpreterVisitor.setReturnSymbol(new IntegerSymbol(integerResult));
+                InterpreterVisitor.getInstance().setReturnSymbol(new IntegerSymbol(integerResult));
                 break;
             case LESS_THAN:
                 operands = getIntegerOperands(expression);
@@ -91,7 +94,7 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 if(this.verbose){
                     System.out.println(this.getClass().getSimpleName() + ": Result of " + operands[0] + " < " + operands[1] + " is " + booleanResult);
                 }
-                InterpreterVisitor.setReturnSymbol(new BooleanSymbol(booleanResult));
+                InterpreterVisitor.getInstance().setReturnSymbol(new BooleanSymbol(booleanResult));
                 break;
             case LESS_OR_EQUALS:
                 operands = getIntegerOperands(expression);
@@ -100,7 +103,7 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 if(this.verbose){
                     System.out.println(this.getClass().getSimpleName() + ": Result of " + operands[0] + " <= " + operands[1] + " is " + booleanResult);
                 }
-                InterpreterVisitor.setReturnSymbol(new BooleanSymbol(booleanResult));
+                InterpreterVisitor.getInstance().setReturnSymbol(new BooleanSymbol(booleanResult));
                 break;
             case GREATER_THAN:
                 operands = getIntegerOperands(expression);
@@ -109,7 +112,7 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 if(this.verbose){
                     System.out.println(this.getClass().getSimpleName() + ": Result of " + operands[0] + " > " + operands[1] + " is " + booleanResult);
                 }
-                InterpreterVisitor.setReturnSymbol(new BooleanSymbol(booleanResult));
+                InterpreterVisitor.getInstance().setReturnSymbol(new BooleanSymbol(booleanResult));
                 break;
             case GREATER_OR_EQUALS:
                 operands = getIntegerOperands(expression);
@@ -117,7 +120,7 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 if(this.verbose){
                     System.out.println(this.getClass().getSimpleName() + ": Result of " + operands[0] + " >= " + operands[1] + " is " + booleanResult);
                 }
-                InterpreterVisitor.setReturnSymbol(new BooleanSymbol(booleanResult));
+                InterpreterVisitor.getInstance().setReturnSymbol(new BooleanSymbol(booleanResult));
                 break;
             case EQUALS:
                 SymbolTableEntry firstElement;
@@ -126,20 +129,20 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 // Visit first element
                 expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
 
-                if(InterpreterVisitor.getReturnSymbol().getComplexType().equals("Primitive")){
-                    firstElement =  ((PrimitiveSymbol)InterpreterVisitor.getReturnSymbol());
-                } else if(InterpreterVisitor.getReturnSymbol().getComplexType().equals("Complex")) {
-                    firstElement =  ((ComplexSymbol)InterpreterVisitor.getReturnSymbol());
+                if(InterpreterVisitor.getInstance().getReturnSymbol().getComplexType().equals("Primitive")){
+                    firstElement =  ((PrimitiveSymbol)InterpreterVisitor.getInstance().getReturnSymbol());
+                } else if(InterpreterVisitor.getInstance().getReturnSymbol().getComplexType().equals("Complex")) {
+                    firstElement =  ((ComplexSymbol)InterpreterVisitor.getInstance().getReturnSymbol());
                 } else {
-                    throw new UnexpectedTypeException("Recieved unexpected type for equals operation: " + InterpreterVisitor.getReturnSymbol().getType() +  "");
+                    throw new UnexpectedTypeException("Recieved unexpected type for equals operation: " + InterpreterVisitor.getInstance().getReturnSymbol().getType() +  "");
                 }
                 expression.visitChild(new InterpreterDecider(), expression.getSecondOperand());
 
-                secondElement = InterpreterVisitor.getReturnSymbol();
+                secondElement = InterpreterVisitor.getInstance().getReturnSymbol();
 
                 booleanResult = firstElement.equals(secondElement);
 
-                InterpreterVisitor.setReturnSymbol(new BooleanSymbol(booleanResult));
+                InterpreterVisitor.getInstance().setReturnSymbol(new BooleanSymbol(booleanResult));
 
                 //System.out.println("Result of " + firstElement.getValue() + " EQUALS " + secondEq.getValue() + " is " + booleanResult + ".");
                 break;
@@ -150,30 +153,30 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 // Visit first element
                 expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
 
-                if(InterpreterVisitor.getReturnSymbol().getComplexType().equals("Primitive")){
-                    NeqfirstElement =  ((PrimitiveSymbol)InterpreterVisitor.getReturnSymbol());
-                } else if(InterpreterVisitor.getReturnSymbol().getComplexType().equals("Complex")) {
-                    NeqfirstElement =  ((ComplexSymbol)InterpreterVisitor.getReturnSymbol());
+                if(InterpreterVisitor.getInstance().getReturnSymbol().getComplexType().equals("Primitive")){
+                    NeqfirstElement =  ((PrimitiveSymbol)InterpreterVisitor.getInstance().getReturnSymbol());
+                } else if(InterpreterVisitor.getInstance().getReturnSymbol().getComplexType().equals("Complex")) {
+                    NeqfirstElement =  ((ComplexSymbol)InterpreterVisitor.getInstance().getReturnSymbol());
                 } else {
-                    throw new UnexpectedTypeException("Recieved unexpected type for equals operation: " + InterpreterVisitor.getReturnSymbol().getType() +  "");
+                    throw new UnexpectedTypeException("Recieved unexpected type for equals operation: " + InterpreterVisitor.getInstance().getReturnSymbol().getType() +  "");
                 }
                 expression.visitChild(new InterpreterDecider(), expression.getSecondOperand());
 
-                NeqsecondElement = InterpreterVisitor.getReturnSymbol();
+                NeqsecondElement = InterpreterVisitor.getInstance().getReturnSymbol();
 
                 booleanResult = !(NeqfirstElement.equals(NeqsecondElement));
 
-                InterpreterVisitor.setReturnSymbol(new BooleanSymbol(booleanResult));
+                InterpreterVisitor.getInstance().setReturnSymbol(new BooleanSymbol(booleanResult));
                 break;
             case OR:
                 expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
-                Boolean orOne = ((BooleanSymbol)InterpreterVisitor.getReturnSymbol()).getValue();
+                Boolean orOne = ((BooleanSymbol)InterpreterVisitor.getInstance().getReturnSymbol()).getValue();
                 Boolean orTwo = true;
                 if(!orOne){     //only evaluating the second expression if this one is true to implement short-circuiting!
                     expression.visitChild(new InterpreterDecider(), expression.getSecondOperand());
-                    orTwo = ((BooleanSymbol)InterpreterVisitor.getReturnSymbol()).getValue();
+                    orTwo = ((BooleanSymbol)InterpreterVisitor.getInstance().getReturnSymbol()).getValue();
                 }
-                InterpreterVisitor.setReturnSymbol(new BooleanSymbol(orOne || orTwo));
+                InterpreterVisitor.getInstance().setReturnSymbol(new BooleanSymbol(orOne || orTwo));
 
                 if(this.verbose){
                     System.out.println(this.getClass().getSimpleName() + ": Result of " + orOne + " OR " + orTwo + " is " + (orOne || orTwo));
@@ -181,13 +184,13 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 break;
             case AND:
                 expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
-                Boolean andOne = ((BooleanSymbol)InterpreterVisitor.getReturnSymbol()).getValue();
+                Boolean andOne = ((BooleanSymbol)InterpreterVisitor.getInstance().getReturnSymbol()).getValue();
                 Boolean andTwo  = false;;
                 if(andOne){     //only evaluating the second expression if this one is true to implement short-circuiting!
                     expression.visitChild(new InterpreterDecider(), expression.getSecondOperand());
-                    andTwo = ((BooleanSymbol)InterpreterVisitor.getReturnSymbol()).getValue();
+                    andTwo = ((BooleanSymbol)InterpreterVisitor.getInstance().getReturnSymbol()).getValue();
                 }
-                InterpreterVisitor.setReturnSymbol(new BooleanSymbol(andOne && andTwo));
+                InterpreterVisitor.getInstance().setReturnSymbol(new BooleanSymbol(andOne && andTwo));
 
                 if(this.verbose){
                     System.out.println(this.getClass().getSimpleName() + ": Result of " + andOne + " AND " + andTwo + " is " + (andOne && andTwo));
@@ -199,7 +202,7 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 if(this.verbose){
                     System.out.println(this.getClass().getSimpleName() + ": Negating boolean.");
                 }
-                InterpreterVisitor.setReturnSymbol(new BooleanSymbol(!((BooleanSymbol)InterpreterVisitor.getReturnSymbol()).getValue()));
+                InterpreterVisitor.getInstance().setReturnSymbol(new BooleanSymbol(!((BooleanSymbol)InterpreterVisitor.getInstance().getReturnSymbol()).getValue()));
                 break;
             case VARIABLE:
                 //TODO: WARNING:THIS OPERATOR IS UNSUPPORTED
@@ -214,11 +217,11 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 if(this.verbose){
                     System.out.println(this.getClass().getSimpleName() + ": Fetching constant.");
                 }
-                InterpreterVisitor.setReturnSymbol(expression.getConstant());
+                InterpreterVisitor.getInstance().setReturnSymbol(expression.getConstant());
                 break;
             case ACCESS:
                 expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
-                TemplateSymbol template = (TemplateSymbol)InterpreterVisitor.getReturnSymbol();
+                TemplateSymbol template = (TemplateSymbol)InterpreterVisitor.getInstance().getReturnSymbol();
 
                 //remember the field to find in the template
                 String fieldName = ((TField) expression.getSecondOperand()).getFieldName();
@@ -230,14 +233,14 @@ public class ExpressionInterpreter extends InterpreterVisitor {
                 if(this.verbose){
                     System.out.println(this.getClass().getSimpleName() + ": Accessing template with \"" + fieldName + "\".");
                 }
-                InterpreterVisitor.setReturnSymbol(fieldContent);
+                InterpreterVisitor.getInstance().setReturnSymbol(fieldContent);
                 break;
             case INDEX:
                 expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
-                ArrayList<SymbolTableEntry> content = ((ArraySymbol)InterpreterVisitor.getReturnSymbol()).getContent();
+                ArrayList<SymbolTableEntry> content = ((ArraySymbol)InterpreterVisitor.getInstance().getReturnSymbol()).getContent();
                 expression.visitChild(new InterpreterDecider(), expression.getSecondOperand());
-                Integer index = ((IntegerSymbol)InterpreterVisitor.getReturnSymbol()).getValue();
-                InterpreterVisitor.setReturnSymbol(content.get(index));
+                Integer index = ((IntegerSymbol)InterpreterVisitor.getInstance().getReturnSymbol()).getValue();
+                InterpreterVisitor.getInstance().setReturnSymbol(content.get(index));
 
                 if(this.verbose){
                     System.out.println(this.getClass().getSimpleName() + ": Indexing array with \"" + index + "\".");
@@ -246,11 +249,11 @@ public class ExpressionInterpreter extends InterpreterVisitor {
             case CONCAT:
                 //the type checker has already set up typecasting for us, so all inputs here will be strings
                 expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
-                String stringOne = ((StringSymbol)InterpreterVisitor.getReturnSymbol()).getValue();
+                String stringOne = ((StringSymbol)InterpreterVisitor.getInstance().getReturnSymbol()).getValue();
                 expression.visitChild(new InterpreterDecider(), expression.getSecondOperand());
-                String stringTwo = ((StringSymbol)InterpreterVisitor.getReturnSymbol()).getValue();
+                String stringTwo = ((StringSymbol)InterpreterVisitor.getInstance().getReturnSymbol()).getValue();
 
-                InterpreterVisitor.setReturnSymbol(new StringSymbol(stringOne + stringTwo));
+                InterpreterVisitor.getInstance().setReturnSymbol(new StringSymbol(stringOne + stringTwo));
                 break;
             default:
                 break;
@@ -261,9 +264,9 @@ public class ExpressionInterpreter extends InterpreterVisitor {
     private Integer[] getIntegerOperands(Expression node){
         Integer[] operands = new Integer[2];
         node.visitChild(new InterpreterDecider(), node.getFirstOperand());
-        operands[0] = ((PrimitiveSymbol<Integer>)InterpreterVisitor.getReturnSymbol()).getValue();
+        operands[0] = ((PrimitiveSymbol<Integer>)InterpreterVisitor.getInstance().getReturnSymbol()).getValue();
         node.visitChild(new InterpreterDecider(), node.getSecondOperand());
-        operands[1] = ((PrimitiveSymbol<Integer>)InterpreterVisitor.getReturnSymbol()).getValue();
+        operands[1] = ((PrimitiveSymbol<Integer>)InterpreterVisitor.getInstance().getReturnSymbol()).getValue();
         return operands;
     }
 }

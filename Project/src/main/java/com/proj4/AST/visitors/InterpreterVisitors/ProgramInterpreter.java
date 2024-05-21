@@ -7,6 +7,7 @@ import com.proj4.AST.nodes.AST;
 import com.proj4.AST.nodes.Program;
 import com.proj4.AST.visitors.InterpreterDecider;
 import com.proj4.AST.visitors.InterpreterVisitor;
+import com.proj4.AST.visitors.NodeVisitor;
 import com.proj4.exceptions.UnsupportedInputException;
 import com.proj4.symbolTable.GlobalScope;
 import com.proj4.symbolTable.ScopeManager;
@@ -14,7 +15,7 @@ import com.proj4.symbolTable.symbols.*;
 
 
 
-public class ProgramInterpreter extends InterpreterVisitor {
+public class ProgramInterpreter implements NodeVisitor {
     private Boolean verbose = false;
 
     public void visit(AST node) {
@@ -42,8 +43,8 @@ public class ProgramInterpreter extends InterpreterVisitor {
         node.visitChildren(new InterpreterDecider());
 
         //when we're done interpreting the body of the program, begin evaluating states
-        while (InterpreterVisitor.getCurrentState() != null) {
-            StateSymbol stateSymbol = GlobalScope.getInstance().getStateTable().get(InterpreterVisitor.getCurrentState());
+        while (InterpreterVisitor.getInstance().getCurrentState() != null) {
+            StateSymbol stateSymbol = GlobalScope.getInstance().getStateTable().get(InterpreterVisitor.getInstance().getCurrentState());
             if (stateSymbol.getBody() != null) {
                 program.visitChild(new InterpreterDecider(), stateSymbol.getBody());
             }
@@ -92,7 +93,7 @@ public class ProgramInterpreter extends InterpreterVisitor {
                 program.visitChild(new InterpreterDecider(), action.getBody());
                 inputScan.close(); //TODO: If problems with input, move me to the outermost scope of this method.
             } else {
-                InterpreterVisitor.setCurrentState(null);
+                InterpreterVisitor.getInstance().setCurrentState(null);
                 System.out.println("Reached final state: No available actions! Stopping program.");
             }
         }

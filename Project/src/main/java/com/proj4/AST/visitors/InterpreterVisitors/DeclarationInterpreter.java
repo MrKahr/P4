@@ -3,11 +3,11 @@ package com.proj4.AST.visitors.InterpreterVisitors;
 import com.proj4.AST.nodes.AST;
 import com.proj4.AST.nodes.Declaration;
 import com.proj4.AST.visitors.InterpreterDecider;
-import com.proj4.AST.visitors.InterpreterVisitor;
+import com.proj4.AST.visitors.NodeVisitor;
 import com.proj4.symbolTable.ScopeManager;
 import com.proj4.symbolTable.symbols.SymbolTableEntry;
 
-public class DeclarationInterpreter extends InterpreterVisitor {
+public class DeclarationInterpreter implements NodeVisitor {
 
     public void visit(AST node) {
         Declaration declaration = (Declaration) node;
