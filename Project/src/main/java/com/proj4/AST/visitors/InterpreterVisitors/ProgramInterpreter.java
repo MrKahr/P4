@@ -88,7 +88,7 @@ public class ProgramInterpreter extends InterpreterVisitor {
                             throw new UnsupportedInputException("Error with input, parameter "+parameters.get(index)+" expected type "+action.getInitialScope().getVariableTable().get(parameters.get(index)).getType()+", which is not supported in state input!");
                     }
                 }
-                
+                ScopeManager.getInstance().getScopeStack().push(action.getInitialScope());
                 program.visitChild(new InterpreterDecider(), action.getBody());
                 inputScan.close(); //TODO: If problems with input, move me to the outermost scope of this method.
             } else {
