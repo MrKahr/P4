@@ -90,7 +90,7 @@ public class ProgramInterpreter implements NodeVisitor {
                             throw new UnsupportedInputException("Error with input, parameter "+parameters.get(index)+" expected type "+action.getInitialScope().getVariableTable().get(parameters.get(index)).getType()+", which is not supported in state input!");
                     }
                 }
-                InterpreterVisitor.setCurrentAction(stateSymbol.getActionList().get(selection));
+                InterpreterVisitor.getInstance().setCurrentAction(stateSymbol.getActionList().get(selection));
                 ScopeManager.getInstance().getScopeStack().push(action.getInitialScope());
                 program.visitChild(new InterpreterDecider(), action.getBody());
                 
