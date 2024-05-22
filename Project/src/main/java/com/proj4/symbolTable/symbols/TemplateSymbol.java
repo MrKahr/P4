@@ -21,30 +21,36 @@ public class TemplateSymbol extends SymbolTableEntry{
         this.setType(other.getType());
         for (SymbolTableEntry entry : other.getContent()) {
             //use the type to figure out which symbol type we're dealing with and create a copy of that type
-            switch (entry.getType()) {
-                case "Integer": //IntSymbol
-                    content.add(new IntegerSymbol((IntegerSymbol) entry));
-                    break;
-                case "Boolean": //BooleanSymbol
-                    content.add(new BooleanSymbol((BooleanSymbol) entry));
-                    break;
-                case "String":  //StringSymbol
-                    content.add(new StringSymbol((StringSymbol) entry));
-                    break;
-                case "Null":
-                    content.add(new NullSymbol((NullSymbol) entry));
-                    break;
-                default:        //Not a primitive
-                    switch (entry.getComplexType()) {
-                        case "Array":   //ArraySymbol
-                            content.add(new ArraySymbol((ArraySymbol) entry));
-                            break;
-                        case "Template":    //TemplateSymbol
-                            content.add(new TemplateSymbol((TemplateSymbol) entry));
-                            break;
-                        default:
-                            throw new UndefinedTypeException("Type \"" + entry.getType() + "\" is not defined!");
-                    }
+
+            // We check array here since we cannot discern between Integer and Integer Array as their type in both cases is "Integer"
+            if(entry.getComplexType() == "Array"){
+                content.add(new ArraySymbol((ArraySymbol) entry));
+            } else {
+                switch (entry.getType()) {
+                    case "Integer": //IntSymbol
+                        content.add(new IntegerSymbol((IntegerSymbol) entry));
+                        break;
+                    case "Boolean": //BooleanSymbol
+                        content.add(new BooleanSymbol((BooleanSymbol) entry));
+                        break;
+                    case "String":  //StringSymbol
+                        content.add(new StringSymbol((StringSymbol) entry));
+                        break;
+                    case "Null":
+                        content.add(new NullSymbol((NullSymbol) entry));
+                        break;
+                    default:        //Not a primitive
+                        switch (getComplexType()) {
+                            // case "Array":   //ArraySymbol
+                            //     content.add(new ArraySymbol((ArraySymbol) entry));
+                            //     break;
+                            case "Template":    //TemplateSymbol
+                                content.add(new TemplateSymbol((TemplateSymbol) entry));
+                                break;
+                            default:
+                                throw new UndefinedTypeException("Type \"" + entry.getType() + "\" is not defined!");
+                        }
+                }
             }
         }
     }
