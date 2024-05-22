@@ -48,7 +48,7 @@ public class ActionTest extends TestingArgs {
         assertTrue(arraySymbol.getNestingLevel() == 0); // Check nesting level
         for (Integer i = 0; i < arraySymbol.getContent().size(); i++) {
             ArraySymbol subArr = (ArraySymbol) arraySymbol.getContent().get(i);
-            for (Integer j = 0; i < subArr.getContent().size(); i++) {
+            for (Integer j = 0; j < subArr.getContent().size(); j++) {
                 IntegerSymbol intSymbol = (IntegerSymbol) arraySymbol.getContent().get(i);
                 assertTrue(j + 1 == intSymbol.getValue()); // Check values of array
             }

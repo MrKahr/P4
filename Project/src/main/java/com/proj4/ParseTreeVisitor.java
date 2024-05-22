@@ -158,25 +158,25 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     @Override
     public ArrayList<Declaration> visitParameterList(DBLParser.ParameterListContext ctx) {
         ArrayList<Declaration> parameterNodes = new ArrayList<Declaration>();
-        ParseTree abstractType = null;
+        ParseTree childNode = null;
         String type = "parseTreeVisitor";
         String complexType = "parseTreeVisitor";
         Integer nestingLevel = -1;
         //modulo expressions here separate parameters as each parameter is in the form: Type - Identifier - ,
         for (int i = 0; i < ctx.getChildCount(); i++){
             if((i)%3 == 0){ // Get type
-                abstractType = ctx.getChild(i);
-                if (abstractType.getClass().getSimpleName().equals("TypedefUserContext")) {
-                    type = abstractType.getText();
+                childNode = ctx.getChild(i);
+                if (childNode.getClass().getSimpleName().equals("TypedefUserContext")) {
+                    type = childNode.getText();
                     complexType = "Template";
                 }
-                else if(abstractType.getText().contains("[")) {
-                    type = abstractType.getText().replaceAll("\\[\\]", "");
+                else if(childNode.getText().contains("[")) {
+                    type = childNode.getText().replaceAll("\\[\\]", "");
                     complexType = "Array";
-                    nestingLevel = (int) abstractType.getText().chars().filter(ch -> ch == '[').count()-1; // Count number of "[" to find nestinglevel
+                    nestingLevel = (int) childNode.getText().chars().filter(ch -> ch == '[').count()-1; // Count number of "[" to find nestinglevel
                 }
                 else {
-                    type = abstractType.getText();
+                    type = childNode.getText();
                     complexType = "Primitive";
                 }
             }
