@@ -3,7 +3,7 @@ package com.proj4.AST.nodes;
 import com.proj4.exceptions.MalformedAstException;
 
 //this class should only be created by the type checker! It exists to tell the interpreter that a typecast must be done
-public class StringCast extends AST {
+public class StringCast extends Expression {
     
     //Constructor
     //creates a StringCast node that inserts itself between the root of the given subtree and its parent
@@ -27,5 +27,15 @@ public class StringCast extends AST {
     //Method
     public AST getSubtree(){
         return getChild(0);
+    }
+
+     @Override
+    public Expression getFirstOperand(){
+        return null;
+    }
+
+    @Override
+    public Expression getSecondOperand(){
+        return null;
     }
 }
