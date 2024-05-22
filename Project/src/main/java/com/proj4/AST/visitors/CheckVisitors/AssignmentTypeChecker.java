@@ -11,10 +11,10 @@ public class AssignmentTypeChecker implements NodeVisitor{
     
     public void visit(AST node){
         Assignment assignment = (Assignment) node;
-        
+
         assignment.visitChild(new CheckDecider(), assignment.getSymbolExpression());    //check the symbol to overwrite
-        
-        String expectedType = TypeCheckVisitor.getInstance().getFoundType();
+
+        String expectedType = TypeCheckVisitor.getInstance().getFoundType(); // This evaluates arrays correct
 
         String expectedComplexType = TypeCheckVisitor.getInstance().getFoundComplexType();
 
@@ -24,11 +24,13 @@ public class AssignmentTypeChecker implements NodeVisitor{
 
         String valueComplexType = TypeCheckVisitor.getInstance().getFoundComplexType();
 
-        if(!expectedType.equals(valueType)){
-            throw new MismatchedTypeException("Cannot assign value of type \"" + TypeCheckVisitor.getInstance().getFoundType() + "\" to variable of type \"" + expectedType + "\"!");
+        // Primitive types
+        if(!expectedType.equals(valueType) && valueType != "Null"){
+            throw new MismatchedTypeException("Cannot assign value of type \"" + TypeCheckVisitor.getFoundType() + "\" to variable of type \"" + expectedType + "\"!");
         }
-        if (!expectedComplexType.equals(valueComplexType)) {
-            throw new MismatchedTypeException("Cannot assign value of complex type \"" + TypeCheckVisitor.getInstance().getFoundComplexType() + "\" to variable of type \"" + expectedComplexType + "\"!");
+            // Complex types
+        if (!expectedComplexType.equals(valueComplexType) && valueComplexType != "Null") {
+            throw new MismatchedTypeException("Cannot assign value of complex type \"" + TypeCheckVisitor.getFoundComplexType() + "\" to variable of type \"" + expectedComplexType + "\"!");
         }
     }
 }

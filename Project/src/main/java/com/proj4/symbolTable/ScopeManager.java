@@ -3,8 +3,14 @@ package com.proj4.symbolTable;
 import java.util.ArrayList;
 import java.util.Stack;
 
+import com.proj4.symbolTable.symbols.ArraySymbol;
+import com.proj4.symbolTable.symbols.BooleanSymbol;
+import com.proj4.symbolTable.symbols.IntegerSymbol;
+import com.proj4.symbolTable.symbols.NullSymbol;
 import com.proj4.symbolTable.symbols.PrimitiveSymbol;
+import com.proj4.symbolTable.symbols.StringSymbol;
 import com.proj4.symbolTable.symbols.SymbolTableEntry;
+import com.proj4.symbolTable.symbols.TemplateSymbol;
 
 //this class manages the stack of scopes in a DBL-program
 public class ScopeManager {
@@ -134,18 +140,52 @@ public class ScopeManager {
 
     public void printBindings() {
         if (verbose) {
-            System.out.println("--------Bindings--------");
+            System.out.println("----------Bindings----------");
             for (String identifier : getScopeStack().peek().getVariableTable().keySet()) {
                 SymbolTableEntry variable = getScopeStack().peek().getVariableTable().get(identifier);
-                String value;
+                String value = "";
                 if (variable instanceof PrimitiveSymbol) {
+                    System.out.println("PRIMITIVE");
                     value = ((PrimitiveSymbol) variable).getValue().toString();
-                } else {
-                    value = "Content";
+                } else if(variable instanceof ArraySymbol) {
+                    System.out.println("ARRAY");
+                    value += "[";
+                    value += parseContent(((ArraySymbol) variable).getContent());
+                    value += "]";
+                } else if(variable instanceof TemplateSymbol) {
+                    System.out.println("TEMPLATE");
+                    value = parseContent(((TemplateSymbol) variable).getContent());
                 }
-                System.out.println(identifier + " |-> " + value);
+                System.out.println(identifier + " |-> " + value + "\n");
             }
-            System.out.println("------------------------");
+            System.out.println("----------------------------");
         }
+    }
+
+    private String parseContent(ArrayList<SymbolTableEntry> content) {
+        String output = "";
+        for(int i = 0; i < content.size(); i++){
+            SymbolTableEntry entry = content.get(i);
+            if(entry instanceof IntegerSymbol){
+                output += ((IntegerSymbol) entry).getValue().toString();
+            } else if(entry instanceof StringSymbol){
+                output += ((StringSymbol) entry).getValue();
+            } else if(entry instanceof BooleanSymbol){
+                output += ((BooleanSymbol) entry).getValue().toString();
+            } else if(entry instanceof NullSymbol){
+                output += ((NullSymbol) entry).getValue();
+            } else if(entry instanceof ArraySymbol){
+                output += "[";
+                output += parseContent(((ArraySymbol) entry).getContent());
+                output += "]";
+            } else if(entry instanceof TemplateSymbol){
+                output += parseContent(((TemplateSymbol) entry).getContent());
+            }
+            if(i < content.size()-1) {
+                output += ", ";
+            }
+        }
+        output += "";
+        return output != "" ? output : content.toString();
     }
 }

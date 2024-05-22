@@ -14,7 +14,7 @@ public class Declaration extends Statement implements Identifiable, Typed{
         this.identifier = identifier;
         this.type = type;
         this.complexType = complexType;
-        this.nestingLevel = 0;
+        this.nestingLevel = -1; // Means no nesting level
     }
 
     public Declaration(String identifier, String type, String complexType, int nestingLevel){
@@ -33,10 +33,16 @@ public class Declaration extends Statement implements Identifiable, Typed{
     }
 
     public String getType(){
+        if(type == null) {
+            throw new MalformedAstException("Null type passed to declaration - cannot declare variable in symbol table.");
+        }
         return type;
     }
 
     public String getComplexType(){
+        if(type == null){
+            throw new MalformedAstException("Null complex type passed to declaration - cannot declare variable in symbol table.");
+        }
         return complexType;
     }
 

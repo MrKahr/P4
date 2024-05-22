@@ -14,8 +14,8 @@ public class TemplateInstanceInterpreter implements NodeVisitor {
         TemplateInstance templateInstance = (TemplateInstance) node;
 
         String templateType = templateInstance.getType();
-        
-        TemplateSymbol template = (TemplateSymbol)SymbolTableEntry.instantiateDefault(templateType, "Template", 0);
+
+        TemplateSymbol template = (TemplateSymbol)SymbolTableEntry.instantiateDefault(templateType, "Template", -1);
 
         //we make assignments to the fields in the order the fields are declared
         if (templateInstance.getChildren().size() > 0) {

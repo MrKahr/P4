@@ -16,18 +16,18 @@ public abstract class SymbolTableEntry implements Typed{
     public abstract String getComplexType();
 
     public static SymbolTableEntry instantiateDefault(String type, String complexType, int nestingLevel){
-            switch (complexType) {
-                case "Array":
-                    return new ArraySymbol(type, 0);
-                case "Template":
-                    return new TemplateSymbol(GlobalScope.getInstance().getBlueprintTable().get(type));
-                case "Primitive":
-                    return instantiateDefault(type);
-                case "Null":
-                    return instantiateDefault(complexType);
-                default:
-                    throw new UndefinedTypeException("The complex type \"" + complexType + "\" is undefined!");
-            }
+        switch (complexType) {
+            case "Array":
+                return new ArraySymbol(type, 0);
+            case "Template":
+                return new TemplateSymbol(GlobalScope.getInstance().getBlueprintTable().get(type));
+            case "Primitive":
+                return instantiateDefault(type);
+            case "Null":
+                return instantiateDefault(complexType);
+            default:
+                throw new UndefinedTypeException("The complex type \"" + complexType + "\" is undefined!");
+        }
     }
 
     public static SymbolTableEntry instantiateDefault(String type){
@@ -39,9 +39,9 @@ public abstract class SymbolTableEntry implements Typed{
             case "String":
                 return new StringSymbol("");
             case "Null":
-                return new NullSymbol("Undefined");
+                return new NullSymbol("Null");
             default:
-                throw new UndefinedTypeException("The type \"" + type + "\" is not a primtive!");
+                throw new UndefinedTypeException("The type \"" + type + "\" is not a primitive!");
         }
     }
 

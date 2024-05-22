@@ -1,13 +1,14 @@
-
 /* TEST 1
 Action Decl with parameters, without return
 */
-Action tad1(Integer a, Integer b) RESULTS IN Integer {
-    Integer ada IS a+b;
-    RESULT IN ada;
+Action rad(Integer a, Integer b) RESULTS IN Integer {
+    RESULT IN a+b;
 }
 
-Integer ada IS 1;
-ada IS tad1(1,2);
 
+Rule r1 WHEN [rad] IF(true){
+    Integer i IS rad.RESULT;
+    i IS i + 5; // This should equal 8
+}
 
+Integer v1 IS rad(1,2);

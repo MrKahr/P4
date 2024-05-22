@@ -28,9 +28,10 @@ public class RuleDeclTypeChecker implements NodeVisitor{
 
         //bind the rule to the actions that trigger it
         for (String identifier : ruleDecl.getTriggerActions()) {
-            GlobalScope.getInstance().declareRule(identifier, new RuleSymbol(ruleDecl.getRuleBody()));
+            RuleSymbol ruleSymbol = new RuleSymbol(ruleDecl.getRuleBody());
+            ruleSymbol.setInitialScope(ScopeManager.getInstance().getCurrent());
+            GlobalScope.getInstance().declareRule(identifier, ruleSymbol);
         }
-
         ScopeManager.getInstance().exit();
     }
 }

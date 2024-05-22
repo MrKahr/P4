@@ -43,8 +43,8 @@ program
 stmt
     :   ifBlock
     |   forLoop
-    |   declaration
     |   assignment SEMICOLON
+    |   declaration
     |   actionCall SEMICOLON
     ;
 
@@ -54,15 +54,16 @@ stmtList
 
 expr
     :   BRAC_START expr BRAC_END   # parExpr
-    |   expr multOp expr           # multExpr
-    |   expr addOp expr            # addExpr
     |   expr DOT IDENTIFIER        # templateAccessExpr
     |   expr SQB_START expr SQB_END# arrayAccessExpr
+    |   expr multOp expr           # multExpr
+    |   expr addOp expr            # addExpr
+    |   templateInit               #templateInitExpr
+    |   arrayInit                  # arrayInitExpr
     |   actionResult               # actionResultExpr
     |   actionCall                 # actionCallExpr     // Ensure action calls are the last of parser definitions
     |   DIGIT                      # digitExpr
     |   IDENTIFIER                 # idExpr
-    |   templateInit               #templateInitExpr
     ;
 
 boolExpr
@@ -93,7 +94,6 @@ assignment // Remember to add semicolon if relevant
     :   expr ASSIGN expr          # exprAssign
     |   expr ASSIGN boolExpr      # boolExprAssign
     |   expr ASSIGN stringExpr    # stringExprAssign
-    |   expr ASSIGN arrayInit     # arrayInitAssign
     |   expr ASSIGN IDENTIFIER    # idAssign
     ;
 
@@ -115,7 +115,8 @@ declaration
     |   typedefUser IDENTIFIER SEMICOLON       # idDeclUser
     |   typedefUser assignment SEMICOLON       # assignDeclUser
     |   templateAssignment                     # templateInitDecl
-    |   arrayDecl SEMICOLON                    # declArrayDecl
+    |   arrayType IDENTIFIER SEMICOLON         # declArrayDecl
+    |   arrayType assignment SEMICOLON         # declArrayInit
     ;
 
 declarationList
@@ -172,16 +173,13 @@ argumentList
     :   ((expr | boolExpr | stringExpr) (COMMA (expr | boolExpr | stringExpr))*)?
     ;
 
-arrayDecl
-    :   arrayType IDENTIFIER (ASSIGN arrayInit)?
-    ;
 
 arrayType
     :   (typedefUser | typePrimitive) (SQB_START SQB_END)+
     ;
 
 arrayInit
-    :   (SQB_START ((stringExpr | expr | arrayInit) (COMMA (stringExpr | expr | arrayInit))*)? SQB_END)+
+    :   SQB_START ((stringExpr | expr | arrayInit) (COMMA (stringExpr | expr | arrayInit))*)? SQB_END
     ;
 
 return

@@ -16,12 +16,14 @@ public class VariableTypeChecker implements NodeVisitor{
         if (entry == null) {
             throw new UndefinedVariableException("Variable \"" + variable.getIdentifier() + "\" not defined in current scope!");
         } else {
+            System.out.println("Complex type: " + entry.getComplexType());
             if (entry.getComplexType().equals("Array")) {
                 ArraySymbol arrayEntry = (ArraySymbol) entry;   //Branching to ensure nesting level gets set correctly in typchecker
-                TypeCheckVisitor.getInstance().setFoundType(entry.getType(), entry.getComplexType(), arrayEntry.getNestingLevel());
+                System.out.println("Level:" + arrayEntry.getNestingLevel());
+                TypeCheckVisitor.getInstance().setFoundType(arrayEntry.getType(), arrayEntry.getComplexType(), arrayEntry.getNestingLevel());
             } else {
-                TypeCheckVisitor.getInstance().setFoundType(entry.getType(), entry.getComplexType(), 0); 
-            }  
+                TypeCheckVisitor.getInstance().setFoundType(entry.getType(), entry.getComplexType(), -1);
+            }
         }
     }
     //not visiting children here because Variable-nodes are leaf nodes

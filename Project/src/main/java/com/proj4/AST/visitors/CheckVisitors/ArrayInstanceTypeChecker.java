@@ -24,11 +24,13 @@ public class ArrayInstanceTypeChecker implements NodeVisitor{
         String expectedComplexType = TypeCheckVisitor.getInstance().getFoundComplexType();
         Integer expectedNestingLevel = TypeCheckVisitor.getInstance().getNestingLevel();
 
-        // Typecheck every child 
+        //System.out.println(this.getClass().getSimpleName() + ": DEBUG ARRAY TYPE = " + expectedType);
+        // Typecheck every child
         for (int i = 1; i < arrayInstance.getChildren().size(); i++) {
             arrayInstance.visitChild(new CheckDecider(), arrayInstance.getChildren().get(i));
-            if (!TypeCheckVisitor.getInstance().getFoundType().equals(expectedType)) {
-                throw new MismatchedTypeException("Array element does not match expected array type! Found \"" + TypeCheckVisitor.getInstance().getFoundType() + "\" at index " + i + ". Expected \"" + expectedType + "\"."); 
+
+            if (!TypeCheckVisitor.getFoundType().equals(expectedType)) {
+                throw new MismatchedTypeException("Array element does not match expected array type! Found \"" + TypeCheckVisitor.getFoundType() + "\" at index " + i + ". Expected \"" + expectedType + "\".");
             }
             if (!(TypeCheckVisitor.getInstance().getFoundComplexType().equals(expectedComplexType))){
                 throw new MismatchedTypeException("Array element does not match expected complex type! Found \"" + TypeCheckVisitor.getInstance().getFoundType() + "\" at index " + i + ". Expected \"" + expectedComplexType + "\".");
@@ -42,8 +44,7 @@ public class ArrayInstanceTypeChecker implements NodeVisitor{
                 TypeCheckVisitor.getInstance().setFoundType(expectedType, "Array", TypeCheckVisitor.getInstance().getNestingLevel() + 1);
 
             } else {
-                TypeCheckVisitor.getInstance().setNestingLevel(0);
-                TypeCheckVisitor.getInstance().setFoundType(expectedType, "Array", 0);
+                TypeCheckVisitor.getInstance().setFoundType(expectedType, "Array", -1);
             }
     }
 }

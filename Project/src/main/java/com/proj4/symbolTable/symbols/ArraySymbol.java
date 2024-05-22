@@ -13,6 +13,7 @@ public class ArraySymbol extends SymbolTableEntry{
     public ArraySymbol(String type, Integer nestingLevel){
         setType(type);
         if (nestingLevel > 0) {
+            System.out.println("SUBRACTIRNG NESTINGLEVEL");
             addContent(new ArraySymbol(type, nestingLevel - 1));
         }
         this.nestingLevel = nestingLevel;
@@ -20,7 +21,7 @@ public class ArraySymbol extends SymbolTableEntry{
 
     public ArraySymbol(ArraySymbol other){  //create a copy of a given ComplexSymbol{
             //use the type to figure out which symbol type we're dealing with and create a copy of that type
-            switch (getType()) {
+            switch (other.getType()) {
                 case "Integer": //IntSymbol
                     for (SymbolTableEntry entry : other.getContent()) {
                         content.add(new IntegerSymbol((IntegerSymbol) entry));
@@ -37,7 +38,7 @@ public class ArraySymbol extends SymbolTableEntry{
                     }
                     break;
                 default:        //Not a primitive
-                    switch (getComplexType()) {
+                    switch (other.getComplexType()) {
                         case "Array":   //ArraySymbol
                             for (SymbolTableEntry entry : other.getContent()) {
                                 content.add(new ArraySymbol((ArraySymbol) entry));
@@ -77,14 +78,14 @@ public class ArraySymbol extends SymbolTableEntry{
     //if the nesting level of an ArraySymbol is 0, then its content is not nested arrays and indexing it will return a non-array symbol.
     //if the nesting level is greater than 0, then indexing the array contains another nested array.
     //this is useful to know because arrays with different nesting levels are different data types!
-    public Integer calculateNestingLevel(SymbolTableEntry entry){
-        if (entry.getComplexType().equals("Array")) {
-            ArraySymbol array = (ArraySymbol) entry;    //if the complexType is "Array", we should be able to cast like this
-            return 1 + calculateNestingLevel(array.getContent().get(0));
-        } else {
-            return 0;
-        }
-    }
+    // public Integer calculateNestingLevel(SymbolTableEntry entry){
+    //     if (entry.getComplexType().equals("Array")) {
+    //         ArraySymbol array = (ArraySymbol) entry;    //if the complexType is "Array", we should be able to cast like this
+    //         return 1 + calculateNestingLevel(array.getContent().get(0));
+    //     } else {
+    //         return 0;
+    //     }
+    // }
 
     public Integer getNestingLevel(){
         return nestingLevel;

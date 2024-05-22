@@ -34,29 +34,30 @@ public class ExpressionTypeChecker implements NodeVisitor {
 
                 if(firstType.equals("Integer") && secondType.equals("Integer")){
                     //both operands are integers. The output is an integer
-                    TypeCheckVisitor.getInstance().setFoundType("Integer", "Primitive", 0);
+                    TypeCheckVisitor.getInstance().setFoundType("Integer", "Primitive", -1);
 
                 } else if (firstType.equals("String") && secondType.equals("Integer")) {
                     //first operand is a string. Cast second operand to string and set operator to CONCAT. Output is a string
                     new StringCast(expression.getSecondOperand());
-                    TypeCheckVisitor.getInstance().setFoundType("String", "Primitive", 0);
+                    TypeCheckVisitor.getInstance().setFoundType("String", "Primitive", -1);
                     expression.setOperator(ExpressionOperator.CONCAT);
 
                 } else if (firstType.equals("Integer") && secondType.equals("String")){
                     //second operand is a string. Cast first operand to string. Output is a string
                     new StringCast(expression.getFirstOperand());
-                    TypeCheckVisitor.getInstance().setFoundType("String", "Primitive", 0);
+                    TypeCheckVisitor.getInstance().setFoundType("String", "Primitive", -1);
                     expression.setOperator(ExpressionOperator.CONCAT);
 
                 } else if (firstType.equals("String") && secondType.equals("String")){
                     //both operands are strings. Output is a string
-                    TypeCheckVisitor.getInstance().setFoundType("String", "Primitive", 0);
+                    TypeCheckVisitor.getInstance().setFoundType("String", "Primitive", -1);
+
                     expression.setOperator(ExpressionOperator.CONCAT);
                 } else {
                     //Something that's not a string or integer has been found. Throw
                     throw new MismatchedTypeException();
                 }
-                    
+
                 break;
             case SUBTRACT:
                 // falltrough
@@ -71,14 +72,14 @@ public class ExpressionTypeChecker implements NodeVisitor {
                 if (!TypeCheckVisitor.getInstance().getFoundType().equals("Integer")) {
                     throw new MismatchedTypeException();
                 }
-                TypeCheckVisitor.getInstance().setFoundType("Integer", "Primitive", 0);
+                TypeCheckVisitor.getInstance().setFoundType("Integer", "Primitive", -1);
                 break;
             case NEGATE:
                 expression.visitChild(new CheckDecider(), expression.getFirstOperand());
                 if (!TypeCheckVisitor.getInstance().getFoundType().equals("Integer")) {
                     throw new MismatchedTypeException();
                 }
-                TypeCheckVisitor.getInstance().setFoundType("Integer", "Primitive", 0);
+                TypeCheckVisitor.getInstance().setFoundType("Integer", "Primitive", -1);
                 break;
             case LESS_THAN:
                 // falltrough
@@ -95,7 +96,7 @@ public class ExpressionTypeChecker implements NodeVisitor {
                 if (!TypeCheckVisitor.getInstance().getFoundType().equals("Integer")) {
                     throw new MismatchedTypeException();
                 }
-                TypeCheckVisitor.getInstance().setFoundType("Boolean", "Primitive", 0);
+                TypeCheckVisitor.getInstance().setFoundType("Boolean", "Primitive", -1);
                 break;
             case EQUALS:
                 // fallthrough
@@ -107,7 +108,7 @@ public class ExpressionTypeChecker implements NodeVisitor {
                 if (!firstType.equals(TypeCheckVisitor.getInstance().getFoundType())) {
                     throw new MismatchedTypeException();
                 }
-                TypeCheckVisitor.getInstance().setFoundType("Boolean", "Primitive", 0);
+                TypeCheckVisitor.getInstance().setFoundType("Boolean", "Primitive", -1);
                 break;
             case OR:
                 // falltrough
@@ -120,21 +121,21 @@ public class ExpressionTypeChecker implements NodeVisitor {
                 if (!TypeCheckVisitor.getInstance().getFoundType().equals("Boolean")) {
                     throw new MismatchedTypeException();
                 }
-                TypeCheckVisitor.getInstance().setFoundType("Boolean", "Primitive", 0);
+                TypeCheckVisitor.getInstance().setFoundType("Boolean", "Primitive", -1);
                 break;
             case NOT:
                 expression.visitChild(new CheckDecider(), expression.getFirstOperand());
                 if (!TypeCheckVisitor.getInstance().getFoundType().equals("Boolean")) {
                     throw new MismatchedTypeException();
                 }
-                TypeCheckVisitor.getInstance().setFoundType("Boolean", "Primitive", 0);
+                TypeCheckVisitor.getInstance().setFoundType("Boolean", "Primitive", -1);
                 break;
             case VARIABLE:
                 //TODO: this case is unused, as its functionality is partially implemented by cCONCAT
-                TypeCheckVisitor.getInstance().setFoundType("String", "Primitive", 0);
+                TypeCheckVisitor.getInstance().setFoundType("String", "Primitive", -1);
                 break;
             case CONSTANT:
-                TypeCheckVisitor.getInstance().setFoundType(expression.getConstant().getType(), "Primitive", 0);
+                TypeCheckVisitor.getInstance().setFoundType(expression.getConstant().getType(), "Primitive", -1);
                 break;
             case ACCESS:
                 //make sure the first operand is actually a template
@@ -165,7 +166,7 @@ public class ExpressionTypeChecker implements NodeVisitor {
                     ArraySymbol fieldArray = (ArraySymbol) fieldContent;
                     TypeCheckVisitor.getInstance().setFoundType(fieldContent.getType(), "Array", fieldArray.getNestingLevel());
                 } else {
-                    TypeCheckVisitor.getInstance().setFoundType(fieldContent.getType(), fieldContent.getComplexType(), 0);
+                    TypeCheckVisitor.getInstance().setFoundType(fieldContent.getType(), fieldContent.getComplexType(), -1);
                 }
 
                 //TODO: When we finally get to interpreting the program, the process of getting the field will be quite similar,
@@ -184,21 +185,22 @@ public class ExpressionTypeChecker implements NodeVisitor {
                 int nestingLevel = TypeCheckVisitor.getInstance().getNestingLevel();
 
                 // Case 2: Check that index i.e. second operand is an integer
-                if (!(TypeCheckVisitor.getInstance().getFoundType().equals("Integer") && TypeCheckVisitor.getInstance().getFoundComplexType().equals("Primitive"))) {
-                    throw new MismatchedTypeException("Index for array (or template) is not integer!");
+                expression.visitChild(new CheckDecider(), expression.getSecondOperand());
+                if (!(TypeCheckVisitor.getFoundType().equals("Integer") && TypeCheckVisitor.getFoundComplexType().equals("Primitive"))) {
+                    throw new MismatchedTypeException("Index for array (or template) is not integer! Received type: '" + TypeCheckVisitor.getFoundType() + "'' with complex type: '" + TypeCheckVisitor.getFoundComplexType() + "'");
                 }
 
-                if (TypeCheckVisitor.getInstance().getNestingLevel() > 0) {   //if nestingLevel is 0, indexing will give us something that is not an array
-                    TypeCheckVisitor.getInstance().setFoundType(arrayType, "Array", nestingLevel - 1);
+                if (TypeCheckVisitor.getNestingLevel() >= 0) {   //if nestingLevel is -1, indexing will give us something that is not an array
+                    TypeCheckVisitor.setFoundType(arrayType, "Array", nestingLevel - 1);
                 } else {
                     switch (arrayType) {
                         case "Integer":
                         case "Boolean":
                         case "String":
-                            TypeCheckVisitor.getInstance().setFoundType(arrayType, "Primitive", 0);
+                            TypeCheckVisitor.setFoundType(arrayType, "Primitive", -1);
                         break;
                         default:
-                            TypeCheckVisitor.getInstance().setFoundType(arrayType, "Template", 0);
+                            TypeCheckVisitor.setFoundType(arrayType, "Template", -1);
                             break;
                     }
                 }

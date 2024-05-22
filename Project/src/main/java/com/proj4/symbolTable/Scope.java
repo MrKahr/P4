@@ -73,7 +73,7 @@ public class Scope implements Cloneable {
             throw new VariableAlreadyDefinedException("The variable name \"" + identifier + "\" is already in use!");
         } else {
             if (verbose) {
-                System.out.println("Declaring variable \"" + identifier + "\" with type \"" + variable.getType()
+                System.out.println(this.getClass().getSimpleName() + ": Declaring variable \"" + identifier + "\" with type \"" + variable.getType()
                         + "\", complex type \"" + variable.getComplexType() + "\".");
             }
             variableTable.put(identifier, variable);

@@ -99,11 +99,13 @@ public class ProgramInterpreter implements NodeVisitor {
                 System.out.println("Reached final state: No available actions! Stopping program.");
             }
         }
-        if (!ScopeManager.getInstance().getScopeStack().empty()) {
-            System.out.println("\nInterpreting done. Final scope: ");
-            ScopeManager.getInstance().printBindings();
-        } else {
-            System.out.println("\nInterpreting done. Final scope is empty!");
+        if(ScopeManager.getInstance().getVerbosity()){
+            if (!ScopeManager.getInstance().getScopeStack().empty()) {
+                System.out.println("\nInterpreting done. Final scope: ");
+                ScopeManager.getInstance().printBindings();
+            } else {
+                System.out.println("\nInterpreting done. Final scope is empty!");
+            }
         }
         inputScan.close(); //TODO: If problems with input, move me to the outermost scope of this method.
         ScopeManager.getInstance().exit();

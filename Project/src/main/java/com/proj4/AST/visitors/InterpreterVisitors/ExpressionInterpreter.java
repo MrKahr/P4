@@ -42,10 +42,8 @@ public class ExpressionInterpreter implements NodeVisitor {
                 if(this.verbose){
                     System.out.println(this.getClass().getSimpleName() + ": Result of " + left + " + " + right + " is " + integerResult);
                 }
-               
-                InterpreterVisitor.getInstance().setReturnSymbol(new IntegerSymbol(integerResult));
-                
 
+                InterpreterVisitor.getInstance().setReturnSymbol(new IntegerSymbol(integerResult));
                 break;
             case SUBTRACT:
                 operands = getIntegerOperands(expression);
@@ -209,7 +207,7 @@ public class ExpressionInterpreter implements NodeVisitor {
                 //TODO: figure out how to handle this in the interpreter!
                 //at the time of writing, there is no syntactic support for this operator
                 if(this.verbose){
-                    System.out.println(this.getClass().getSimpleName() + ": Converting variable to string.");
+                    System.out.println(this.getClass().getSimpleName() + ": Unsupported Operation: Converting variable to string.");
                 }
                 break;
             case CONSTANT:
@@ -241,7 +239,6 @@ public class ExpressionInterpreter implements NodeVisitor {
                 expression.visitChild(new InterpreterDecider(), expression.getSecondOperand());
                 Integer index = ((IntegerSymbol)InterpreterVisitor.getInstance().getReturnSymbol()).getValue();
                 InterpreterVisitor.getInstance().setReturnSymbol(content.get(index));
-
                 if(this.verbose){
                     System.out.println(this.getClass().getSimpleName() + ": Indexing array with \"" + index + "\".");
                 }

@@ -35,15 +35,14 @@ public class ReturnTypeChecker implements NodeVisitor{
         }
 
         returnNode.visitChild(new CheckDecider(), returnNode.getReturnValue());
-
-        if (!TypeCheckVisitor.getInstance().getFoundType().equals(action.getReturnType())){
-            throw new MismatchedTypeException("Error for \""+ actionIdentifier + "\" Mismatched return type! Expected \"" + action.getReturnType() + "\"" + "but got \"" + TypeCheckVisitor.getInstance().getFoundType());
+        if (!TypeCheckVisitor.getFoundType().equals(action.getReturnType())){
+            throw new MismatchedTypeException("Error for \""+ actionIdentifier + "\": Mismatched return type! Expected \"" + action.getReturnType() + "\"" + " but got \"" + TypeCheckVisitor.getFoundType() + "\"");
         }
-        if (!TypeCheckVisitor.getInstance().getFoundComplexType().equals(action.getComplexReturnType())) {
-            throw new MismatchedTypeException("Error for \"" + actionIdentifier + "\" + Expected complex return type \"" + action.getComplexReturnType() + "\" but got \"" + TypeCheckVisitor.getInstance().getFoundComplexType() + "\"!");
+        if (!TypeCheckVisitor.getFoundComplexType().equals(action.getComplexReturnType())) {
+            throw new MismatchedTypeException("Error for \"" + actionIdentifier + "\": Expected complex return type \"" + action.getComplexReturnType() + "\" but got \"" + TypeCheckVisitor.getFoundComplexType() + "\"");
         }
-        if (TypeCheckVisitor.getInstance().getNestingLevel() != action.getNestingLevel()) {
-            throw new MismatchedTypeException("Error for \""+ actionIdentifier + "\" Mismatched return type! Expected nesting level " + action.getNestingLevel() + " but got " + TypeCheckVisitor.getInstance().getNestingLevel() + "!");
+        if (TypeCheckVisitor.getNestingLevel() != action.getNestingLevel()) {
+            throw new MismatchedTypeException("Error for \""+ actionIdentifier + "\": Mismatched return type! Expected nesting level \"" + action.getNestingLevel() + "\" but got \"" + TypeCheckVisitor.getNestingLevel() + "\"");
         }
     }
 }
