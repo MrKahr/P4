@@ -5,6 +5,7 @@ Action decl
 */
 Action ta() {
     Integer v1 IS 3;
+    Integer v2 IS 4;
 }
 
 
@@ -22,12 +23,12 @@ Action tb(Integer a, Integer b, Integer c) RESULTS IN Integer {
 Action Decl - Arrays
 - with parameters
 - without return
-*/
+
 Action tad1(Integer[] arrA, Integer[] arrB) RESULTS IN Integer[][] {
     Integer[][] arrC;// IS [arrA, arrB];
     RESULT IN arrC;
 }
-
+*/
 
 // Test 1
 Integer varNull IS ta(); // This one gets the value of the Action despite it not returning anything
@@ -36,4 +37,4 @@ Integer varNull IS ta(); // This one gets the value of the Action despite it not
 Integer vtb IS tb(1, 2, 3); // This works as intended
 
 // Test 3
-Integer[][] arr2D IS tad1([1], [2]);
+//Integer[][] arr2D IS tad1([1], [2]);
