@@ -33,10 +33,16 @@ public class Declaration extends Statement implements Identifiable, Typed{
     }
 
     public String getType(){
+        if(type == null) {
+            throw new MalformedAstException("Null type passed to declaration - cannot declare variable in symbol table.");
+        }
         return type;
     }
 
     public String getComplexType(){
+        if(type == null){
+            throw new MalformedAstException("Null complex type passed to declaration - cannot declare variable in symbol table.");
+        }
         return complexType;
     }
 

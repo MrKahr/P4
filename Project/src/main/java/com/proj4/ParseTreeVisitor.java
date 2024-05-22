@@ -159,8 +159,8 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     public ArrayList<Declaration> visitParameterList(DBLParser.ParameterListContext ctx) {
         ArrayList<Declaration> parameterNodes = new ArrayList<Declaration>();
         ParseTree childNode = null;
-        String type = "parseTreeVisitor";
-        String complexType = "parseTreeVisitor";
+        String type = null;
+        String complexType = null;
         Integer nestingLevel = -1;
         //modulo expressions here separate parameters as each parameter is in the form: Type - Identifier - ,
         for (int i = 0; i < ctx.getChildCount(); i++){
