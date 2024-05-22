@@ -3,15 +3,15 @@ package com.proj4.AST.visitors.CheckVisitors;
 import com.proj4.AST.nodes.AST;
 import com.proj4.AST.nodes.RuleDecl;
 import com.proj4.AST.visitors.CheckDecider;
-import com.proj4.AST.visitors.TypeCheckVisitor;
+import com.proj4.AST.visitors.NodeVisitor;
 import com.proj4.exceptions.UndefinedActionExpection;
 import com.proj4.symbolTable.GlobalScope;
 import com.proj4.symbolTable.ScopeManager;
 import com.proj4.symbolTable.symbols.ActionSymbol;
 import com.proj4.symbolTable.symbols.RuleSymbol;
 
-public class RuleDeclTypeChecker extends TypeCheckVisitor{
-
+public class RuleDeclTypeChecker implements NodeVisitor{
+    
     public void visit(AST node){
         RuleDecl ruleDecl = (RuleDecl) node;
         ScopeManager.getInstance().inherit();

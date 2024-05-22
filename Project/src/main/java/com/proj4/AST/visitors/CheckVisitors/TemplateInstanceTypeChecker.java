@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.proj4.AST.nodes.AST;
 import com.proj4.AST.nodes.TemplateInstance;
 import com.proj4.AST.visitors.CheckDecider;
+import com.proj4.AST.visitors.NodeVisitor;
 import com.proj4.AST.visitors.TypeCheckVisitor;
 import com.proj4.exceptions.MismatchedTypeException;
 import com.proj4.symbolTable.symbols.ArraySymbol;
@@ -12,7 +13,7 @@ import com.proj4.symbolTable.symbols.SymbolTableEntry;
 import com.proj4.symbolTable.symbols.TemplateSymbol;
 import com.proj4.symbolTable.GlobalScope;
 
-public class TemplateInstanceTypeChecker extends TypeCheckVisitor{
+public class TemplateInstanceTypeChecker implements NodeVisitor{
 
     public void visit(AST node){
         TemplateInstance templateInstance = (TemplateInstance) node;
@@ -29,12 +30,12 @@ public class TemplateInstanceTypeChecker extends TypeCheckVisitor{
                 templateInstance.visitChild(new CheckDecider(), index);
                 SymbolTableEntry entry = content.get(index);
 
-                if (!TypeCheckVisitor.getFoundType().equals(entry.getType())) {
-                    throw new MismatchedTypeException("Mismatched type in template instatiation! Expected \"" + entry.getType() + "\"" + "but got \"" + TypeCheckVisitor.getFoundType() + "\".");
+                if (!TypeCheckVisitor.getInstance().getFoundType().equals(entry.getType())) {
+                    throw new MismatchedTypeException("Mismatched type in template instatiation! Expected \"" + entry.getType() + "\"" + "but got \"" + TypeCheckVisitor.getInstance().getFoundType() + "\".");
                 }
 
-                if (!TypeCheckVisitor.getFoundComplexType().equals(entry.getComplexType())) {
-                    throw new MismatchedTypeException("Mismatched complex type in template instatiation! Expected \"" + entry.getComplexType() + "\"" + "but got \"" + TypeCheckVisitor.getFoundComplexType() + "\".");
+                if (!TypeCheckVisitor.getInstance().getFoundComplexType().equals(entry.getComplexType())) {
+                    throw new MismatchedTypeException("Mismatched complex type in template instatiation! Expected \"" + entry.getComplexType() + "\"" + "but got \"" + TypeCheckVisitor.getInstance().getFoundComplexType() + "\".");
                 }
 
                 if (entry instanceof ArraySymbol) {
@@ -43,7 +44,7 @@ public class TemplateInstanceTypeChecker extends TypeCheckVisitor{
                             throw new MismatchedTypeException("Mismatched nesting level in template instatiation! Expected \"" + ((ArraySymbol) entry).getNestingLevel() + "\"" + "but got \"" + TypeCheckVisitor.getNestingLevel() + "\".");
                         };
                     } catch (ClassCastException e) {
-                        throw new MismatchedTypeException("Mismatched complex type in template instatiation! Expected \"Array\"" + "but got \"" + TypeCheckVisitor.getFoundComplexType() + "\".");
+                        throw new MismatchedTypeException("Mismatched complex type in template instatiation! Expected \"Array\"" + "but got \"" + TypeCheckVisitor.getInstance().getFoundComplexType() + "\".");
                     }
                 }
             }

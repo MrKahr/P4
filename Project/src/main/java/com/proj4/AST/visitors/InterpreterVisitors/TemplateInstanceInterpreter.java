@@ -4,10 +4,11 @@ import com.proj4.AST.nodes.AST;
 import com.proj4.AST.nodes.TemplateInstance;
 import com.proj4.AST.visitors.InterpreterDecider;
 import com.proj4.AST.visitors.InterpreterVisitor;
+import com.proj4.AST.visitors.NodeVisitor;
 import com.proj4.symbolTable.symbols.SymbolTableEntry;
 import com.proj4.symbolTable.symbols.TemplateSymbol;
 
-public class TemplateInstanceInterpreter extends InterpreterVisitor {
+public class TemplateInstanceInterpreter implements NodeVisitor {
 
     public void visit(AST node){
         TemplateInstance templateInstance = (TemplateInstance) node;
@@ -20,10 +21,10 @@ public class TemplateInstanceInterpreter extends InterpreterVisitor {
         if (templateInstance.getChildren().size() > 0) {
             for (int index = 0; index < templateInstance.getChildren().size(); index++) {
                 templateInstance.visitChild(new InterpreterDecider(), index);
-                template.getContent().set(index, InterpreterVisitor.getReturnSymbol());
+                template.getContent().set(index, InterpreterVisitor.getInstance().getReturnSymbol());
             }
         }
 
-        InterpreterVisitor.setReturnSymbol(template);
+        InterpreterVisitor.getInstance().setReturnSymbol(template);
     }
 }

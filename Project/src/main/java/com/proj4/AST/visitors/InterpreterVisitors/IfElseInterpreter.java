@@ -4,9 +4,10 @@ import com.proj4.AST.nodes.AST;
 import com.proj4.AST.nodes.IfElse;
 import com.proj4.AST.visitors.InterpreterDecider;
 import com.proj4.AST.visitors.InterpreterVisitor;
+import com.proj4.AST.visitors.NodeVisitor;
 import com.proj4.symbolTable.symbols.BooleanSymbol;
 
-public class IfElseInterpreter extends InterpreterVisitor {
+public class IfElseInterpreter implements NodeVisitor {
     private Boolean verbose = false;
 
     public IfElseInterpreter(){}
@@ -17,7 +18,7 @@ public class IfElseInterpreter extends InterpreterVisitor {
     public void visit(AST node) {
         IfElse ifElse = (IfElse) node;
         ifElse.visitChild(new InterpreterDecider(), ifElse.getCondition());
-        Boolean truthValue = ((BooleanSymbol)InterpreterVisitor.getReturnSymbol()).getValue();
+        Boolean truthValue = ((BooleanSymbol)InterpreterVisitor.getInstance().getReturnSymbol()).getValue();
 
         if(this.verbose){
             System.out.println(this.getClass().getSimpleName() + ": If-statement condition is " + truthValue + ".");

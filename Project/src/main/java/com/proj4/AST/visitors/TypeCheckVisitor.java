@@ -1,31 +1,46 @@
 package com.proj4.AST.visitors;
 
-public abstract class TypeCheckVisitor implements NodeVisitor {
+//this class is a singleton
+public class TypeCheckVisitor {
 
     //Field
-    private static String foundType;        //this holds the most recent type we have found. Used to circumvent visitors not being able to return anything
-    private static String foundComplexType; //this holds the most recent complex type we have found. Used for differentiating between arrays, templates, and primitives
-    private static String currentAction;    //if we're inside an action body, this will hold the action's name
-    private static Integer nestingLevel = -1;
+    private static TypeCheckVisitor instance;
+
+    private String foundType;        //this holds the most recent type we have found. Used to circumvent visitors not being able to return anything
+    private String foundComplexType; //this holds the most recent complex type we have found. Used for differentiating between arrays, templates, and primitives
+    private String currentAction;    //if we're inside an action body, this will hold the action's name
+    private Integer nestingLevel = -1;
+
+    //Constructor
+    private TypeCheckVisitor(){
+        
+    }
 
     //Method
-    public static String getFoundType(){
+    public static TypeCheckVisitor getInstance(){
+        if (instance == null) {
+            instance = new TypeCheckVisitor();
+        }
+        return instance;
+    }
+    
+    public String getFoundType(){
         return foundType;
     }
 
-    public static String getFoundComplexType(){
+    public String getFoundComplexType(){
         return foundComplexType;
     }
 
-    public static String getCurrentAction(){
+    public String getCurrentAction(){
         return currentAction;
     }
 
-    public static Integer getNestingLevel(){
+    public Integer getNestingLevel(){
         return nestingLevel;
     }
 
-    public static void setFoundType(String type, String complexType, int nesting){
+    public void setFoundType(String type, String complexType, int nesting){
         foundType = type;
         foundComplexType = complexType;
         nestingLevel = nesting;
@@ -33,7 +48,7 @@ public abstract class TypeCheckVisitor implements NodeVisitor {
         System.out.println("TypeCheckVisitor: setFoundType(Type = "+type+" | Complex type = "+complexType+" | Nesting Level = "+nesting+")");
     }
 
-    public static void setCurrentAction(String actionName){
+    public void setCurrentAction(String actionName){
         currentAction = actionName;
     }
 

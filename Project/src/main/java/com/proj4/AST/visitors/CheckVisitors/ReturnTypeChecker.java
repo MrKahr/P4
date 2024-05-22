@@ -3,13 +3,14 @@ package com.proj4.AST.visitors.CheckVisitors;
 import com.proj4.AST.nodes.AST;
 import com.proj4.AST.nodes.Return;
 import com.proj4.AST.visitors.CheckDecider;
+import com.proj4.AST.visitors.NodeVisitor;
 import com.proj4.AST.visitors.TypeCheckVisitor;
 import com.proj4.exceptions.MalformedAstException;
 import com.proj4.exceptions.MismatchedTypeException;
 import com.proj4.symbolTable.GlobalScope;
 import com.proj4.symbolTable.symbols.ActionSymbol;
 
-public class ReturnTypeChecker extends TypeCheckVisitor{
+public class ReturnTypeChecker implements NodeVisitor{
     private Boolean verbose = false;
 
     public ReturnTypeChecker(){}
@@ -20,11 +21,11 @@ public class ReturnTypeChecker extends TypeCheckVisitor{
 
     public void visit(AST node){
         Return returnNode = (Return) node;
-        String actionIdentifier = TypeCheckVisitor.getCurrentAction();
+        String actionIdentifier = TypeCheckVisitor.getInstance().getCurrentAction();
 
 
         if(this.verbose) {
-            System.out.println(this.getClass().getSimpleName() + ": Attempting to return from \"" + TypeCheckVisitor.getCurrentAction() + "\".");
+            System.out.println(this.getClass().getSimpleName() + ": Attempting to return from \"" + TypeCheckVisitor.getInstance().getCurrentAction() + "\".");
         }
 
         ActionSymbol action = GlobalScope.getInstance().getActionTable().get(actionIdentifier);
@@ -34,7 +35,6 @@ public class ReturnTypeChecker extends TypeCheckVisitor{
         }
 
         returnNode.visitChild(new CheckDecider(), returnNode.getReturnValue());
-
         if (!TypeCheckVisitor.getFoundType().equals(action.getReturnType())){
             throw new MismatchedTypeException("Error for \""+ actionIdentifier + "\": Mismatched return type! Expected \"" + action.getReturnType() + "\"" + " but got \"" + TypeCheckVisitor.getFoundType() + "\"");
         }

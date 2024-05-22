@@ -12,3 +12,4 @@ public class NullSymbol extends PrimitiveSymbol<String>{
         this.setValue(other.getValue());
     }
 }
+

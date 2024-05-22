@@ -1,27 +1,28 @@
 package com.proj4.AST.visitors.CheckVisitors;
 
 import com.proj4.AST.visitors.CheckDecider;
+import com.proj4.AST.visitors.NodeVisitor;
 import com.proj4.AST.visitors.TypeCheckVisitor;
 import com.proj4.exceptions.MismatchedTypeException;
 import com.proj4.AST.nodes.AST;
 import com.proj4.AST.nodes.Assignment;
 
-public class AssignmentTypeChecker extends TypeCheckVisitor{
-
+public class AssignmentTypeChecker implements NodeVisitor{
+    
     public void visit(AST node){
         Assignment assignment = (Assignment) node;
 
         assignment.visitChild(new CheckDecider(), assignment.getSymbolExpression());    //check the symbol to overwrite
 
-        String expectedType = TypeCheckVisitor.getFoundType(); // This evaluates arrays correct
+        String expectedType = TypeCheckVisitor.getInstance().getFoundType(); // This evaluates arrays correct
 
-        String expectedComplexType = TypeCheckVisitor.getFoundComplexType();
+        String expectedComplexType = TypeCheckVisitor.getInstance().getFoundComplexType();
 
         assignment.visitChild(new CheckDecider(), assignment.getValueExpression());    //check the value to overwrite with
+        
+        String valueType = TypeCheckVisitor.getInstance().getFoundType();
 
-        String valueType = TypeCheckVisitor.getFoundType();
-
-        String valueComplexType = TypeCheckVisitor.getFoundComplexType();
+        String valueComplexType = TypeCheckVisitor.getInstance().getFoundComplexType();
 
         // Primitive types
         if(!expectedType.equals(valueType) && valueType != "Null"){

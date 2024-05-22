@@ -1,0 +1,4 @@
+setState(String state)
+remove(Card[] array)
+shuffle(Card[] array) // Would be better designed if typing was determined dynamically, because right now, we can only shuffle card array. We could also do some void pointer solution. 
+write(String input)

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.proj4.AST.nodes.AST;
 import com.proj4.AST.nodes.ActionCall;
 import com.proj4.AST.visitors.CheckDecider;
+import com.proj4.AST.visitors.NodeVisitor;
 import com.proj4.AST.visitors.TypeCheckVisitor;
 import com.proj4.exceptions.MismatchedTypeException;
 import com.proj4.exceptions.ParameterMismatchExpection;
@@ -13,7 +14,7 @@ import com.proj4.symbolTable.GlobalScope;
 import com.proj4.symbolTable.symbols.ActionSymbol;
 import com.proj4.symbolTable.symbols.SymbolTableEntry;
 
-public class ActionCallTypeChecker extends TypeCheckVisitor{
+public class ActionCallTypeChecker implements NodeVisitor{
 
     public void visit(AST node){
         ActionCall actionCall = (ActionCall) node;
@@ -35,7 +36,7 @@ public class ActionCallTypeChecker extends TypeCheckVisitor{
             actionCall.visitChild(new CheckDecider(), index);
 
             SymbolTableEntry parameter = action.getInitialScope().getVariableTable().get(parameterNames.get(index));
-
+          
             if (!TypeCheckVisitor.getFoundType().equals(parameter.getType())){
                 throw new MismatchedTypeException("Error for \""+ actionCall.getIdentifier() + "\": Expected type \"" + parameter.getType() + "\"" + " but got \"" + TypeCheckVisitor.getFoundType() + "\"");
             }
@@ -47,7 +48,7 @@ public class ActionCallTypeChecker extends TypeCheckVisitor{
         //arguments are all well typed and we pretend to have gotten a return value
 
         //System.out.println(this.getClass().getSimpleName() + ": DEBUG ACTION RETURN = " + action.getReturnType());
-        TypeCheckVisitor.setFoundType(action.getReturnType(), action.getComplexReturnType(), action.getNestingLevel());
+        TypeCheckVisitor.getInstance().setFoundType(action.getReturnType(), action.getComplexReturnType(), action.getNestingLevel());
 
     }
 }
