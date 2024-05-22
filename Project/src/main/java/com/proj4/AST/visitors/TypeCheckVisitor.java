@@ -13,7 +13,7 @@ public class TypeCheckVisitor {
 
     //Constructor
     private TypeCheckVisitor(){
-        
+
     }
 
     //Method
@@ -23,7 +23,7 @@ public class TypeCheckVisitor {
         }
         return instance;
     }
-    
+
     public String getFoundType(){
         return foundType;
     }
@@ -52,9 +52,9 @@ public class TypeCheckVisitor {
         currentAction = actionName;
     }
 
-    public static void setNestingLevel(Integer level){
+    public void setNestingLevel(Integer level){
         //System.out.println("TypeCheckVisitor: DEBUG Setting nesting level = " + level);
-        nestingLevel = level;
+        this.nestingLevel = level;
     }
 
 }

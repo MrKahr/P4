@@ -40,8 +40,8 @@ public class TemplateInstanceTypeChecker implements NodeVisitor{
 
                 if (entry instanceof ArraySymbol) {
                     try {
-                        if(!TypeCheckVisitor.getNestingLevel().equals(((ArraySymbol) entry).getNestingLevel())){
-                            throw new MismatchedTypeException("Mismatched nesting level in template instatiation! Expected \"" + ((ArraySymbol) entry).getNestingLevel() + "\"" + "but got \"" + TypeCheckVisitor.getNestingLevel() + "\".");
+                        if(!TypeCheckVisitor.getInstance().getNestingLevel().equals(((ArraySymbol) entry).getNestingLevel())){
+                            throw new MismatchedTypeException("Mismatched nesting level in template instatiation! Expected \"" + ((ArraySymbol) entry).getNestingLevel() + "\"" + "but got \"" + TypeCheckVisitor.getInstance().getNestingLevel() + "\".");
                         };
                     } catch (ClassCastException e) {
                         throw new MismatchedTypeException("Mismatched complex type in template instatiation! Expected \"Array\"" + "but got \"" + TypeCheckVisitor.getInstance().getFoundComplexType() + "\".");
@@ -49,6 +49,6 @@ public class TemplateInstanceTypeChecker implements NodeVisitor{
                 }
             }
         }
-        TypeCheckVisitor.setFoundType(templateType, "Template", -1);
+        TypeCheckVisitor.getInstance().setFoundType(templateType, "Template", -1);
     }
 }

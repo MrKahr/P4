@@ -9,7 +9,7 @@ import com.proj4.exceptions.MismatchedTypeException;
 import com.proj4.exceptions.UndefinedTypeException;
 
 public class ArrayInstanceTypeChecker implements NodeVisitor{
-    
+
     public void visit(AST node){
         ArrayInstance arrayInstance = (ArrayInstance) node;
 
@@ -29,8 +29,8 @@ public class ArrayInstanceTypeChecker implements NodeVisitor{
         for (int i = 1; i < arrayInstance.getChildren().size(); i++) {
             arrayInstance.visitChild(new CheckDecider(), arrayInstance.getChildren().get(i));
 
-            if (!TypeCheckVisitor.getFoundType().equals(expectedType)) {
-                throw new MismatchedTypeException("Array element does not match expected array type! Found \"" + TypeCheckVisitor.getFoundType() + "\" at index " + i + ". Expected \"" + expectedType + "\".");
+            if (!TypeCheckVisitor.getInstance().getFoundType().equals(expectedType)) {
+                throw new MismatchedTypeException("Array element does not match expected array type! Found \"" + TypeCheckVisitor.getInstance().getFoundType() + "\" at index " + i + ". Expected \"" + expectedType + "\".");
             }
             if (!(TypeCheckVisitor.getInstance().getFoundComplexType().equals(expectedComplexType))){
                 throw new MismatchedTypeException("Array element does not match expected complex type! Found \"" + TypeCheckVisitor.getInstance().getFoundType() + "\" at index " + i + ". Expected \"" + expectedComplexType + "\".");

@@ -186,21 +186,21 @@ public class ExpressionTypeChecker implements NodeVisitor {
 
                 // Case 2: Check that index i.e. second operand is an integer
                 expression.visitChild(new CheckDecider(), expression.getSecondOperand());
-                if (!(TypeCheckVisitor.getFoundType().equals("Integer") && TypeCheckVisitor.getFoundComplexType().equals("Primitive"))) {
-                    throw new MismatchedTypeException("Index for array (or template) is not integer! Received type: '" + TypeCheckVisitor.getFoundType() + "'' with complex type: '" + TypeCheckVisitor.getFoundComplexType() + "'");
+                if (!(TypeCheckVisitor.getInstance().getFoundType().equals("Integer") && TypeCheckVisitor.getInstance().getFoundComplexType().equals("Primitive"))) {
+                    throw new MismatchedTypeException("Index for array (or template) is not integer! Received type: '" + TypeCheckVisitor.getInstance().getFoundType() + "'' with complex type: '" + TypeCheckVisitor.getInstance().getFoundComplexType() + "'");
                 }
 
-                if (TypeCheckVisitor.getNestingLevel() >= 0) {   //if nestingLevel is -1, indexing will give us something that is not an array
-                    TypeCheckVisitor.setFoundType(arrayType, "Array", nestingLevel - 1);
+                if (TypeCheckVisitor.getInstance().getNestingLevel() >= 0) {   //if nestingLevel is -1, indexing will give us something that is not an array
+                    TypeCheckVisitor.getInstance().setFoundType(arrayType, "Array", nestingLevel - 1);
                 } else {
                     switch (arrayType) {
                         case "Integer":
                         case "Boolean":
                         case "String":
-                            TypeCheckVisitor.setFoundType(arrayType, "Primitive", -1);
+                            TypeCheckVisitor.getInstance().setFoundType(arrayType, "Primitive", -1);
                         break;
                         default:
-                            TypeCheckVisitor.setFoundType(arrayType, "Template", -1);
+                            TypeCheckVisitor.getInstance().setFoundType(arrayType, "Template", -1);
                             break;
                     }
                 }
