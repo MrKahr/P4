@@ -1,10 +1,11 @@
 package com.proj4.AST.visitors.InterpreterVisitors;
 
+import java.util.ArrayList;
+
 import com.proj4.AST.visitors.InterpreterVisitor;
 import com.proj4.exceptions.UndefinedActionExpection;
 import com.proj4.symbolTable.GlobalScope;
-import com.proj4.symbolTable.symbols.ActionSymbol;
-import com.proj4.symbolTable.symbols.StringSymbol;
+import com.proj4.symbolTable.symbols.*;
 
 public class InbuiltActionExecutor {
 
@@ -27,6 +28,11 @@ public class InbuiltActionExecutor {
                 StringSymbol paramOneState = (StringSymbol) setState.getInitialScope().getVariableTable().get("state");
                 InterpreterVisitor.getInstance().setCurrentState(paramOneState.getValue());
                 break;
+            case "sizeInt":
+                ActionSymbol size = GlobalScope.getInstance().getActionTable().get(actionName);
+                ArraySymbol paramOneArraySymbol = (ArraySymbol) size.getInitialScope().getVariableTable().get("array");
+                ArrayList<SymbolTableEntry> array = paramOneArraySymbol.getContent();
+                InterpreterVisitor.getInstance().setReturnSymbol(new IntegerSymbol(array.size()));
             case "shuffle":     //randomize the given array
                 throw new UnsupportedOperationException("shuffle is not implemented yet.");
             case "draw":

@@ -1,5 +1,7 @@
 package com.proj4.AST.visitors.InterpreterVisitors;
 
+import java.util.ArrayList;
+
 import com.proj4.AST.nodes.AST;
 import com.proj4.AST.nodes.ActionCall;
 import com.proj4.AST.visitors.InterpreterVisitor;
@@ -19,6 +21,12 @@ public class InbuiltActionInterpreter implements NodeVisitor {
                 ActionSymbol setState = GlobalScope.getInstance().getActionTable().get(actionCall.getIdentifier());
                 StringSymbol paramOneState = (StringSymbol) setState.getInitialScope().getVariableTable().get("state");
                 InterpreterVisitor.getInstance().setCurrentState(paramOneState.getValue());
+                break;
+            case "sizeInt":
+                ActionSymbol size = GlobalScope.getInstance().getActionTable().get(actionCall.getIdentifier());
+                ArraySymbol paramOneArraySymbol = (ArraySymbol) size.getInitialScope().getVariableTable().get("array");
+                ArrayList<SymbolTableEntry> array = paramOneArraySymbol.getContent();
+                InterpreterVisitor.getInstance().setReturnSymbol(new IntegerSymbol(array.size()));
                 break;
             case "shuffle":     //randomize the given array
                 throw new UnsupportedOperationException("shuffle is not implemented yet.");
