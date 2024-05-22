@@ -8,7 +8,7 @@ import com.proj4.AST.nodes.AST;
 import com.proj4.AST.nodes.Assignment;
 
 public class AssignmentTypeChecker implements NodeVisitor{
-    
+
     public void visit(AST node){
         Assignment assignment = (Assignment) node;
 
@@ -19,18 +19,18 @@ public class AssignmentTypeChecker implements NodeVisitor{
         String expectedComplexType = TypeCheckVisitor.getInstance().getFoundComplexType();
 
         assignment.visitChild(new CheckDecider(), assignment.getValueExpression());    //check the value to overwrite with
-        
+
         String valueType = TypeCheckVisitor.getInstance().getFoundType();
 
         String valueComplexType = TypeCheckVisitor.getInstance().getFoundComplexType();
 
         // Primitive types
         if(!expectedType.equals(valueType) && valueType != "Null"){
-            throw new MismatchedTypeException("Cannot assign value of type \"" + TypeCheckVisitor.getFoundType() + "\" to variable of type \"" + expectedType + "\"!");
+            throw new MismatchedTypeException("Cannot assign value of type \"" + TypeCheckVisitor.getInstance().getFoundType() + "\" to variable of type \"" + expectedType + "\"!");
         }
             // Complex types
         if (!expectedComplexType.equals(valueComplexType) && valueComplexType != "Null") {
-            throw new MismatchedTypeException("Cannot assign value of complex type \"" + TypeCheckVisitor.getFoundComplexType() + "\" to variable of type \"" + expectedComplexType + "\"!");
+            throw new MismatchedTypeException("Cannot assign value of complex type \"" + TypeCheckVisitor.getInstance().getFoundComplexType() + "\" to variable of type \"" + expectedComplexType + "\"!");
         }
     }
 }

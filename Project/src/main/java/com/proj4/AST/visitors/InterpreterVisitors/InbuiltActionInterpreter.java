@@ -1,11 +1,7 @@
 package com.proj4.AST.visitors.InterpreterVisitors;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
 import com.proj4.AST.nodes.AST;
 import com.proj4.AST.nodes.ActionCall;
-import com.proj4.AST.visitors.InterpreterDecider;
 import com.proj4.AST.visitors.InterpreterVisitor;
 import com.proj4.AST.visitors.NodeVisitor;
 import com.proj4.exceptions.UndefinedActionExpection;
