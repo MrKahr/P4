@@ -22,7 +22,7 @@ Integer b IS tb();
 
 /* TEST 3
 Action Decl with parameters, without return
-*/
+
 Action tad1(Integer a, Integer b) RESULTS IN Integer {
     Integer ada IS a+b;
     RESULT IN ada;
@@ -30,3 +30,5 @@ Action tad1(Integer a, Integer b) RESULTS IN Integer {
 
 Integer ada IS 1;
 ada IS tad1(1,2);
+*/
+write("hej");

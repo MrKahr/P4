@@ -9,6 +9,7 @@ import com.proj4.AST.visitors.InterpreterVisitor;
 import com.proj4.AST.visitors.NodeVisitor;
 import com.proj4.exceptions.MismatchedTypeException;
 import com.proj4.symbolTable.GlobalScope;
+import com.proj4.symbolTable.InbuiltActionDefiner;
 import com.proj4.symbolTable.ScopeManager;
 import com.proj4.symbolTable.symbols.*;
 
@@ -54,10 +55,16 @@ public class ActionCallInterpreter implements NodeVisitor {
         }
 
         //check if the action is built-in or not
-        if (GlobalScope.getInstance().getInbuiltActions().contains(actionCall.getIdentifier())) {
+        if (InbuiltActionDefiner.getDefinerInstance().getIdentifiers().contains(actionCall.getIdentifier())) {
             //hand control to an InbuiltFunctionInterpreter and let it do its thing
-            InbuiltFunctionInterpreter inbuiltFunctionInterpreter = new InbuiltFunctionInterpreter();
+            InbuiltActionInterpreter inbuiltFunctionInterpreter = new InbuiltActionInterpreter();
+            //TODO: document the reason for thisAction
+            String thisAction = InterpreterVisitor.getInstance().getCurrentActionIdentifier();
+            InterpreterVisitor.getInstance().setCurrentAction(actionCall.getIdentifier());
+            ScopeManager.getInstance().getScopeStack().push(action.getInitialScope());
             inbuiltFunctionInterpreter.visit(actionCall);
+            ScopeManager.getInstance().exit();
+            InterpreterVisitor.getInstance().setCurrentAction(thisAction);
         } else {
             //set the scope and interpret the action. Also set the current action so return nodes target the right places
             String thisAction = InterpreterVisitor.getInstance().getCurrentActionIdentifier();

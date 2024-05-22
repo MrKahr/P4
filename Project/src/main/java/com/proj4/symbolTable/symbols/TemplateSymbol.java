@@ -31,6 +31,9 @@ public class TemplateSymbol extends SymbolTableEntry{
                 case "String":  //StringSymbol
                     content.add(new StringSymbol((StringSymbol) entry));
                     break;
+                case "Null":
+                    content.add(new NullSymbol((NullSymbol) entry));
+                    break;
                 default:        //Not a primitive
                     switch (getComplexType()) {
                         case "Array":   //ArraySymbol
