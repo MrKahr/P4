@@ -21,7 +21,7 @@ public class ProgramInterpreter implements NodeVisitor {
     public void visit(AST node) {
         //a scope to put action-templates into
         ScopeManager.getInstance().enter();
-
+/*
         //instantiate action-templates for every action
         for (String identifier : GlobalScope.getInstance().getActionTable().keySet()) {
             if(this.verbose){
@@ -37,7 +37,7 @@ public class ProgramInterpreter implements NodeVisitor {
                 )
             );
         }
-
+*/
         //interpret the body of the program
         Program program = (Program) node;
         node.visitChildren(new InterpreterDecider());
@@ -107,7 +107,8 @@ public class ProgramInterpreter implements NodeVisitor {
                 System.out.println("\nInterpreting done. Final scope is empty!");
             }
         }
-        inputScan.close(); //TODO: If problems with input, move me to the outermost scope of this method.
+        inputScan.close(); 
+        ScopeManager.getInstance().printGlobalScope(GlobalScope.getInstance().getResultTable());
         ScopeManager.getInstance().exit();
     }
 }

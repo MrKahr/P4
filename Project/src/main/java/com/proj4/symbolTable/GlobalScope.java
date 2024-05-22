@@ -25,6 +25,9 @@ public class GlobalScope {
     //this table keeps track of actions
     private HashMap<String, ActionSymbol> actionTable = new HashMap<>();
 
+    //this table keeps track of action templates i.e. the ones we can access with [actionname].RESULT
+    private HashMap<String, TemplateSymbol> resultTable = new HashMap<>();
+
     //this table keeps track of which states have been declared in the current scope
     private HashMap<String, StateSymbol> stateTable = new HashMap<>();
   
@@ -67,6 +70,10 @@ public class GlobalScope {
 
     public HashMap<String, ArrayList<RuleSymbol>> getRuleTable(){
         return ruleTable;
+    }
+
+    public HashMap<String, TemplateSymbol> getResultTable() {
+        return resultTable;
     }
 
     public void setActionTable(HashMap<String, ActionSymbol> table){
