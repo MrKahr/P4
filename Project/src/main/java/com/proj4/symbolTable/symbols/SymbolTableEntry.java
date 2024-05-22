@@ -18,7 +18,7 @@ public abstract class SymbolTableEntry implements Typed{
     public static SymbolTableEntry instantiateDefault(String type, String complexType, int nestingLevel){
         switch (complexType) {
             case "Array":
-                return new ArraySymbol(type, 0);
+                return new ArraySymbol(type, nestingLevel);
             case "Template":
                 return new TemplateSymbol(GlobalScope.getInstance().getBlueprintTable().get(type));
             case "Primitive":

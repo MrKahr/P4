@@ -125,6 +125,12 @@ public class ExpressionTest extends TestingArgs {
     }
 
     @Test
+    public void test14_5() {
+        IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("sa2");
+        assertTrue(intSymbol.getValue() == -1);
+    }
+
+    @Test
     @Disabled
     public void test15() {
         IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("sb");

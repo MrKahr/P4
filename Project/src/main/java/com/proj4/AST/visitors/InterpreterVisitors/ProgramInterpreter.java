@@ -18,6 +18,10 @@ import com.proj4.symbolTable.symbols.*;
 public class ProgramInterpreter implements NodeVisitor {
     private Boolean verbose = false;
 
+    public ProgramInterpreter(Boolean verbose){
+        this.verbose = verbose;
+    }
+
     public void visit(AST node) {
         //a scope to put action-templates into
         ScopeManager.getInstance().enter();
@@ -29,11 +33,11 @@ public class ProgramInterpreter implements NodeVisitor {
             }
             //Create an instance of the action's corresponding template and bind it to the identifier so we can use .RESULT
             ScopeManager.getInstance().getCurrent().declareVariable(
-                identifier, 
+                identifier,
                 SymbolTableEntry.instantiateDefault(
                     identifier,
                     "Template",
-                    0
+                    -1
                 )
             );
         }
@@ -55,7 +59,7 @@ public class ProgramInterpreter implements NodeVisitor {
                     System.out.println("[" + i + "] " + stateSymbol.getActionList().get(i));
                 }
                 //get input
-                
+
                 int selection = -1;
                 try {
                     String input = inputScan.nextLine();
@@ -63,9 +67,9 @@ public class ProgramInterpreter implements NodeVisitor {
                 } catch (Exception e) {
                     inputScan.close();
                     throw new UnsupportedInputException("Error with input, did not read integer:+ " + e.getMessage() );
-                    
+
                 }
-                
+
                 //start selected action
                 ActionSymbol action = GlobalScope.getInstance().getActionTable().get(stateSymbol.getActionList().get(selection));
                 ArrayList<String> parameters = action.getParameterNames();
@@ -93,7 +97,7 @@ public class ProgramInterpreter implements NodeVisitor {
                 InterpreterVisitor.getInstance().setCurrentAction(stateSymbol.getActionList().get(selection));
                 ScopeManager.getInstance().getScopeStack().push(action.getInitialScope());
                 program.visitChild(new InterpreterDecider(), action.getBody());
-                
+
             } else {
                 InterpreterVisitor.getInstance().setCurrentState(null);
                 System.out.println("Reached final state: No available actions! Stopping program.");

@@ -75,6 +75,7 @@ public class ActionDeclTypeChecker implements NodeVisitor{
 
         //In this language, given some action "a", we can write a.RESULT to get the most recently returned value
         //So let's make a template blueprint for this action (we'll instantiate the actual template with the interpreter)
+
         TemplateSymbol blueprint = new TemplateSymbol();
         blueprint.setType(actionDecl.getIdentifier());
         blueprint.addContent(

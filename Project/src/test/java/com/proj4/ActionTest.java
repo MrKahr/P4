@@ -45,7 +45,7 @@ public class ActionTest extends TestingArgs {
     public void test3() {
         ArraySymbol arraySymbol = (ArraySymbol) variableTable.get("arr2D");
         assertEquals("Integer", arraySymbol.getType()); // Check type
-        assertTrue(arraySymbol.getNestingLevel() == 0); // Check nesting level
+        assertTrue(arraySymbol.getNestingLevel() == 1); // Check nesting level
         for (Integer i = 0; i < arraySymbol.getContent().size(); i++) {
             ArraySymbol subArr = (ArraySymbol) arraySymbol.getContent().get(i);
             for (Integer j = 0; j < subArr.getContent().size(); j++) {

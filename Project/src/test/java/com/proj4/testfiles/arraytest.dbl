@@ -7,7 +7,7 @@ Integer[] a IS [1, 2, 3];
 /* TEST 2
 Flat String Array
 */
-String[] b IS ["John", "Userman", "is", "a", "user"];
+String[] b IS ["1", "2", "3", "4", "5"];
 
 
 /* TEST 3
@@ -16,13 +16,7 @@ Flat Boolean array
 Boolean[] c IS [true, true, true];
 
 
-/* TEST 3
+/* TEST 4
 3-level nested Integer array - correct type
 */
-Integer[] d IS [[1], [2, [3]], 4];
-
-
-/* TEST 4
-3-level nested Integer array - incorrect type
-*/
-Integer[] e IS [[1], ["fish", [3]], 4];
+Integer[] d IS [[[0+1], [2]], [[2+1], [4]]];

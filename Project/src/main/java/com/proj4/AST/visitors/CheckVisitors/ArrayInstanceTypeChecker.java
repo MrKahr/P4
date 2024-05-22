@@ -36,7 +36,7 @@ public class ArrayInstanceTypeChecker implements NodeVisitor{
                 throw new MismatchedTypeException("Array element does not match expected complex type! Found \"" + TypeCheckVisitor.getInstance().getFoundType() + "\" at index " + i + ". Expected \"" + expectedComplexType + "\".");
             }
             if(!(expectedNestingLevel == TypeCheckVisitor.getInstance().getNestingLevel())){
-                throw new MismatchedTypeException("Nesting level mismatch between array parent and child elements");
+                throw new MismatchedTypeException("Nesting level mismatch between array parent and child elements. Expected " + expectedNestingLevel + ", got " + (TypeCheckVisitor.getInstance().getNestingLevel()));
             }
         }
             // Check whether child is an array, if so increment nesting level
@@ -44,7 +44,7 @@ public class ArrayInstanceTypeChecker implements NodeVisitor{
                 TypeCheckVisitor.getInstance().setFoundType(expectedType, "Array", TypeCheckVisitor.getInstance().getNestingLevel() + 1);
 
             } else {
-                TypeCheckVisitor.getInstance().setFoundType(expectedType, "Array", -1);
+                TypeCheckVisitor.getInstance().setFoundType(expectedType, "Array", 0);
             }
     }
 }

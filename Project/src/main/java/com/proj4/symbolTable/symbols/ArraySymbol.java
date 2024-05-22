@@ -12,51 +12,29 @@ public class ArraySymbol extends SymbolTableEntry{
     //Constructor
     public ArraySymbol(String type, Integer nestingLevel){
         setType(type);
-        if (nestingLevel > 0) {
-            System.out.println("SUBRACTIRNG NESTINGLEVEL");
-            addContent(new ArraySymbol(type, nestingLevel - 1));
-        }
         this.nestingLevel = nestingLevel;
     }
 
     public ArraySymbol(ArraySymbol other){  //create a copy of a given ComplexSymbol{
-            //use the type to figure out which symbol type we're dealing with and create a copy of that type
-            switch (other.getType()) {
-                case "Integer": //IntSymbol
-                    for (SymbolTableEntry entry : other.getContent()) {
-                        content.add(new IntegerSymbol((IntegerSymbol) entry));
-                    }
-                    break;
-                case "Boolean": //BooleanSymbol
-                    for (SymbolTableEntry entry : other.getContent()) {
-                        content.add(new BooleanSymbol((BooleanSymbol) entry));
-                    }
-                    break;
-                case "String":  //StringSymbol
-                    for (SymbolTableEntry entry : other.getContent()) {
-                        content.add(new StringSymbol((StringSymbol) entry));
-                    }
-                    break;
-                default:        //Not a primitive
-                    switch (other.getComplexType()) {
-                        case "Array":   //ArraySymbol
-                            for (SymbolTableEntry entry : other.getContent()) {
-                                content.add(new ArraySymbol((ArraySymbol) entry));
-                            }
-                            break;
-                        case "Template":    //TemplateSymbol
-                            for (SymbolTableEntry entry : other.getContent()) {
-                                content.add(new TemplateSymbol((TemplateSymbol) entry));
-                            }
-                            break;
-                        default:
-                            throw new UndefinedTypeException("Type \"" + getType() + "\" is not defined!");
-                    }
-                    break;
+        //use the type to figure out which symbol type we're dealing with and create a copy of that type
+        for(SymbolTableEntry entry : other.getContent()){
+            if(entry instanceof IntegerSymbol){
+                content.add(new IntegerSymbol((IntegerSymbol) entry));
+            } else if(entry instanceof BooleanSymbol){
+                content.add(new BooleanSymbol((BooleanSymbol) entry));
+            } else if(entry instanceof StringSymbol){
+                content.add(new StringSymbol((StringSymbol) entry));
+            } else if(entry instanceof ArraySymbol){
+                content.add(new ArraySymbol((ArraySymbol) entry));
+            } else if(entry instanceof TemplateSymbol){
+                content.add(new TemplateSymbol((TemplateSymbol) entry));
+            } else {
+                throw new UndefinedTypeException("Type \"" + entry.getType() + "\" is not defined!");
             }
-            this.nestingLevel = other.getNestingLevel();
         }
-
+        this.nestingLevel = other.getNestingLevel();
+        setType(other.getType());
+    }
 
     //Method
     public ArrayList<SymbolTableEntry> getContent(){
