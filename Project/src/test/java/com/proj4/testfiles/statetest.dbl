@@ -7,6 +7,9 @@ Action tad2(Integer a, Integer b) RESULTS IN Integer {
     RESULT IN ada;
 }
 
-State state1 ALLOWS [tad2]
+State state1 ALLOWS [tad2, setState]
+State state2 ALLOWS []
+
+Integer sa IS 1;
 
 setState("state1");

@@ -10,6 +10,7 @@ import com.proj4.AST.visitors.InterpreterVisitor;
 import com.proj4.AST.visitors.NodeVisitor;
 import com.proj4.exceptions.UnsupportedInputException;
 import com.proj4.symbolTable.GlobalScope;
+import com.proj4.symbolTable.InbuiltActionDefiner;
 import com.proj4.symbolTable.ScopeManager;
 import com.proj4.symbolTable.symbols.*;
 
@@ -17,6 +18,13 @@ import com.proj4.symbolTable.symbols.*;
 
 public class ProgramInterpreter implements NodeVisitor {
     private Boolean verbose = false;
+    private String stateTestInput1 = "";
+    private String stateTestInput2 = "";
+
+    public ProgramInterpreter(String stateInput1,String stateInput2){
+        stateTestInput1 = stateInput1;
+        stateTestInput2 = stateInput2;
+    }
 
     public void visit(AST node) {
         //a scope to put action-templates into
@@ -58,13 +66,20 @@ public class ProgramInterpreter implements NodeVisitor {
                 
                 int selection = -1;
                 try {
-                    String input = inputScan.nextLine();
-                    selection = Integer.valueOf(input);
+                    if (stateTestInput1 != "") {
+                        String input = stateTestInput1;
+                        selection = Integer.valueOf(input);
+                    } else {
+                        String input = inputScan.nextLine();
+                        selection = Integer.valueOf(input);    
+                    }
+                    
                 } catch (Exception e) {
                     inputScan.close();
                     throw new UnsupportedInputException("Error with input, did not read integer:+ " + e.getMessage() );
                     
                 }
+                String actionName = stateSymbol.getActionList().get(selection);
                 
                 //start selected action
                 ActionSymbol action = GlobalScope.getInstance().getActionTable().get(stateSymbol.getActionList().get(selection));
@@ -75,7 +90,13 @@ public class ProgramInterpreter implements NodeVisitor {
                 }
                 for (int index = 0; index < parameters.size(); index++) {
                     System.out.println("Provide input for " + parameters.get(index));
-                    String input = inputScan.nextLine();
+                    String input = "";
+                    if (stateTestInput2 != "") {
+                        input = stateTestInput2;
+                    } else {
+                        input = inputScan.nextLine();
+                    }
+                    
                     switch (action.getInitialScope().getVariableTable().get(parameters.get(index)).getType()) {
                         case "Integer":
                             action.getInitialScope().getVariableTable().put(parameters.get(index), new IntegerSymbol(Integer.valueOf(input)));;
@@ -92,7 +113,12 @@ public class ProgramInterpreter implements NodeVisitor {
                 }
                 InterpreterVisitor.getInstance().setCurrentAction(stateSymbol.getActionList().get(selection));
                 ScopeManager.getInstance().getScopeStack().push(action.getInitialScope());
-                program.visitChild(new InterpreterDecider(), action.getBody());
+                if (InbuiltActionDefiner.getDefinerInstance().getIdentifiers().contains(actionName)) {
+                    InbuiltActionExecutor.getInstance().executeAction(actionName);
+                } else {
+                    program.visitChild(new InterpreterDecider(), action.getBody());
+                }
+                
                 
             } else {
                 InterpreterVisitor.getInstance().setCurrentState(null);
