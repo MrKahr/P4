@@ -121,7 +121,7 @@ public class ProgramInterpreter implements NodeVisitor {
                 System.out.println("\nInterpreting done. Final scope is empty!");
             }
         }
-        scanner.close(); 
+        scanner.close();
         ScopeManager.getInstance().printGlobalScope(GlobalScope.getInstance().getResultTable());
         ScopeManager.getInstance().exit();
     }
