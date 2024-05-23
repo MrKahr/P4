@@ -1,3 +1,12 @@
+/* PRECONDITION
+This Action is used to store a value.
+It's used to get values of out rules.
+Yes, this is a work-around because rules are statically scoped.
+*/
+Action storeInt(Integer value) RESULTS IN Integer {
+    RESULT IN value;
+}
+
 /* TEST 1
 Action Decl with parameters, without return
 */
@@ -7,8 +16,10 @@ Action rad(Integer a, Integer b) RESULTS IN Integer {
 
 
 Rule r1 WHEN [rad] IF(true){
-    Integer i IS rad.RESULT;
-    i IS i + 5; // This should equal 8
+    Integer i IS 5 + rad.RESULT; // This should equal 8
+    storeInt(i);
 }
 
 Integer v1 IS rad(1,2);
+
+Integer rad IS storeInt.RESULT; // This should also be 8

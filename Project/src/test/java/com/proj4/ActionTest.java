@@ -49,12 +49,17 @@ public class ActionTest extends TestingArgs {
     public void test3() {
         ArraySymbol arraySymbol = (ArraySymbol) variableTable.get("arr2D");
         assertEquals("Integer", arraySymbol.getType()); // Check type
-        assertTrue(arraySymbol.getNestingLevel() == 1); // Check nesting level
-        for (Integer i = 0; i < arraySymbol.getContent().size(); i++) {
-            ArraySymbol subArr = (ArraySymbol) arraySymbol.getContent().get(i);
-            for (Integer j = 0; j < subArr.getContent().size(); j++) {
-                IntegerSymbol intSymbol = (IntegerSymbol) arraySymbol.getContent().get(i);
-                assertTrue(j + 1 == intSymbol.getValue()); // Check values of array
+        assertTrue(arraySymbol.getNestingLevel() == 2); // Check nesting level
+        Integer counter = 1; // Counter for value of innermost array
+        for(SymbolTableEntry entry : arraySymbol.getContent()) {
+            ArraySymbol arraySymbol2 = (ArraySymbol) entry;
+            for(SymbolTableEntry entry2 : arraySymbol2.getContent()){
+                ArraySymbol arraySymbol3 = (ArraySymbol) entry2;
+                for(SymbolTableEntry entry3 : arraySymbol3.getContent()){
+                    IntegerSymbol integerSymbol = (IntegerSymbol) entry3;
+                    assertTrue(integerSymbol.getValue() == counter);
+                    counter++;
+                }
             }
         }
     }

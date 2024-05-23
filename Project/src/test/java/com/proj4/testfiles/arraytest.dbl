@@ -37,7 +37,7 @@ e2[0] IS e1[0];
 
 
 /* TEST 7
-Assign 2D-array to 2D-array
+Assign 2D-array to 2D-array - left
 */
 Integer[][] f1 IS [[0, 1]];
 Integer[][] f2 IS [[45], [2]];
@@ -45,9 +45,11 @@ f2[0] IS f1[0];
 
 
 /* TEST 8
-Access array out of bounds
-Tested elsewhere
+Assign array to array - right
 */
+Integer[] g1 IS [1, 2, 3];
+Integer[] g2 IS [78];
+g2[0] IS g1[3];
 
 
 /* TEST 9

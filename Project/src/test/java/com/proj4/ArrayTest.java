@@ -122,10 +122,12 @@ public class ArrayTest extends TestingArgs {
         }
 
         @Test
-        public void test8() { // Access array out of bounds
-            DBL interpreter = new DBL();
-            Executable e = () -> {interpreter.interpret("Integer[] g1 IS [1, 2, 3]; Integer[] g2 IS [0]; g2[0] IS g1[3];");};
-            assertThrows(MismatchedTypeException.class, e);
+        public void test8() {
+            ArraySymbol arraySymbol = (ArraySymbol) variableTable.get("g2");
+            assertEquals("Integer", arraySymbol.getType()); // Check type
+            assertTrue(arraySymbol.getNestingLevel() == 0); // Check nesting level
+            IntegerSymbol intSymbol = (IntegerSymbol) arraySymbol.getContent().get(0);
+            assertTrue(intSymbol.getValue() == 0); // Check values of array
         }
 
         @Test

@@ -20,16 +20,12 @@ Action Decl - Arrays
 - without return
 */
 Action tad1(Integer[][] arrA, Integer[][] arrB) RESULTS IN Integer[][][] {
-    Integer[][][] arrC IS [arrA, arrB, [[2]]];
+    Integer[][][] arrC IS [arrA, arrB, [[5]]];
     RESULT IN arrC;
 }
-
-// Test 1
-
 
 // Test 2
 Integer vtb IS tb(1, 2, 3);
 
 // Test 3
 Integer[][][] arr2D IS tad1([[1], [2]], [[3], [4]]);
-
