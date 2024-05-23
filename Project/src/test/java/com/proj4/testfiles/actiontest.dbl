@@ -36,6 +36,9 @@ Integer varNull IS ta(); // This one gets the value of the Action despite it not
 // Test 2
 Integer vtb IS tb(1, 2, 3); // This works as intended
 
+Integer[] arr IS [1,2];
+Integer arrsize IS sizeInt(arr);
+
 // Test 3
 //Integer[][] arr2D IS tad1([1], [2]);
 
