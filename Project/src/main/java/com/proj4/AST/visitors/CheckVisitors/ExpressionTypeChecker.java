@@ -47,7 +47,7 @@ public class ExpressionTypeChecker implements NodeVisitor {
                     new StringCast(expression.getFirstOperand());
                     TypeCheckVisitor.getInstance().setFoundType("String", "Primitive", -1);
                     expression.setOperator(ExpressionOperator.CONCAT);
-
+                    
                 } else if (firstType.equals("String") && secondType.equals("String")){
                     //both operands are strings. Output is a string
                     TypeCheckVisitor.getInstance().setFoundType("String", "Primitive", -1);
