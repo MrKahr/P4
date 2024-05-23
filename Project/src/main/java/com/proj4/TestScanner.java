@@ -12,7 +12,7 @@ public class TestScanner {
 
     // Constructor 
     TestScanner(){
-        scanner = new Scanner(System.in);
+        //scanner = new Scanner(System.in);
     }
 
     // Method 
@@ -37,7 +37,7 @@ public class TestScanner {
     }
 
     public void provideInput(String input) {
-        ByteArrayInputStream testIn = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8));
+        ByteArrayInputStream testIn = new ByteArrayInputStream(input.getBytes());
         System.setIn(testIn);
     }
 
