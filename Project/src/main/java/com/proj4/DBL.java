@@ -19,16 +19,13 @@ import com.proj4.symbolTable.ScopeManager;
 public class DBL {
     private Boolean debugMode = false;
     private Boolean verbose = false;
-    private String stateTestInput1 = "";
-    private String stateTestInput2 = "";
     private LocalTime startTime;
 
     // Constructor
     public DBL(){}
 
-    public void setStateTestInput(String stateInput1, String stateInput2){
-        stateTestInput1 = stateInput1;
-        stateTestInput2 = stateInput2;
+    public void setStateTestInput(){
+
     }
 
     // Methods
@@ -130,7 +127,7 @@ public class DBL {
             checkDecider.decideVisitor(abstractSyntaxTree);
 
             // Interpret AST
-            InterpreterDecider interpreterDecider = new InterpreterDecider(this.verbose, this.stateTestInput1, this.stateTestInput2);
+            InterpreterDecider interpreterDecider = new InterpreterDecider(this.verbose);
             interpreterDecider.decideVisitor(abstractSyntaxTree);
 
             // Input was sucessfully interpreted

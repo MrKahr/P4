@@ -3,6 +3,7 @@ package com.proj4.AST.visitors.InterpreterVisitors;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import com.proj4.TestScanner;
 import com.proj4.AST.nodes.AST;
 import com.proj4.AST.nodes.Program;
 import com.proj4.AST.visitors.InterpreterDecider;
@@ -18,12 +19,9 @@ import com.proj4.symbolTable.symbols.*;
 
 public class ProgramInterpreter implements NodeVisitor {
     private Boolean verbose = false;
-    private String stateTestInput1 = "";
-    private String stateTestInput2 = "";
 
-    public ProgramInterpreter(String stateInput1,String stateInput2){
-        stateTestInput1 = stateInput1;
-        stateTestInput2 = stateInput2;
+
+    public ProgramInterpreter(){
     }
 
     public void visit(AST node) {
@@ -49,7 +47,6 @@ public class ProgramInterpreter implements NodeVisitor {
         //interpret the body of the program
         Program program = (Program) node;
         node.visitChildren(new InterpreterDecider());
-        Scanner inputScan = new Scanner(System.in);
         //when we're done interpreting the body of the program, begin evaluating states
         while (InterpreterVisitor.getInstance().getCurrentState() != null) {
             StateSymbol stateSymbol = GlobalScope.getInstance().getStateTable().get(InterpreterVisitor.getInstance().getCurrentState());
@@ -66,18 +63,11 @@ public class ProgramInterpreter implements NodeVisitor {
                 
                 int selection = -1;
                 try {
-                    if (stateTestInput1 != "") {
-                        String input = stateTestInput1;
-                        selection = Integer.valueOf(input);
-                    } else {
-                        String input = inputScan.nextLine();
-                        selection = Integer.valueOf(input);    
-                    }
-                    
+                    String input = TestScanner.getInstance().getScanner().nextLine();
+                    selection = Integer.valueOf(input);                    
                 } catch (Exception e) {
-                    inputScan.close();
+                    TestScanner.getInstance().getScanner().close();
                     throw new UnsupportedInputException("Error with input, did not read integer:+ " + e.getMessage() );
-                    
                 }
                 String actionName = stateSymbol.getActionList().get(selection);
                 
@@ -91,12 +81,8 @@ public class ProgramInterpreter implements NodeVisitor {
                 for (int index = 0; index < parameters.size(); index++) {
                     System.out.println("Provide input for " + parameters.get(index));
                     String input = "";
-                    if (stateTestInput2 != "") {
-                        input = stateTestInput2;
-                    } else {
-                        input = inputScan.nextLine();
-                    }
-                    
+
+                    input = TestScanner.getInstance().getScanner().nextLine();
                     switch (action.getInitialScope().getVariableTable().get(parameters.get(index)).getType()) {
                         case "Integer":
                             action.getInitialScope().getVariableTable().put(parameters.get(index), new IntegerSymbol(Integer.valueOf(input)));;
@@ -133,7 +119,7 @@ public class ProgramInterpreter implements NodeVisitor {
                 System.out.println("\nInterpreting done. Final scope is empty!");
             }
         }
-        inputScan.close(); 
+        TestScanner.getInstance().getScanner().close(); 
         ScopeManager.getInstance().printGlobalScope(GlobalScope.getInstance().getResultTable());
         ScopeManager.getInstance().exit();
     }

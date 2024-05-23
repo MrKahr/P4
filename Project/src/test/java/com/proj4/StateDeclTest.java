@@ -7,6 +7,7 @@ import java.util.HashMap;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import com.proj4.TestScanner;
 import com.proj4.symbolTable.ScopeManager;
 import com.proj4.symbolTable.ScopeObserver;
 import com.proj4.symbolTable.symbols.*;
@@ -22,7 +23,8 @@ public class StateDeclTest extends TestingArgs{
         DBL interpreter = new DBL();
         interpreter.setDebugMode(debugMode);
         interpreter.setVerbosity(verbose);
-        interpreter.setStateTestInput("1","state2");
+        TestScanner.getInstance().setTestStatus(true);
+        TestScanner.getInstance().provideInput("1\nstate2\n");
         interpreter.interpret(getPath() + "statetest.dbl");
         variableTable = scopeObserver.getCurrentScope().peek().getVariableTable();
     }

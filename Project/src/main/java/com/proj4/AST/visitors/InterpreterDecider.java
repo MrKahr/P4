@@ -6,15 +6,11 @@ import com.proj4.symbolTable.ScopeManager;
 
 public class InterpreterDecider implements VisitorDecider {
     private static Boolean verbose = false;
-    private static String stateTestInput1 = "";
-    private static String stateTestInput2 = "";
 
     public InterpreterDecider(){}
 
-    public InterpreterDecider(Boolean isVerbose, String stateInput1, String stateInput2) {
+    public InterpreterDecider(Boolean isVerbose) {
         verbose = isVerbose;
-        stateTestInput1 = stateInput1;
-        stateTestInput2 = stateInput2;
     }
 
     //decide which visitor class to use for the given node
@@ -51,7 +47,7 @@ public class InterpreterDecider implements VisitorDecider {
                 node.acceptVisitor(new DeclarationInterpreter());
                 break;
             case "Program":
-                node.acceptVisitor(new ProgramInterpreter(stateTestInput1, stateTestInput2));
+                node.acceptVisitor(new ProgramInterpreter());
                 break;
             case "Return":
                 node.acceptVisitor(new ReturnInterpreter(verbose));
