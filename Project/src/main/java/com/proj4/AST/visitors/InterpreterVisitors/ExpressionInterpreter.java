@@ -235,10 +235,27 @@ public class ExpressionInterpreter implements NodeVisitor {
                 break;
             case INDEX:
                 expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
-                ArrayList<SymbolTableEntry> content = ((ArraySymbol)InterpreterVisitor.getInstance().getReturnSymbol()).getContent();
+                ArraySymbol currentArray = ((ArraySymbol)InterpreterVisitor.getInstance().getReturnSymbol());
+                ArrayList<SymbolTableEntry> content = currentArray.getContent();
                 expression.visitChild(new InterpreterDecider(), expression.getSecondOperand());
                 Integer index = ((IntegerSymbol)InterpreterVisitor.getInstance().getReturnSymbol()).getValue();
+
+                // We must allocate more entries in the array if we access an index out of bounds.
+                Integer elementsToAllocate = index - content.size();
+                if(elementsToAllocate >= 0){
+                    for (int i = 0; i <= elementsToAllocate; i++) {
+                        content.add(
+                            SymbolTableEntry.instantiateDefault(
+                                currentArray.getContent().getFirst().getType(),
+                                currentArray.getContent().getFirst().getComplexType(),
+                                currentArray.getNestingLevel() - 1
+                            )
+                            );
+                    }
+                }
+                // We should only index after we have expanded the array.
                 InterpreterVisitor.getInstance().setReturnSymbol(content.get(index));
+
                 if(this.verbose){
                     System.out.println(this.getClass().getSimpleName() + ": Indexing array with \"" + index + "\".");
                 }

@@ -4,7 +4,7 @@ package com.proj4;
 public class Main {
     public static void main(String[] args) {
         if (args.length == 0) {
-            args = new String[]{"String sa IS \"fish\"; String sb IS \"John\" + \"Userman\";"};
+            args = new String[]{"String sc IS \"fish\" + 1;"};
         }
         DBL interpreter = new DBL();
         interpreter.setVerbosity(true);

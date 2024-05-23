@@ -50,7 +50,7 @@ public class DBL {
     public void interpret(String input){
         this.startTime = LocalTime.now();
 
-        String printString = "Reading input: " + input;
+        String printString = "Reading input: " + "\"" + input + "\"";
         String lines = "";
         for (int i = 0; i < printString.length(); i++) {
             lines += "=";
@@ -102,6 +102,8 @@ public class DBL {
 
             // Assign AST
             AST abstractSyntaxTree = parseVisitor.getRoot();
+            //Set parents for AST nodes
+            abstractSyntaxTree.parentWalk();
 
             if(this.verbose){
                 System.out.println("AST generated");
@@ -127,7 +129,7 @@ public class DBL {
             // Input was sucessfully interpreted
             this.printDone(input);
         } catch (Exception e) {
-            System.out.println("Failed to interpret input '" + input + "'\n");
+            System.out.println("Failed to interpret input: '" + input + "'\n");
             e.printStackTrace();
             throw e;
         }

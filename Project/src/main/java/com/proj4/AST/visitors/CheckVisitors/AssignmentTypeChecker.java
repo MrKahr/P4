@@ -25,11 +25,11 @@ public class AssignmentTypeChecker implements NodeVisitor{
         String valueComplexType = TypeCheckVisitor.getInstance().getFoundComplexType();
 
         // Primitive types
-        if(!expectedType.equals(valueType) && valueType != "Null"){
+        if(!expectedType.equals(valueType) || valueType.equals("Null")){
             throw new MismatchedTypeException("Cannot assign value of type \"" + TypeCheckVisitor.getInstance().getFoundType() + "\" to variable of type \"" + expectedType + "\"!");
         }
             // Complex types
-        if (!expectedComplexType.equals(valueComplexType) && valueComplexType != "Null") {
+        if (!expectedComplexType.equals(valueComplexType) || valueComplexType.equals("Null")) {
             throw new MismatchedTypeException("Cannot assign value of complex type \"" + TypeCheckVisitor.getInstance().getFoundComplexType() + "\" to variable of type \"" + expectedComplexType + "\"!");
         }
     }

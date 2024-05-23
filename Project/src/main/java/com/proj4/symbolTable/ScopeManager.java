@@ -1,6 +1,7 @@
 package com.proj4.symbolTable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Stack;
 
 import com.proj4.symbolTable.symbols.ArraySymbol;
@@ -146,7 +147,7 @@ public class ScopeManager {
                 String value = "";
                 if (variable instanceof PrimitiveSymbol) {
                     System.out.println("PRIMITIVE");
-                    value = ((PrimitiveSymbol) variable).getValue().toString();
+                    value = variable instanceof StringSymbol ? "\"" + ((StringSymbol) variable).getValue().toString() + "\"" : ((PrimitiveSymbol) variable).getValue().toString();
                 } else if(variable instanceof ArraySymbol) {
                     System.out.println("ARRAY");
                     value += "[";
@@ -158,22 +159,24 @@ public class ScopeManager {
                 }
                 System.out.println(identifier + " |-> " + value + "\n");
             }
-            System.out.println("----------------------------");
+            System.out.println("----------Bindings----------");
         }
+    }
+
+    public void printGlobalScope(HashMap<String,TemplateSymbol> currentSubtable){
+        System.out.println("----------GLOBAL--------------");
+        for (String key : currentSubtable.keySet()) {
+            System.out.println(key + " |-> " + parseContent(currentSubtable.get(key).getContent()));
+        }
+        System.out.println("----------GLOBAL--------------");
     }
 
     private String parseContent(ArrayList<SymbolTableEntry> content) {
         String output = "";
         for(int i = 0; i < content.size(); i++){
             SymbolTableEntry entry = content.get(i);
-            if(entry instanceof IntegerSymbol){
-                output += ((IntegerSymbol) entry).getValue().toString();
-            } else if(entry instanceof StringSymbol){
-                output += ((StringSymbol) entry).getValue();
-            } else if(entry instanceof BooleanSymbol){
-                output += ((BooleanSymbol) entry).getValue().toString();
-            } else if(entry instanceof NullSymbol){
-                output += ((NullSymbol) entry).getValue();
+            if(entry instanceof PrimitiveSymbol){
+                output += entry instanceof StringSymbol ? "\"" + ((StringSymbol) entry).getValue() + "\"" : ((PrimitiveSymbol) entry).getValue().toString();
             } else if(entry instanceof ArraySymbol){
                 output += "[";
                 output += parseContent(((ArraySymbol) entry).getContent());

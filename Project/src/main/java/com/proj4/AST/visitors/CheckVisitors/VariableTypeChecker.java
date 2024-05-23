@@ -5,6 +5,7 @@ import com.proj4.AST.nodes.Variable;
 import com.proj4.AST.visitors.NodeVisitor;
 import com.proj4.AST.visitors.TypeCheckVisitor;
 import com.proj4.exceptions.UndefinedVariableException;
+import com.proj4.symbolTable.GlobalScope;
 import com.proj4.symbolTable.symbols.ArraySymbol;
 import com.proj4.symbolTable.symbols.SymbolTableEntry;
 
@@ -13,6 +14,11 @@ public class VariableTypeChecker implements NodeVisitor{
     public void visit(AST node){
         Variable variable = (Variable) node;
         SymbolTableEntry entry = variable.getScope().getVariableTable().get(variable.getIdentifier());
+        if (entry == null) {
+            //if the variable is not in the variable table, we might be looking for an action's corresponding template
+            entry = GlobalScope.getInstance().getResultTable().get(variable.getIdentifier());
+        }
+
         if (entry == null) {
             throw new UndefinedVariableException("Variable \"" + variable.getIdentifier() + "\" not defined in current scope!");
         } else {

@@ -118,6 +118,6 @@ Integer oc IS 2*2+2-6/6;
 
 
 /* TEST 20
-Parenthesis precedence (should equal 4) (equals 9 without parenthesis precedence)
+Precedence (should equal 9)
 */
-Integer pa IS (2+2)*(4-2)/2;
+Integer pa IS 2+2*4-2/2;

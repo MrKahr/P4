@@ -19,4 +19,40 @@ Boolean[] c IS [true, true, true];
 /* TEST 4
 3-level nested Integer array - correct type
 */
-Integer[] d IS [[[0+1], [2]], [[2+1], [4]]];
+Integer[][][] d IS [[[0+1], [2]], [[2+1], [2*8-12]]];
+
+
+/* TEST 5
+3-level nested Integer array - incorrect type
+Tested elsewhere
+*/
+
+
+/* TEST 6
+Assign array to array
+*/
+Integer[] e1 IS [3, 4];
+Integer[] e2 IS [0];
+e2[0] IS e1[0];
+
+
+/* TEST 7
+Assign 2D-array to 2D-array
+*/
+Integer[][] f1 IS [[0, 1]];
+Integer[][] f2 IS [[45], [2]];
+f2[0] IS f1[0];
+
+
+/* TEST 8
+Access array out of bounds
+Tested elsewhere
+*/
+
+
+/* TEST 9
+Append to array
+*/
+Integer[] h1 IS [1, 2, 3];
+Integer[] h2 IS [4, 5, 6];
+h1[3] IS h2[0];

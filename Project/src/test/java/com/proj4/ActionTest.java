@@ -1,12 +1,15 @@
 package com.proj4;
 
 import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.HashMap;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.api.BeforeAll;
 
+import com.proj4.exceptions.MismatchedTypeException;
 import com.proj4.symbolTable.ScopeManager;
 import com.proj4.symbolTable.ScopeObserver;
 import com.proj4.symbolTable.symbols.ArraySymbol;
@@ -31,8 +34,9 @@ public class ActionTest extends TestingArgs {
 
     @Test
     public void test1() {
-        IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("undefined");
-        //assertTrue(intSymbol.getValue() != 3);
+            DBL interpreter = new DBL();
+            Executable e = () -> {interpreter.interpret("Action ta() {Integer v1 IS 3; Integer v2 IS 4;} Integer varNull IS ta();");};
+            assertThrows(MismatchedTypeException.class, e);
     }
 
     @Test

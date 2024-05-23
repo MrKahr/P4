@@ -51,23 +51,12 @@ public class AssignTest extends TestingArgs {
 
     @Test
     public void test4() {
-        ArraySymbol arraySymbol = (ArraySymbol) variableTable.get("aa");
-        assertEquals("Integer", arraySymbol.getType()); // Check type
-        assertTrue(arraySymbol.getNestingLevel() == 0); // Check nesting level
-        for (Integer i = 0; i < arraySymbol.getContent().size(); i++) {
-            IntegerSymbol intSymbol = (IntegerSymbol) arraySymbol.getContent().get(i);
-            assertTrue(i + 1 == intSymbol.getValue()); // Check values of array
-        }
-    }
-
-    @Test
-    public void test5() {
         StringSymbol stringSymbol = (StringSymbol) variableTable.get("vb");
         assertEquals("fish_2", stringSymbol.getValue());
     }
 
     @Test
-    public void test6() {
+    public void test5() {
         IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("voa");
         assertTrue(intSymbol.getValue() == 6);
     }

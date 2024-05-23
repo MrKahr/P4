@@ -179,7 +179,7 @@ arrayType
     ;
 
 arrayInit
-    :   SQB_START ((stringExpr | expr | arrayInit) (COMMA (stringExpr | expr | arrayInit))*)? SQB_END
+    :   SQB_START ((stringExpr | expr | boolExpr | arrayInit) (COMMA (stringExpr | expr | boolExpr | arrayInit))*)? SQB_END
     ;
 
 return
@@ -232,7 +232,6 @@ RESULTS_IN  : 'RESULTS IN'; // Declare return type for action
 TEMPLATE    : 'Template';
 ALLOWS      : 'ALLOWS';
 WITH_LOOP   : 'WITH LOOP';
-DOT         : '.';
 NEW         : 'NEW';
 
 /*** Operators ***/
@@ -251,6 +250,7 @@ MULT        : '*';
 DIV         : '/';
 ADD         : '+';
 SUB         : '-';
+DOT         : '.';
 
 /***  Types ***/
 TYPEDEF_PRIMITIVE

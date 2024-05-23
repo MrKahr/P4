@@ -107,12 +107,12 @@ public abstract class AST {
         decider.decideVisitor(child);
     }
 
-    //a version of the walk-method that assigns parents to every node that is a child of the root
-    public void parentWalk(AST root){
+    //a version of the walk-method that assigns parents to every node that is a child of some other node
+    public void parentWalk(){
         if (children.size() > 0) {
-            for(AST child : root.getChildren()){
-                // child.setParent(root);
-                parentWalk(child);
+            for(AST child : this.getChildren()){
+                child.setParent(this);
+                child.parentWalk();
             }
         }
     }

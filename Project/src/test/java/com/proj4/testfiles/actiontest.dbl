@@ -1,12 +1,7 @@
 /* TEST 1
-Action decl
-- without parameters
-- without return
+Action without return called and assigned to variable.
+Tested elsewhere
 */
-Action ta() {
-    Integer v1 IS 3;
-    Integer v2 IS 4;
-}
 
 
 /* TEST 2
@@ -30,10 +25,10 @@ Action tad1(Integer[][] arrA, Integer[][] arrB) RESULTS IN Integer[][][] {
 }
 
 // Test 1
-Integer varNull IS ta(); // This one gets the value of the Action despite it not returning anything
+
 
 // Test 2
-Integer vtb IS tb(1, 2, 3); // This works as intended
+Integer vtb IS tb(1, 2, 3);
 
 // Test 3
 Integer[][][] arr2D IS tad1([[1], [2]], [[3], [4]]);

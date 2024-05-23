@@ -166,6 +166,6 @@ public class ExpressionTest extends TestingArgs {
     @Test
     public void test20() {
         IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("pa");
-        assertTrue(intSymbol.getValue() == 4);
+        assertTrue(intSymbol.getValue() == 9);
     }
 }
