@@ -72,7 +72,7 @@ boolExpr
     |   expr GTOE expr                      # exprGTOEBool
     |   expr LT expr                        # exprLTBool
     |   expr LTOE expr                      # exprLTOEBool
-    |   expr (NOTEQUALS | EQUALS) expr      # exprEqualBool
+    |   expr (NOTEQUALS | EQUALS) expr      # exprEqualBool // TODO: Merge this with stringexpr EQUALS below - fix in parsetreevisitor
     |   stringExpr (NOTEQUALS | EQUALS) stringExpr  # stringEqualBool
     |   NOT boolExpr                        # negateBool
     |   boolExpr EQUALS boolExpr            # equalBool
@@ -140,7 +140,7 @@ templateDecl
     ;
 
 templateInit
-    :   NEW typedefUser BODY_START ((expr SEMICOLON | stringExpr SEMICOLON | boolExpr SEMICOLON| templateInit))* BODY_END
+    :   NEW typedefUser BODY_START ((expr SEMICOLON | stringExpr SEMICOLON | boolExpr SEMICOLON | templateInit))* BODY_END
     ;
 
 ruleDecl

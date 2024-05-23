@@ -191,7 +191,6 @@ public class ExpressionTypeChecker implements NodeVisitor {
                 }
 
                 if (TypeCheckVisitor.getInstance().getNestingLevel() >= 0) {   //if nestingLevel is -1, indexing will give us something that is not an array
-                    System.out.println(this.getClass().getSimpleName() + ": Subracting nestinglevel");
                     TypeCheckVisitor.getInstance().setFoundType(arrayType, "Array", nestingLevel - 1);
                 } else {
                     switch (arrayType) {

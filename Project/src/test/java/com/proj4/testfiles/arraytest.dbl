@@ -1,3 +1,13 @@
+/* PRECONDITIONS
+Templates
+*/
+Template Card CONTAINS {
+    Integer health;
+    Integer cost;
+    Integer power;
+}
+
+
 /* TEST 1
 Flat Integer array
 */
@@ -58,3 +68,19 @@ Append to array
 Integer[] h1 IS [1, 2, 3];
 Integer[] h2 IS [4, 5, 6];
 h1[3] IS h2[0];
+
+
+/* TEST 10
+Add Card template to array
+*/
+/*
+Template Card CONTAINS {
+    Integer health;
+    Integer cost;
+    Integer power;
+}
+*/
+Card[] deck;
+FOR(Integer i IS 0; i LESS OR EQUALS 10; i IS i+1){
+    deck[i] IS NEW Card{i; i+1; i+2;}
+}
