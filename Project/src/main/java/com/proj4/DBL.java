@@ -24,6 +24,10 @@ public class DBL {
     // Constructor
     public DBL(){}
 
+    public void setStateTestInput(){
+
+    }
+
     // Methods
     public void setDebugMode(Boolean debugMode){
         this.debugMode = debugMode;

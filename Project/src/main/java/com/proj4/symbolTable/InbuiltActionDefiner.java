@@ -4,10 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import com.proj4.symbolTable.symbols.ActionSymbol;
-import com.proj4.symbolTable.symbols.StringSymbol;
-import com.proj4.symbolTable.symbols.SymbolTableEntry;
-import com.proj4.symbolTable.symbols.TemplateSymbol;
+import com.proj4.symbolTable.symbols.*;
 
 public class InbuiltActionDefiner {
     // Field 
@@ -49,6 +46,7 @@ public class InbuiltActionDefiner {
         //defineAction("remove", "Null", "Null");
         //defineAction("shuffle", "Null", "Null");
         defineAction("write", "Null", "Null", new ArrayList<String>(Arrays.asList("toWrite")), new ArrayList<SymbolTableEntry>(Arrays.asList(new StringSymbol(""))));
+        defineAction("sizeInt", "Integer", "Primitive", new ArrayList<String>(Arrays.asList("array")), new ArrayList<SymbolTableEntry>(Arrays.asList(new ArraySymbol("Integer",0))));
     }
 
     private void defineAction(String functionName, String returnType, String complexReturnType, ArrayList<String> paramNames, ArrayList<SymbolTableEntry> startingParams){
