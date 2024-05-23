@@ -22,7 +22,6 @@ public class StringCastInterpreter implements NodeVisitor {
         try {
             //make a string out of the returned symbol and set it as the new return symbol
             StringSymbol toReturn = new StringSymbol(((PrimitiveSymbol)toConvert).getValue().toString());
-            System.out.println("StringCast returning \"" + toReturn.getValue() + "\".");
             InterpreterVisitor.getInstance().setReturnSymbol(toReturn);
         } catch (ClassCastException cce) {
             throw new ParameterMismatchExpection("Sorry, StringCast currently only works for PrimitiveSymbols :/");
