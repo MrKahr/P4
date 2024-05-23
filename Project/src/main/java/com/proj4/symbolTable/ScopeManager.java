@@ -1,6 +1,7 @@
 package com.proj4.symbolTable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Stack;
 
 import com.proj4.symbolTable.symbols.ArraySymbol;
@@ -158,8 +159,16 @@ public class ScopeManager {
                 }
                 System.out.println(identifier + " |-> " + value + "\n");
             }
-            System.out.println("----------------------------");
+            System.out.println("----------Bindings----------");
         }
+    }
+
+    public void printGlobalScope(HashMap<String,TemplateSymbol> currentSubtable){
+        System.out.println("----------GLOBAL--------------");
+        for (String key : currentSubtable.keySet()) {
+            System.out.println(key + " |-> " + parseContent(currentSubtable.get(key).getContent()));
+        }
+        System.out.println("----------GLOBAL--------------");
     }
 
     private String parseContent(ArrayList<SymbolTableEntry> content) {

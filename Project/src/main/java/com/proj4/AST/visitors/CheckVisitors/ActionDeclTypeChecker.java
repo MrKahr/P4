@@ -77,20 +77,27 @@ public class ActionDeclTypeChecker implements NodeVisitor{
         //So let's make a template blueprint for this action (we'll instantiate the actual template with the interpreter)
         TemplateSymbol blueprint = new TemplateSymbol();
         blueprint.setType(actionDecl.getIdentifier());
-        blueprint.addContent(
+        //only add a symbol for the result if we return something
+        if (!actionDecl.getType().equals("Null")) {
+            blueprint.addContent(
             SymbolTableEntry.instantiateDefault(
                 actionDecl.getType(),
                 actionDecl.getComplexReturnType(),
                 actionDecl.getNestingLevel()
             )
         );
+            
+        }
         //To navigate a template, we need a map - NOTE not java map
         ArrayList<String> map = new ArrayList<>();
-        map.add("RESULT");  //the one field we have is accessed with .RESULT
-
+        //only add a field for the result if we return something
+        if (!actionDecl.getType().equals("Null")) {
+            map.add("RESULT");//the one field we have is accessed with .RESULT
+        }
+          
         //Now let's add them to the appropriate tables
         //placing the action template in the program's scope
-        ScopeManager.getInstance().getCurrent().declareVariable(actionDecl.getIdentifier(), blueprint);
+        GlobalScope.getInstance().getResultTable().put(actionDecl.getIdentifier(), blueprint);
         GlobalScope.getInstance().getTemplateMapTable().put(actionDecl.getIdentifier(), map);
         GlobalScope.getInstance().getBlueprintTable().put(actionDecl.getIdentifier(), blueprint);
 

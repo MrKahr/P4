@@ -5,7 +5,7 @@ import com.proj4.AST.nodes.Return;
 import com.proj4.AST.visitors.InterpreterDecider;
 import com.proj4.AST.visitors.InterpreterVisitor;
 import com.proj4.AST.visitors.NodeVisitor;
-import com.proj4.symbolTable.ScopeManager;
+import com.proj4.symbolTable.GlobalScope;
 import com.proj4.symbolTable.symbols.TemplateSymbol;
 
 public class ReturnInterpreter implements NodeVisitor {
@@ -27,7 +27,7 @@ public class ReturnInterpreter implements NodeVisitor {
         if(this.verbose){
             System.out.println(this.getClass().getSimpleName() + ": Attempting to write to actionTemplate with identifier \"" + InterpreterVisitor.getInstance().getCurrentActionIdentifier() + "\"");
         }
-        TemplateSymbol actionTemplate = (TemplateSymbol)ScopeManager.getInstance().getCurrent().getVariableTable().get(InterpreterVisitor.getInstance().getCurrentActionIdentifier());
+        TemplateSymbol actionTemplate = (TemplateSymbol)GlobalScope.getInstance().getResultTable().get(InterpreterVisitor.getInstance().getCurrentActionIdentifier());
 
         //the 0th field is RESULT
         actionTemplate.getContent().set(0, InterpreterVisitor.getInstance().getReturnSymbol());

@@ -102,6 +102,8 @@ public class DBL {
 
             // Assign AST
             AST abstractSyntaxTree = parseVisitor.getRoot();
+            //Set parents for AST nodes
+            abstractSyntaxTree.parentWalk();
 
             if(this.verbose){
                 System.out.println("AST generated");
