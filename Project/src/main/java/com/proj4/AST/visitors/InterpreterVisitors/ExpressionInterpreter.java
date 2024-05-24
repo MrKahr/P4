@@ -244,13 +244,36 @@ public class ExpressionInterpreter implements NodeVisitor {
                 Integer elementsToAllocate = index - content.size();
                 if(elementsToAllocate >= 0){
                     for (int i = 0; i <= elementsToAllocate; i++) {
+                        /*
+                            This version of allocating elements allows expanding level 0 arrays with or without values assigned to them
+                            (except for empty arrays - those are still illegal)
+                            Example without this version:
+                                Card c1 IS NEW Card{};
+                                Card[] deck IS [c1];
+                            Example with this version:
+                                Card[] deck;
+                        */
+                        String complexType = "Primitive";
+                        if(!(currentArray.getType().equals("Integer") ||
+                             currentArray.getType().equals("Boolean") ||
+                             currentArray.getType().equals("String"))){
+                            // If the type of the array is not any of the primitives, it can only be an array of templates.
+                            complexType = "Template";
+                        }
                         content.add(
                             SymbolTableEntry.instantiateDefault(
-                                currentArray.getContent().getFirst().getType(),
-                                currentArray.getContent().getFirst().getComplexType(),
+                                currentArray.getType(),
+                                complexType,
                                 currentArray.getNestingLevel() - 1
-                            )
-                            );
+                            ));
+
+
+                        // content.add(
+                        //     SymbolTableEntry.instantiateDefault(
+                        //         currentArray.getContent().getFirst().getType(),
+                        //         currentArray.getContent().getFirst().getComplexType(),
+                        //         currentArray.getNestingLevel() - 1
+                        //     ));
                     }
                 }
                 // We should only index after we have expanded the array.
