@@ -179,7 +179,7 @@ arrayType
     ;
 
 arrayInit
-    :   SQB_START ((stringExpr | expr | arrayInit) (COMMA (stringExpr | expr | arrayInit))*)? SQB_END
+    :   SQB_START ((boolExpr |stringExpr | expr | arrayInit) (COMMA (boolExpr| stringExpr | expr | arrayInit))*)? SQB_END
     ;
 
 return
