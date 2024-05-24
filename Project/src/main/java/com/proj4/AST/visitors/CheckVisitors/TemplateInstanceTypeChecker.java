@@ -19,7 +19,6 @@ public class TemplateInstanceTypeChecker implements NodeVisitor{
         TemplateInstance templateInstance = (TemplateInstance) node;
 
         String templateType = templateInstance.getType();
-
         //we make assignments to the fields in the order the fields are declared
         if (templateInstance.getChildren().size() > 0) {
             //get the blueprint for comparing types

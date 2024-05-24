@@ -129,7 +129,7 @@ public class DBL {
             // Input was sucessfully interpreted
             this.printDone(input);
         } catch (Exception e) {
-            System.out.println("Failed to interpret input: '" + input + "'\n");
+            System.out.println("\nFailed to interpret input: '" + input + "'\n");
             e.printStackTrace();
             throw e;
         }

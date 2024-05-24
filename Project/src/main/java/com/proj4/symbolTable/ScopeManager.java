@@ -155,7 +155,9 @@ public class ScopeManager {
                     value += "]";
                 } else if(variable instanceof TemplateSymbol) {
                     System.out.println("TEMPLATE");
-                    value = parseContent(((TemplateSymbol) variable).getContent());
+                    value += "<";
+                    value += parseContent(((TemplateSymbol) variable).getContent());
+                    value += ">";
                 }
                 System.out.println(identifier + " |-> " + value + "\n");
             }
@@ -182,13 +184,14 @@ public class ScopeManager {
                 output += parseContent(((ArraySymbol) entry).getContent());
                 output += "]";
             } else if(entry instanceof TemplateSymbol){
+                output += "<";
                 output += parseContent(((TemplateSymbol) entry).getContent());
+                output += ">";
             }
             if(i < content.size()-1) {
                 output += ", ";
             }
         }
-        output += "";
         return output != "" ? output : content.toString();
     }
 }
