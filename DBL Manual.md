@@ -83,7 +83,8 @@ DBL | Explanation
 ***Identifier*** | A user-defined type. For instance, `Card` could be a user-defined type for a card Template
 
 ## Syntax
-> The format presented in this section is a simplified version of the DBL grammar.
+> [!IMPORTANT]
+> The syntax formats presented in this section is a simplified version of the DBL grammar.
 
 
 ### Variable declaration
