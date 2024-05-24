@@ -131,7 +131,7 @@ public class ExpressionTypeChecker implements NodeVisitor {
                 TypeCheckVisitor.getInstance().setFoundType("Boolean", "Primitive", -1);
                 break;
             case VARIABLE:
-                //TODO: this case is unused, as its functionality is partially implemented by cCONCAT
+                //TODO: this case is unused, as its functionality is partially implemented by CONCAT
                 TypeCheckVisitor.getInstance().setFoundType("String", "Primitive", -1);
                 break;
             case CONSTANT:
@@ -140,8 +140,11 @@ public class ExpressionTypeChecker implements NodeVisitor {
             case ACCESS:
                 //make sure the first operand is actually a template
                 expression.visitChild(new CheckDecider(), expression.getFirstOperand());
-                if (!TypeCheckVisitor.getInstance().getFoundComplexType().equals("Template")) {
-                    throw new MismatchedTypeException();
+                String foundComplexType = TypeCheckVisitor.getInstance().getFoundComplexType();
+                Integer foundNestingLevel = TypeCheckVisitor.getInstance().getNestingLevel();
+                // We check nesting level to allow templates to be accessed in arrays, e.g. "deck[0].cost"
+                if (!(foundComplexType.equals("Template") || foundComplexType.equals("Array") && foundNestingLevel == -1)) {
+                    throw new MismatchedTypeException("First operand has complex type \"" + foundComplexType + "\" with nesting level " + foundNestingLevel + " which is not a Template");
                 }
                 //remember the type of the template we found
                 String templateType = TypeCheckVisitor.getInstance().getFoundType();
@@ -178,7 +181,7 @@ public class ExpressionTypeChecker implements NodeVisitor {
                 // Check whether operand is an array
                 if (!TypeCheckVisitor.getInstance().getFoundComplexType().equals("Array")) {
                     throw new MismatchedTypeException(
-                        "Error on indexing: Cannot index element that is not an array!");
+                        "Error on indexing: Cannot index element \"" + TypeCheckVisitor.getInstance().getFoundComplexType() + "\": it is not an array!");
                     }
                 //remember array's type and nestinglevel
                 String arrayType = TypeCheckVisitor.getInstance().getFoundType();
@@ -190,7 +193,7 @@ public class ExpressionTypeChecker implements NodeVisitor {
                     throw new MismatchedTypeException("Index for array (or template) is not integer! Received type: '" + TypeCheckVisitor.getInstance().getFoundType() + "'' with complex type: '" + TypeCheckVisitor.getInstance().getFoundComplexType() + "'");
                 }
 
-                if (TypeCheckVisitor.getInstance().getNestingLevel() >= 0) {   //if nestingLevel is -1, indexing will give us something that is not an array
+                if (nestingLevel >= 0) {   //if nestingLevel is -1, indexing will give us something that is not an array
                     TypeCheckVisitor.getInstance().setFoundType(arrayType, "Array", nestingLevel - 1);
                 } else {
                     switch (arrayType) {
