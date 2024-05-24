@@ -230,12 +230,6 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
 
     /*** ASSIGNMENT ***/
     @Override
-    public Assignment visitIdAssign(DBLParser.IdAssignContext ctx) {
-        Assignment node = new Assignment((Expression) visit(ctx.expr()), new Variable(ctx.IDENTIFIER().getText()));
-        return node;
-    }
-
-    @Override
     public Assignment visitExprAssign(DBLParser.ExprAssignContext ctx) {
         Assignment node = new Assignment((Expression) visit(ctx.expr(0)), (Expression) visit(ctx.expr(1)));
         return node;
@@ -365,7 +359,6 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         return node;
     }
 
-
     @Override
     public Declaration visitIdDeclUser(DBLParser.IdDeclUserContext ctx) {
         Declaration node = new Declaration(ctx.IDENTIFIER().getText(), ctx.typedefUser().getText(), "Template");
@@ -373,21 +366,14 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     }
 
     @Override
-    public Declaration visitTemplateInitDecl(DBLParser.TemplateInitDeclContext ctx) {
-        return (Declaration) visit(ctx.templateAssignment());
-    }
+    public Declaration visitAssignIdUserDecl(DBLParser.AssignIdUserDeclContext ctx){
+        Assignment assignNode = (Assignment) visit(ctx.assignment());
+        Variable variableNode = (Variable) assignNode.getSymbolExpression(); // Get left side of assign
+        Declaration node = new Declaration(variableNode.getIdentifier(), ctx.typedefUser().getText(), "Template");
 
-    @Override
-    public Declaration visitTemplateAssignment(DBLParser.TemplateAssignmentContext ctx) {
-        String type = ctx.typedefUser().getText();
-        String id = ctx.IDENTIFIER().getText();
-
-        Assignment assignNode = new Assignment(new Variable(id), (TemplateInstance) visit(ctx.templateInit()));
-        Declaration node = new Declaration(id, type, "Template");
         node.addChild(assignNode);
         return node;
     }
-
 
     /*** Return ***/
     @Override

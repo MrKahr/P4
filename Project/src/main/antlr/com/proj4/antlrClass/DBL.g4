@@ -94,11 +94,6 @@ assignment // Remember to add semicolon if relevant
     :   expr ASSIGN expr          # exprAssign
     |   expr ASSIGN boolExpr      # boolExprAssign
     |   expr ASSIGN stringExpr    # stringExprAssign
-    |   expr ASSIGN IDENTIFIER    # idAssign
-    ;
-
-templateAssignment // TemplateInitAssign
-    :   typedefUser IDENTIFIER ASSIGN templateInit
     ;
 
 typePrimitive
@@ -110,13 +105,12 @@ typedefUser
     ;
 
 declaration
-    :   typePrimitive IDENTIFIER SEMICOLON     # idDeclPrim
-    |   typePrimitive assignment SEMICOLON     # assignDeclPrim
-    |   typedefUser IDENTIFIER SEMICOLON       # idDeclUser
-    |   typedefUser assignment SEMICOLON       # assignDeclUser
-    |   templateAssignment                     # templateInitDecl
-    |   arrayType IDENTIFIER SEMICOLON         # declArrayDecl
-    |   arrayType assignment SEMICOLON         # declArrayInit
+    :   typePrimitive IDENTIFIER SEMICOLON  # idDeclPrim
+    |   typePrimitive assignment SEMICOLON  # assignDeclPrim
+    |   typedefUser IDENTIFIER SEMICOLON    # idDeclUser
+    |   typedefUser assignment SEMICOLON    # assignIdUserDecl
+    |   arrayType IDENTIFIER SEMICOLON      # declArrayDecl
+    |   arrayType assignment SEMICOLON      # declArrayInit
     ;
 
 declarationList
