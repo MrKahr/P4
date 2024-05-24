@@ -18,6 +18,15 @@ Template Fisk CONTAINS {
     Card c3;
 }
 
+Template manyArrays CONTAINS {
+    Boolean[] boolOne;
+    Boolean[] boolTwo IS [true, false, true];
+    Integer[] IntOne;
+    Integer[] IntTwo IS [1,2,3];
+    String[] StringOne; 
+    String[] StringTwo IS ["hello", "hi", "howdy"];
+}
+
 Card c1 IS NEW Card{1; 2;}
 
 c1.cost IS 3;
