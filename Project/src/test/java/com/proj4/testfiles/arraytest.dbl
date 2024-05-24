@@ -79,8 +79,11 @@ Template Card CONTAINS {
     Integer cost;
     Integer power;
 }
-*/
-Card[] deck;
-FOR(Integer i IS 0; i LESS OR EQUALS 10; i IS i+1){
-    deck[i] IS NEW Card{i; i+1; i+2;}
+
+Card c1 IS NEW Card{; 2; 3;};
+
+Card[] deck IS [c1];
+FOR(Integer i IS 0; i LESS OR EQUALS 2; i IS i+1){
+    deck[i] IS NEW Card{1; 2; 3;};
 }
+*/
