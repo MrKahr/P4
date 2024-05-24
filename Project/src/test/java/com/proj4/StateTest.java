@@ -12,7 +12,7 @@ import com.proj4.symbolTable.ScopeObserver;
 import com.proj4.symbolTable.symbols.IntegerSymbol;
 import com.proj4.symbolTable.symbols.SymbolTableEntry;
 
-public class StatelTest extends TestingArgs{
+public class StateTest extends TestingArgs{
     private static HashMap<String, SymbolTableEntry> variableTable;
 
     @BeforeAll
