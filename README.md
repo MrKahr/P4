@@ -2,7 +2,7 @@
     P4: DBL (Deck Builder Language) 
 </h1>
 <p align="center">
-    <a href="/DBL Manual.md">DBL Manual</a>
+    <a href="/DBL_Manual.md">DBL Manual</a>
 </p>
 
 ## Introduction
