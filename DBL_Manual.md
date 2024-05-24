@@ -2,7 +2,7 @@
     DBL Manual
 </h1>
 <p align="center">
-  It contains information about the syntax and semantics of DBL
+  The sacred text detailing how to write DBL-code
 </p>
 
 ## Things that need fixing
