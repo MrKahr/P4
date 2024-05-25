@@ -17,38 +17,53 @@ import com.proj4.symbolTable.symbols.SymbolTableEntry;
 import com.proj4.symbolTable.symbols.TemplateSymbol;
 
 public class ActionDeclTypeChecker implements NodeVisitor{
+    private Boolean verbose = false;
+
+    public ActionDeclTypeChecker(Boolean verbose){
+        this.verbose = verbose;
+    }
 
     public void visit(AST node){
         ActionDecl actionDecl = (ActionDecl) node;
         ScopeManager.getInstance().inherit();
 
+        String actionID = actionDecl.getIdentifier();
+        String actionType = actionDecl.getType();
+        String actionComplexReturnType = actionDecl.getComplexReturnType();
+        Integer actionNestingLevel = actionDecl.getNestingLevel();
+
         // Check whether action is part of the inbuilt actions
-        if(GlobalScope.getInstance().getInbuiltActions().contains(actionDecl.getIdentifier())){
-            throw new VariableAlreadyDefinedException("Cannot redeclare inbuilt action \"" + actionDecl.getIdentifier());
+        if(GlobalScope.getInstance().getInbuiltActions().contains(actionID)){
+            throw new VariableAlreadyDefinedException("Cannot redeclare inbuilt action \"" + actionID);
         }
 
         //Check whether action is already defined in scope
-        if(GlobalScope.getInstance().getActionTable().containsKey(actionDecl.getIdentifier())){
-            throw new VariableAlreadyDefinedException("Action \"" + actionDecl.getIdentifier() + "\" is already defined!");
+        if(GlobalScope.getInstance().getActionTable().containsKey(actionID)){
+            throw new VariableAlreadyDefinedException("Action \"" + actionID + "\" is already defined!");
         }
         //Check whether a template is using this action's name (assuming that anything that exists in the blueprint table also exists as a map and so on)
-        if (GlobalScope.getInstance().getBlueprintTable().containsKey(actionDecl.getIdentifier())) {
-            throw new VariableAlreadyDefinedException("Template is using reserved identifier \"" + actionDecl.getIdentifier() + "\"!");
+        if (GlobalScope.getInstance().getBlueprintTable().containsKey(actionID)) {
+            throw new VariableAlreadyDefinedException("Template is using reserved identifier \"" + actionID + "\"!");
         }
 
         //Construct symbol to represent the action
         ActionSymbol action = new ActionSymbol(
-            actionDecl.getType(),
-            actionDecl.getComplexReturnType(),
+            actionType,
+            actionComplexReturnType,
             actionDecl.getBody(),
-            actionDecl.getNestingLevel()
+            actionNestingLevel
         );
 
         //Add declared action to action table so return node can see it
-        GlobalScope.getInstance().getActionTable().put(actionDecl.getIdentifier(), action);
+        GlobalScope.getInstance().getActionTable().put(actionID, action);
+
+        if(this.verbose){
+            System.out.println(this.getClass().getSimpleName() + ": Declaring action \"" + actionID + "\" with return type \"" + actionType
+            + "\", complex return type \"" + actionComplexReturnType + "\", return nesting level " + actionNestingLevel);
+        }
 
         //set the action body before checking children
-        TypeCheckVisitor.getInstance().setCurrentAction(actionDecl.getIdentifier());
+        TypeCheckVisitor.getInstance().setCurrentAction(actionID);
 
         //make sure all child declarations (parameters) are well-typed and in this scope, and add their names to the parameter list
         try {
@@ -71,13 +86,13 @@ public class ActionDeclTypeChecker implements NodeVisitor{
         TypeCheckVisitor.getInstance().setCurrentAction(null);
 
         //Add declared action to action table
-        GlobalScope.getInstance().getActionTable().put(actionDecl.getIdentifier(), action);
+        GlobalScope.getInstance().getActionTable().put(actionID, action);
 
         //In this language, given some action "a", we can write a.RESULT to get the most recently returned value
         //So let's make a template blueprint for this action (we'll instantiate the actual template with the interpreter)
 
         TemplateSymbol blueprint = new TemplateSymbol();
-        blueprint.setType(actionDecl.getIdentifier());
+        blueprint.setType(actionID);
         //only add a symbol for the result if we return something
         if (!actionDecl.getType().equals("Null")) {
             blueprint.addContent(
@@ -87,7 +102,7 @@ public class ActionDeclTypeChecker implements NodeVisitor{
                 actionDecl.getNestingLevel()
             )
         );
-            
+
         }
         //To navigate a template, we need a map - NOTE not java map
         ArrayList<String> map = new ArrayList<>();
@@ -95,12 +110,12 @@ public class ActionDeclTypeChecker implements NodeVisitor{
         if (!actionDecl.getType().equals("Null")) {
             map.add("RESULT");//the one field we have is accessed with .RESULT
         }
-          
+
         //Now let's add them to the appropriate tables
         //placing the action template in the program's scope
-        GlobalScope.getInstance().getResultTable().put(actionDecl.getIdentifier(), blueprint);
-        GlobalScope.getInstance().getTemplateMapTable().put(actionDecl.getIdentifier(), map);
-        GlobalScope.getInstance().getBlueprintTable().put(actionDecl.getIdentifier(), blueprint);
+        GlobalScope.getInstance().getResultTable().put(actionID, blueprint);
+        GlobalScope.getInstance().getTemplateMapTable().put(actionID, map);
+        GlobalScope.getInstance().getBlueprintTable().put(actionID, blueprint);
 
         ScopeManager.getInstance().exit();
 

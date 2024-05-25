@@ -23,26 +23,25 @@ public class ReturnTypeChecker implements NodeVisitor{
         Return returnNode = (Return) node;
         String actionIdentifier = TypeCheckVisitor.getInstance().getCurrentAction();
 
-
         if(this.verbose) {
             System.out.println(this.getClass().getSimpleName() + ": Attempting to return from \"" + TypeCheckVisitor.getInstance().getCurrentAction() + "\".");
         }
 
         ActionSymbol action = GlobalScope.getInstance().getActionTable().get(actionIdentifier);
 
-        if (action == null) {
+        if(action == null) {
             throw new MalformedAstException("Return-node with undeclared action found!");
         }
 
         returnNode.visitChild(new CheckDecider(), returnNode.getReturnValue());
         if (!TypeCheckVisitor.getInstance().getFoundType().equals(action.getReturnType())){
-            throw new MismatchedTypeException("Error for \""+ actionIdentifier + "\": Mismatched return type! Expected \"" + action.getReturnType() + "\"" + " but got \"" + TypeCheckVisitor.getInstance().getFoundType() + "\"");
+            throw new MismatchedTypeException("Error for \"" + actionIdentifier + "\": Mismatched return type! Expected \"" + action.getReturnType() + "\"" + " but got \"" + TypeCheckVisitor.getInstance().getFoundType() + "\"");
         }
         if (!TypeCheckVisitor.getInstance().getFoundComplexType().equals(action.getComplexReturnType())) {
             throw new MismatchedTypeException("Error for \"" + actionIdentifier + "\": Expected complex return type \"" + action.getComplexReturnType() + "\" but got \"" + TypeCheckVisitor.getInstance().getFoundComplexType() + "\"");
         }
         if (TypeCheckVisitor.getInstance().getNestingLevel() != action.getNestingLevel()) {
-            throw new MismatchedTypeException("Error for \""+ actionIdentifier + "\": Mismatched return type! Expected nesting level \"" + action.getNestingLevel() + "\" but got \"" + TypeCheckVisitor.getInstance().getNestingLevel() + "\"");
+            throw new MismatchedTypeException("Error for \"" + actionIdentifier + "\": Mismatched return type! Expected nesting level \"" + action.getNestingLevel() + "\" but got \"" + TypeCheckVisitor.getInstance().getNestingLevel() + "\"");
         }
     }
 }
