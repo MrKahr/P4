@@ -78,6 +78,7 @@ boolExpr
     |   boolExpr EQUALS boolExpr            # equalBool
     |   boolExpr AND boolExpr               # andBool
     |   boolExpr OR  boolExpr               # orBool
+    |   actionCall                          # actionCallBool
     |   BOOLEAN                             # litteralBool
     |   IDENTIFIER                          # idBool
     ;
@@ -87,6 +88,7 @@ stringExpr
     |   stringExpr ADD expr        #addStringexpr1
     |   expr ADD stringExpr        #addStringexpr2
     |   string                     # litteralString
+    |   actionCall                 # actionCallString
     |   IDENTIFIER                 # idString
     ;
 
