@@ -1,0 +1,186 @@
+/*** TEMPLATES ***/
+
+Template Card CONTAINS {
+  String color;
+  Integer number;
+}
+
+Template Deck CONTAINS {
+  Card[] cards;
+  Integer size;
+}
+
+Template Player CONTAINS {
+  String name;
+  Deck hand;
+  Integer handSize;
+}
+
+Template Board CONTAINS {
+    Player[] players;
+    Deck[] decks;
+}
+
+
+/*
+Action Combine(Template template, Any[] anys, Any[] anys,...) RESULTS IN Template [] // Must implement, replaced with makeCards
+// Fills attributes of a specified template
+//with all combinations of supplied array elements
+Action draw(Deck deckSource, Deck deckTarget, Integer numberOfCardsTodraw) // Must implement
+// Removes card from source and adds it to target
+Action shuffle(Deck deckSource) // Must implement
+// Reorders cards in a deck randomly
+Action drawAll(Deck deckSource, Deck deckTarget) // Must implement
+// Uses draw until source is empty
+Action AddCard(Card card, Deck deckTarget) // Implemented
+Action RemoveCard(Deck deckTarget) // Must implement
+Action ReadAction() RESULTS IN String // Must implement
+// Language contains an implicit rule on changing game States
+//that prompts player for actions specified by "State ALLOWS"
+Action WriteAction(Action action) // Not needed
+Action FindCardByIndex(Deck deckSource, Integer index) RESULTS IN Card // Not needed
+Action FillDeck(Deck[] decks, Deck deckTarget) // Not needed
+Action PlayCard(Card card) RESULTS IN Card // Must implement
+Action ChangeActivePlayer(Player playerSource, Player playerTarget) // Not needed
+Action NextState() // Not needed
+// Changes State in the order they are declared, looping at last State
+Action ChangeState(State state) RESULTS IN State // use setState
+Action ProduceError() // Not needed
+Action GetState() RESULTS IN State // Must implement
+Action Print(String s) // use write
+Action Exists(Any[], Action condition) // Not needed
+// Does not fit current design ideas
+Action StringToInt(String s) RESULTS IN Integer // Must implement
+Action GameStart(State startingState) // Must implement
+*/
+
+Action addCard(Deck deck, Card card) RESULTS IN Deck {
+    deck.cards[deck.size] IS card;
+    RESULT IN deck;
+}
+
+Action makeCards() RESULTS IN Deck {
+    Deck resultDeck IS NEW Deck{
+        [NEW Card{"pink"; 99;}];
+        0;
+    };
+    String[] colors IS ["red", "green", "yellow", "blue"];
+    Integer[] values IS [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+    FOR(Integer i IS 0; i LESS OR EQUALS 4; i IS i+1) {
+        FOR(Integer j IS 0; j LESS OR EQUALS 10; j IS j+1) {
+            addCard(resultDeck, NEW Card{colors[i]; values[j];});
+        }
+    }
+    RESULT IN resultDeck;
+}
+
+// X User-defined
+Action declareWinner(Player winner) {
+    write("Winner found");
+}
+
+// X
+Action showBoard(Board board) {
+    String s IS board.activePlayer + "'s turn. Hand: \n";
+    Integer i IS 0;
+    FOR(Integer i IS 0; i LESS THAN board.activePlayer.handSize; i IS i+1) {
+        s IS s + "card " + i + "[" + board.activePlayer.hand.cards[i].value + ", " + board.activePlayer.hand.cards[i].color + "]\n";
+    }
+    write(s);
+}
+
+// X
+Action containsValidCard(Deck hand, Card topCard) RESULTS IN boolean {
+    FOR(Integer i IS 0; i LESS THAN hand.handSize; i IS i+1) {
+        Boolean result IS false;
+        IF(hand.cards[i].color EQUALS topCard.color OR hand.cards[i].number EQUALS topCard.number) {
+            result IS true;
+        }
+    }
+    RESULT IN result;
+}
+
+// X
+Action updateActivePlayer(Board board) {
+    IF(board.activePlayer EQUALS board.players[0]) {
+        board.activePlayer IS board.players[1];
+    } ELSE {
+        board.activePlayer IS board.players[0];
+    }
+}
+
+/*** RULES ***/
+/*
+Potential inspiration here:
+https://swt.informatik.uni-freiburg.de/staff/berstel/rw07.pdf /
+Rules are evaluated in the order they are written
+- check whether events are consumed
+*/
+// SKETCH
+// Rule X: WHEN [Action] IF (Condition) THEN {Action} ELSE {Action}
+
+// x
+Rule mustShuffle WHEN [draw] IF (storeBoard.RESULT.decks[1].size LESS THAN 1){
+    Board board IS storeBoard.RESULT;
+    shuffle(board.decks[0]);
+    drawAll(board.decks[0], board.decks[1]);
+    storeBoard(board);
+}
+
+// x
+Rule drawUntilValid WHEN [draw, ChangeState] IF ("Play" EQUALS getState() AND NOT containsValidCard(storeBoard.RESULT.activePlayer.hand, storeBoard.RESULT.decks[0].top)){
+    Board board IS storeBoard.RESULT;
+    draw(board.decks[1], board.activePlayer.hand);
+    storeBoard(board);
+}
+
+// X
+Rule playsValidCard WHEN [PlayCard] IF(PlayCard.RESULT.color EQUALS storeBoard.RESULT.decks[0].Top.color OR PlayCard.RESULT.number EQUALS storeBoard.RESULT.decks[0].Top.number){
+    Board board IS storeBoard.RESULT;
+    RemoveCard(board.activePlayer.hand);
+    updateActivePlayer();
+    storeBoard(board);
+}
+
+// X
+Rule winner WHEN [PlayCard] IF (storeBoard.RESULT.activePlayer.hand.size LESS THAN 1) {
+    ChangeState("End");
+}
+
+//may not be needed
+Rule startTurn WHEN [ChangeState] IF (GetState() EQUALS Play ){
+    Board board IS storeBoard.RESULT;
+    ShowBoard(board);
+    PlayCard(board.activePlayer.hand[StringToInt(ReadAction())]);
+}
+
+/*** STATES ***/
+// Global variable keeps track of current state
+State Start ALLOWS [draw, shuffle]
+// Allowable actions are declared - error if wrong actions performed
+State Play ALLOWS [ALL]
+State End ALLOWS [shuffle]
+
+/*** MAIN GAME ***/
+// X
+Player playerOne IS NEW Player {"Bob"; NEW Deck{};};
+Player playerTwo IS NEW Player {"Bo"; NEW Deck{};};
+
+// X
+Board b1 IS NEW Board {
+    [playerOne, playerTwo];
+    makeCards();
+    playerOne;
+};
+storeBoard(b1);
+
+// X
+shuffle(storeBoard.RESULT.decks[1]);
+
+// X
+draw(storeBoard.RESULT.decks[1], storeBoard.RESULT.players[0].hand, 7);
+draw(storeBoard.RESULT.decks[1], storeBoard.RESULT.players[1].hand, 7);
+
+// X
+setState(Play);
