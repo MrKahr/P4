@@ -2,7 +2,7 @@
 
 Template Card CONTAINS {
   String color;
-  Integer number;
+  Integer value;
 }
 
 Template Deck CONTAINS {
@@ -19,6 +19,7 @@ Template Player CONTAINS {
 Template Board CONTAINS {
     Player[] players;
     Deck[] decks;
+    Player activePlayer;
 }
 
 
@@ -26,7 +27,7 @@ Template Board CONTAINS {
 Action Combine(Template template, Any[] anys, Any[] anys,...) RESULTS IN Template [] // Must implement, replaced with makeCards
 // Fills attributes of a specified template
 //with all combinations of supplied array elements
-Action draw(Deck deckSource, Deck deckTarget, Integer numberOfCardsTodraw) // Must implement
+Action draw(Deck deckSource, Deck deckTarget, Integer valueOfCardsTodraw) // Must implement
 // Removes card from source and adds it to target
 Action shuffle(Deck deckSource) // Must implement
 // Reorders cards in a deck randomly
@@ -82,19 +83,20 @@ Action declareWinner(Player winner) {
 
 // X
 Action showBoard(Board board) {
-    String s IS board.activePlayer + "'s turn. Hand: \n";
-    Integer i IS 0;
+    String s IS board.activePlayer.name + "'s turn. Hand: \n";
+    /*
     FOR(Integer i IS 0; i LESS THAN board.activePlayer.handSize; i IS i+1) {
         s IS s + "card " + i + "[" + board.activePlayer.hand.cards[i].value + ", " + board.activePlayer.hand.cards[i].color + "]\n";
     }
+    */
     write(s);
 }
 
 // X
-Action containsValidCard(Deck hand, Card topCard) RESULTS IN boolean {
-    FOR(Integer i IS 0; i LESS THAN hand.handSize; i IS i+1) {
-        Boolean result IS false;
-        IF(hand.cards[i].color EQUALS topCard.color OR hand.cards[i].number EQUALS topCard.number) {
+Action containsValidCard(Deck hand, Card topCard) RESULTS IN Boolean {
+    Boolean result IS false;
+    FOR(Integer i IS 0; i LESS THAN hand.size; i IS i+1) {
+        IF(hand.cards[i].color EQUALS topCard.color OR hand.cards[i].value EQUALS topCard.value) {
             result IS true;
         }
     }
@@ -136,7 +138,7 @@ Rule drawUntilValid WHEN [draw, ChangeState] IF ("Play" EQUALS getState() AND NO
 }
 
 // X
-Rule playsValidCard WHEN [PlayCard] IF(PlayCard.RESULT.color EQUALS storeBoard.RESULT.decks[0].Top.color OR PlayCard.RESULT.number EQUALS storeBoard.RESULT.decks[0].Top.number){
+Rule playsValidCard WHEN [PlayCard] IF(PlayCard.RESULT.color EQUALS storeBoard.RESULT.decks[0].Top.color OR PlayCard.RESULT.value EQUALS storeBoard.RESULT.decks[0].Top.value){
     Board board IS storeBoard.RESULT;
     RemoveCard(board.activePlayer.hand);
     updateActivePlayer();

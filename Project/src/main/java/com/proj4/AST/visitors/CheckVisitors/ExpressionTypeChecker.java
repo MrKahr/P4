@@ -29,8 +29,10 @@ public class ExpressionTypeChecker implements NodeVisitor {
             case ADD:
                 expression.visitChild(new CheckDecider(), expression.getFirstOperand());
                 firstType = TypeCheckVisitor.getInstance().getFoundType();
+                String firstComplexType = TypeCheckVisitor.getInstance().getFoundComplexType();
                 expression.visitChild(new CheckDecider(), expression.getSecondOperand());
                 secondType = TypeCheckVisitor.getInstance().getFoundType();
+                String secondComplexType = TypeCheckVisitor.getInstance().getFoundComplexType();
 
                 if(firstType.equals("Integer") && secondType.equals("Integer")){
                     //both operands are integers. The output is an integer
@@ -55,7 +57,8 @@ public class ExpressionTypeChecker implements NodeVisitor {
                     expression.setOperator(ExpressionOperator.CONCAT);
                 } else {
                     //Something that's not a string or integer has been found. Throw
-                    throw new MismatchedTypeException();
+                    throw new MismatchedTypeException("Both operands are not a String or an Integer! First operand has type \"" + firstType + "\", complex type \"" + firstComplexType + "\""
+                                                      + " second operand has type \"" + secondType + "\", complex type " + secondComplexType + "\"");
                 }
 
                 break;
@@ -163,7 +166,12 @@ public class ExpressionTypeChecker implements NodeVisitor {
                 ArrayList<String> map = GlobalScope.getInstance().getTemplateMapTable().get(templateType);    //get the arraylist with the chosen template's fields
                 TemplateSymbol blueprint = GlobalScope.getInstance().getBlueprintTable().get(templateType); //get the blueprint for the chosen template
 
-                SymbolTableEntry fieldContent = blueprint.getContent().get(map.indexOf(fieldName));  //find the field we need with the map and get the content of the field
+                SymbolTableEntry fieldContent;
+                try {
+                    fieldContent = blueprint.getContent().get(map.indexOf(fieldName));  //find the field we need with the map and get the content of the field
+                } catch (IndexOutOfBoundsException iofe) {
+                    throw new UndefinedVariableException("Field name \"" + fieldName + "\" does not exist in template \"" + templateType + "\"");
+                }
 
                 if (fieldContent.getComplexType().equals("Array")) {
                     ArraySymbol fieldArray = (ArraySymbol) fieldContent;
