@@ -180,10 +180,8 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         for(int i = 0; i < size; i++){
             if(i == 0){
                 accessNode = new Expression(ExpressionOperator.ACCESS, actionResultNode, new TField(ctx.IDENTIFIER().get(i).getText()));
-                System.out.println("First: " + ctx.IDENTIFIER().get(i).getText());
             } else {
                 accessNode = new Expression(ExpressionOperator.ACCESS, accessNode, new TField(ctx.IDENTIFIER().get(i).getText()));
-                System.out.println("Subseq " + i + " : " + ctx.IDENTIFIER().get(i).getText());
             }
         }
         return accessNode != null ? accessNode : actionResultNode;
@@ -410,7 +408,7 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     @Override
     public RuleDecl visitRuleDecl(DBLParser.RuleDeclContext ctx) {
         // Add if else block
-        RuleDecl node = new RuleDecl((IfElse) visit(ctx.ifBlock()));
+        RuleDecl node = new RuleDecl(ctx.typedefUser().getText(), (IfElse) visit(ctx.ifBlock()));
 
         // Add all actions
         for (String actionID : (ArrayList<String>) visit(ctx.identifierList())) {

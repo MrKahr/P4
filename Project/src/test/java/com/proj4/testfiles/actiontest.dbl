@@ -1,3 +1,26 @@
+/************* PREREQUISITES **********************/
+
+Template Card CONTAINS {
+  String color;
+}
+
+Template Deck CONTAINS {
+  Card[] cards;
+}
+
+
+Template Board CONTAINS {
+    Deck[] d1;
+}
+
+
+Action storeBoard(Board board) RESULTS IN Board {
+    RESULT IN board;
+}
+
+/**********************************************/
+
+
 /* TEST 1
 Action without return called and assigned to variable.
 Tested elsewhere
@@ -24,6 +47,16 @@ Action tad1(Integer[][] arrA, Integer[][] arrB) RESULTS IN Integer[][][] {
     RESULT IN arrC;
 }
 
+/* TEST 4
+Complex paramter passing
+*/
+Action containsValidCard(Deck deck) RESULTS IN Boolean {
+    Boolean result IS false;
+    RESULT IN result;
+}
+
+
+
 // Test 2
 Integer vtb IS tb(1, 2, 3);
 
@@ -32,3 +65,11 @@ Integer arrsize IS sizeInt(arr);
 
 // Test 3
 Integer[][][] arr2D IS tad1([[1], [2]], [[3], [4]]);
+
+
+// Test 4
+Card card IS NEW Card{"John";};
+Deck deck IS NEW Deck{[card];};
+Board board IS NEW Board{[deck];};
+storeBoard(board);
+Boolean isValid IS containsValidCard(storeBoard.RESULT.d1[0]);

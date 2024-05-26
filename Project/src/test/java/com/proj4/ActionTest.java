@@ -14,6 +14,7 @@ import com.proj4.exceptions.MismatchedTypeException;
 import com.proj4.symbolTable.ScopeManager;
 import com.proj4.symbolTable.ScopeObserver;
 import com.proj4.symbolTable.symbols.ArraySymbol;
+import com.proj4.symbolTable.symbols.BooleanSymbol;
 import com.proj4.symbolTable.symbols.IntegerSymbol;
 import com.proj4.symbolTable.symbols.SymbolTableEntry;
 
@@ -50,23 +51,10 @@ public class ActionTest extends TestingArgs {
         IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("arrsize");
         assertTrue(intSymbol.getValue() == 2);
     }
-    @Disabled
+
     @Test
     public void test4() {
-        ArraySymbol arraySymbol = (ArraySymbol) variableTable.get("arr2D");
-        assertEquals("Integer", arraySymbol.getType()); // Check type
-        assertTrue(arraySymbol.getNestingLevel() == 2); // Check nesting level
-        Integer counter = 1; // Counter for value of innermost array
-        for(SymbolTableEntry entry : arraySymbol.getContent()) {
-            ArraySymbol arraySymbol2 = (ArraySymbol) entry;
-            for(SymbolTableEntry entry2 : arraySymbol2.getContent()){
-                ArraySymbol arraySymbol3 = (ArraySymbol) entry2;
-                for(SymbolTableEntry entry3 : arraySymbol3.getContent()){
-                    IntegerSymbol integerSymbol = (IntegerSymbol) entry3;
-                    assertTrue(integerSymbol.getValue() == counter);
-                    counter++;
-                }
-            }
-        }
+        BooleanSymbol booleanSymbol = (BooleanSymbol) variableTable.get("isValid");
+        assertFalse(booleanSymbol.getValue());
     }
 }

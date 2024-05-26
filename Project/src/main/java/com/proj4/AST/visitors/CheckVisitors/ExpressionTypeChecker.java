@@ -207,7 +207,7 @@ public class ExpressionTypeChecker implements NodeVisitor {
                     throw new MismatchedTypeException("Index for array (or template) is not integer! Received type: '" + TypeCheckVisitor.getInstance().getFoundType() + "'' with complex type: '" + TypeCheckVisitor.getInstance().getFoundComplexType() + "'");
                 }
 
-                if (nestingLevel >= 0) {   //if nestingLevel is -1, indexing will give us something that is not an array
+                if (nestingLevel > 0) {   //if nestingLevel is -1, indexing will give us something that is not an array
                     TypeCheckVisitor.getInstance().setFoundType(arrayType, "Array", nestingLevel - 1);
                 } else {
                     switch (arrayType) {

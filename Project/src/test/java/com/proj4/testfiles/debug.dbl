@@ -1,18 +1,10 @@
-/*** TEMPLATES ***/
 
-Template Card CONTAINS {
-  String color;
-  Integer value;
+Action showBoard() {
+    String variable IS "" + 1;
 }
 
 
-Action playCard(Card card) RESULTS IN Card {
-    RESULT IN card;
-}
+//String variable IS "" + 1;
 
 
-/*** RULES ***/
-
-Rule playsValidCard WHEN [setState] IF("p" EQUALS setState.RESULT){
-    Integer success;
-}
+showBoard();

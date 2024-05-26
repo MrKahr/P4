@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.proj4.AST.nodes.AST;
 import com.proj4.AST.nodes.ActionDecl;
+import com.proj4.AST.nodes.Body;
 import com.proj4.AST.nodes.Declaration;
 import com.proj4.AST.visitors.CheckDecider;
 import com.proj4.AST.visitors.NodeVisitor;
@@ -68,9 +69,12 @@ public class ActionDeclTypeChecker implements NodeVisitor{
         //make sure all child declarations (parameters) are well-typed and in this scope, and add their names to the parameter list
         try {
             for (AST child : actionDecl.getChildren()) {
-            actionDecl.visitChild(new CheckDecider(), (Declaration) child);
-            //remember the name of the parameter
-            action.addParameterName(((Declaration) child).getIdentifier());
+                // Workaround to get string cast to work in Actions
+                if(!(child instanceof Body)){
+                    actionDecl.visitChild(new CheckDecider(), (Declaration) child);
+                    //remember the name of the parameter
+                    action.addParameterName(((Declaration) child).getIdentifier());
+                }
             }
         } catch (ClassCastException cce) {
             throw new MalformedAstException("Expected only declarations in children list of actionDecl!");

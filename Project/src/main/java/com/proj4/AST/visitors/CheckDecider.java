@@ -52,7 +52,7 @@ public class CheckDecider implements VisitorDecider {
                 node.acceptVisitor(new ReturnTypeChecker(verbose));
                 break;
             case "RuleDecl":
-                node.acceptVisitor(new RuleDeclTypeChecker());
+                node.acceptVisitor(new RuleDeclTypeChecker(verbose));
                 break;
             case "StateDecl":
                 node.acceptVisitor(new StateDeclTypeChecker());

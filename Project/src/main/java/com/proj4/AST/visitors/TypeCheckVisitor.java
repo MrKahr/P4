@@ -43,7 +43,7 @@ public class TypeCheckVisitor {
         foundComplexType = complexType;
         nestingLevel = nesting;
         // Debug printing
-        System.out.println("TypeCheckVisitor: setFoundType(Type = "+type+" | Complex type = "+complexType+" | Nesting Level = "+nesting+")");
+        //System.out.println("TypeCheckVisitor: setFoundType(Type = "+type+" | Complex type = "+complexType+" | Nesting Level = "+nesting+")");
     }
 
     public void setCurrentAction(String actionName){

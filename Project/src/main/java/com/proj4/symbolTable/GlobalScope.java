@@ -50,6 +50,10 @@ public class GlobalScope {
         return singleInstance;
     }
 
+    public static void destroyInstance(){
+        singleInstance = null;
+    }
+
     public HashMap<String, ActionSymbol> getActionTable(){
         return actionTable;
     }

@@ -5,9 +5,6 @@ import java.util.HashMap;
 import java.util.Stack;
 
 import com.proj4.symbolTable.symbols.ArraySymbol;
-import com.proj4.symbolTable.symbols.BooleanSymbol;
-import com.proj4.symbolTable.symbols.IntegerSymbol;
-import com.proj4.symbolTable.symbols.NullSymbol;
 import com.proj4.symbolTable.symbols.PrimitiveSymbol;
 import com.proj4.symbolTable.symbols.StringSymbol;
 import com.proj4.symbolTable.symbols.SymbolTableEntry;

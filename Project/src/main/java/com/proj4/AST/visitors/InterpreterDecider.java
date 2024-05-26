@@ -23,7 +23,7 @@ public class InterpreterDecider implements VisitorDecider {
         }
         switch (node.getClass().getSimpleName()) {
             case "ActionCall":
-                node.acceptVisitor(new ActionCallInterpreter());
+                node.acceptVisitor(new ActionCallInterpreter(verbose));
                 break;
             case "ActionDecl":
                 node.acceptVisitor(new ActionDeclInterpreter());

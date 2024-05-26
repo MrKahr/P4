@@ -83,7 +83,7 @@ public class ProgramInterpreter implements NodeVisitor {
                     input = scanner.nextLine();
                     switch (action.getInitialScope().getVariableTable().get(parameters.get(index)).getType()) {
                         case "Integer":
-                            action.getInitialScope().getVariableTable().put(parameters.get(index), new IntegerSymbol(Integer.valueOf(input)));;
+                            action.getInitialScope().getVariableTable().put(parameters.get(index), new IntegerSymbol(Integer.valueOf(input)));
                             break;
                         case "Boolean":
                             action.getInitialScope().getVariableTable().put(parameters.get(index), new BooleanSymbol(Boolean.valueOf(input)));
@@ -119,7 +119,7 @@ public class ProgramInterpreter implements NodeVisitor {
             ScopeManager.getInstance().printGlobalScope(GlobalScope.getInstance().getResultTable());
         }
         scanner.close();
-        ScopeManager.getInstance().printGlobalScope(GlobalScope.getInstance().getResultTable());
         ScopeManager.getInstance().exit();
+        GlobalScope.destroyInstance();
     }
 }

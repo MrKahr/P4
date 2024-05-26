@@ -120,7 +120,7 @@ public class ExpressionInterpreter implements NodeVisitor {
                 }
                 InterpreterVisitor.getInstance().setReturnSymbol(new BooleanSymbol(booleanResult));
                 break;
-            case EQUALS:
+            case EQUALS: // TODO: Outdated implementation. Only works with primitives
                 SymbolTableEntry firstElement;
                 SymbolTableEntry secondElement;
 
@@ -144,19 +144,21 @@ public class ExpressionInterpreter implements NodeVisitor {
 
                 //System.out.println("Result of " + firstElement.getValue() + " EQUALS " + secondEq.getValue() + " is " + booleanResult + ".");
                 break;
-            case NOT_EQUALS:
+            case NOT_EQUALS: // TODO: Outdated implementation. Only works with primitives
                 SymbolTableEntry NeqfirstElement;
                 SymbolTableEntry NeqsecondElement;
 
                 // Visit first element
                 expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
 
-                if(InterpreterVisitor.getInstance().getReturnSymbol().getComplexType().equals("Primitive")){
-                    NeqfirstElement =  ((PrimitiveSymbol)InterpreterVisitor.getInstance().getReturnSymbol());
-                } else if(InterpreterVisitor.getInstance().getReturnSymbol().getComplexType().equals("Complex")) {
-                    NeqfirstElement =  ((ComplexSymbol)InterpreterVisitor.getInstance().getReturnSymbol());
+                SymbolTableEntry returnSymbol = InterpreterVisitor.getInstance().getReturnSymbol();
+                System.out.println(returnSymbol);
+                if(returnSymbol instanceof PrimitiveSymbol){
+                    NeqfirstElement = ((PrimitiveSymbol) InterpreterVisitor.getInstance().getReturnSymbol());
+                } else if(returnSymbol instanceof ComplexSymbol) {
+                    NeqfirstElement = ((ComplexSymbol) InterpreterVisitor.getInstance().getReturnSymbol());
                 } else {
-                    throw new UnexpectedTypeException("Recieved unexpected type for equals operation: " + InterpreterVisitor.getInstance().getReturnSymbol().getType() +  "");
+                    throw new UnexpectedTypeException("Recieved unexpected type for equals operation: \"" + returnSymbol.getType() + "\", complex type \"" + returnSymbol.getComplexType() + "\"");
                 }
                 expression.visitChild(new InterpreterDecider(), expression.getSecondOperand());
 
@@ -213,7 +215,7 @@ public class ExpressionInterpreter implements NodeVisitor {
             case CONSTANT:
                 //this operator always returns a primitive!
                 if(this.verbose){
-                    System.out.println(this.getClass().getSimpleName() + ": Fetching constant.");
+                    System.out.println(this.getClass().getSimpleName() + ": Fetching constant \"" + expression.getConstant().getValue() + "\"");
                 }
                 InterpreterVisitor.getInstance().setReturnSymbol(expression.getConstant());
                 break;

@@ -14,6 +14,12 @@ import com.proj4.symbolTable.ScopeManager;
 import com.proj4.symbolTable.symbols.*;
 
 public class ActionCallInterpreter implements NodeVisitor {
+    private Boolean verbose = false;
+
+    public ActionCallInterpreter(Boolean verbose){
+        this.verbose = verbose;
+    }
+
 
     public void visit(AST node) {
         ActionCall actionCall = (ActionCall) node;
@@ -57,7 +63,7 @@ public class ActionCallInterpreter implements NodeVisitor {
         //check if the action is built-in or not
         if (InbuiltActionDefiner.getDefinerInstance().getIdentifiers().contains(actionCall.getIdentifier())) {
             //hand control to an InbuiltFunctionInterpreter and let it do its thing
-            InbuiltActionInterpreter inbuiltFunctionInterpreter = new InbuiltActionInterpreter();
+            InbuiltActionInterpreter inbuiltFunctionInterpreter = new InbuiltActionInterpreter(this.verbose);
             //TODO: document the reason for thisAction
             String thisAction = InterpreterVisitor.getInstance().getCurrentActionIdentifier();
             InterpreterVisitor.getInstance().setCurrentAction(actionCall.getIdentifier());

@@ -14,7 +14,6 @@ public class ProgramTypeChecker implements NodeVisitor{
         //put current inbuilt actions into symbol table
         InbuiltActionDefiner.getDefinerInstance().defineActions();
 
-        System.out.println(GlobalScope.getInstance().getActionTable().keySet());
         //start of traversing the AST requires new scope
         ScopeManager.getInstance().enter();
         program.visitChildren(new CheckDecider());
