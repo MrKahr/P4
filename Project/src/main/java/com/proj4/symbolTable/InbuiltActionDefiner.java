@@ -4,10 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import com.proj4.symbolTable.symbols.ActionSymbol;
-import com.proj4.symbolTable.symbols.StringSymbol;
-import com.proj4.symbolTable.symbols.SymbolTableEntry;
-import com.proj4.symbolTable.symbols.TemplateSymbol;
+import com.proj4.symbolTable.symbols.*;
 
 public class InbuiltActionDefiner {
     // Field
@@ -21,7 +18,6 @@ public class InbuiltActionDefiner {
         map = new ArrayList<String>();
         actionIdentifiers = new HashSet<String>();
         map.add("RESULT");
-        defineActions();
     }
 
     // Method
@@ -49,21 +45,23 @@ public class InbuiltActionDefiner {
         //defineAction("remove", "Null", "Null");
         //defineAction("shuffle", "Null", "Null");
         defineAction("write", "Null", "Null", new ArrayList<String>(Arrays.asList("toWrite")), new ArrayList<SymbolTableEntry>(Arrays.asList(new StringSymbol(""))));
+        defineAction("sizeInt", "Integer", "Primitive", new ArrayList<String>(Arrays.asList("array")), new ArrayList<SymbolTableEntry>(Arrays.asList(new ArraySymbol("Integer", 0))));
     }
 
-    private void defineAction(String functionName, String returnType, String complexReturnType, ArrayList<String> paramNames, ArrayList<SymbolTableEntry> startingParams){
-        ActionSymbol function = new ActionSymbol(returnType, complexReturnType, null, -1);
-        function.setParameterNames(paramNames);
+    private void defineAction(String actionID, String returnType, String complexReturnType, ArrayList<String> paramNames, ArrayList<SymbolTableEntry> startingParams){
+        ActionSymbol actionSymbol = new ActionSymbol(returnType, complexReturnType, null, -1);
+        actionSymbol.setParameterNames(paramNames);
 
         // Give actions initial scope
-        function.setInitialScope(new Scope());
+        actionSymbol.setInitialScope(new Scope());
 
         for (int i = 0; i < startingParams.size(); i++) {
-            function.getInitialScope().declareVariable(paramNames.get(i), startingParams.get(i));
+            actionSymbol.getInitialScope().declareVariable(paramNames.get(i), startingParams.get(i));
         }
 
-        TemplateSymbol functionBlueprint = new TemplateSymbol();
-        functionBlueprint.addContent(
+        TemplateSymbol blueprint = new TemplateSymbol();
+        blueprint.setType(actionID);
+        blueprint.addContent(
             SymbolTableEntry.instantiateDefault(
                 returnType,
                 complexReturnType,
@@ -71,11 +69,12 @@ public class InbuiltActionDefiner {
             )
         );
         // Put template, blueprint and action symbol in appropriate tables.
-        GlobalScope.getInstance().getBlueprintTable().put(functionName, functionBlueprint);
-        GlobalScope.getInstance().getActionTable().put(functionName, function);
-        GlobalScope.getInstance().getTemplateMapTable().put(functionName, map);
+        GlobalScope.getInstance().getBlueprintTable().put(actionID, blueprint);
+        GlobalScope.getInstance().getActionTable().put(actionID, actionSymbol);
+        GlobalScope.getInstance().getTemplateMapTable().put(actionID, map);
+        GlobalScope.getInstance().getResultTable().put(actionID, blueprint);
         // Put identifier in list of inbuilt action identifiers
-        actionIdentifiers.add(functionName);
+        actionIdentifiers.add(actionID);
     }
 
     public HashSet<String> getIdentifiers(){

@@ -47,7 +47,7 @@ public class InterpreterDecider implements VisitorDecider {
                 node.acceptVisitor(new DeclarationInterpreter());
                 break;
             case "Program":
-                node.acceptVisitor(new ProgramInterpreter(verbose));
+                node.acceptVisitor(new ProgramInterpreter());
                 break;
             case "Return":
                 node.acceptVisitor(new ReturnInterpreter(verbose));

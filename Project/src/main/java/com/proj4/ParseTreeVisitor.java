@@ -176,12 +176,14 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
     public Expression visitActionResult(DBLParser.ActionResultContext ctx){
         Expression actionResultNode = new Expression(ExpressionOperator.ACCESS, new Variable(ctx.typedefUser().getText()), new TField(ctx.RESULT().getText()));
         Expression accessNode = null;
-        Integer size = ctx.IDENTIFIER().size()-1;
-        for(int i=size; i > 0; i--){
-            if(i == size){
+        Integer size = ctx.IDENTIFIER().size();
+        for(int i = 0; i < size; i++){
+            if(i == 0){
                 accessNode = new Expression(ExpressionOperator.ACCESS, actionResultNode, new TField(ctx.IDENTIFIER().get(i).getText()));
+                System.out.println("First: " + ctx.IDENTIFIER().get(i).getText());
             } else {
                 accessNode = new Expression(ExpressionOperator.ACCESS, accessNode, new TField(ctx.IDENTIFIER().get(i).getText()));
+                System.out.println("Subseq " + i + " : " + ctx.IDENTIFIER().get(i).getText());
             }
         }
         return accessNode != null ? accessNode : actionResultNode;
@@ -589,6 +591,12 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         Variable node = new Variable(ctx.IDENTIFIER().getText());
         return node;
     }
+
+    // @Override
+    // public Expression visitActionResultString(DBLParser.ActionResultStringContext ctx) {
+    //     Expression node = (Expression) visit(ctx.actionResult());
+    //     return node;
+    // }
 
     @Override
     public ActionCall visitActionCallString(DBLParser.ActionCallStringContext ctx){

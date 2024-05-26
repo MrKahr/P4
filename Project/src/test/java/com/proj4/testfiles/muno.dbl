@@ -22,7 +22,6 @@ Template Board CONTAINS {
     Player activePlayer;
 }
 
-
 /*
 Action Combine(Template template, Any[] anys, Any[] anys,...) RESULTS IN Template [] // Must implement, replaced with makeCards
 // Fills attributes of a specified template
@@ -34,18 +33,18 @@ Action shuffle(Deck deckSource) // Must implement
 Action drawAll(Deck deckSource, Deck deckTarget) // Must implement
 // Uses draw until source is empty
 Action AddCard(Card card, Deck deckTarget) // Implemented
-Action RemoveCard(Deck deckTarget) // Must implement
+Action removeCard(Card cardToRemove, Deck deckTarget) // Implemented
 Action ReadAction() RESULTS IN String // Must implement
 // Language contains an implicit rule on changing game States
 //that prompts player for actions specified by "State ALLOWS"
 Action WriteAction(Action action) // Not needed
 Action FindCardByIndex(Deck deckSource, Integer index) RESULTS IN Card // Not needed
 Action FillDeck(Deck[] decks, Deck deckTarget) // Not needed
-Action PlayCard(Card card) RESULTS IN Card // Must implement
+Action playCard(Card card) RESULTS IN Card // Must implement
 Action ChangeActivePlayer(Player playerSource, Player playerTarget) // Not needed
 Action NextState() // Not needed
 // Changes State in the order they are declared, looping at last State
-Action ChangeState(State state) RESULTS IN State // use setState
+Action setState(State state) RESULTS IN State
 Action ProduceError() // Not needed
 Action GetState() RESULTS IN State // Must implement
 Action Print(String s) // use write
@@ -55,16 +54,58 @@ Action StringToInt(String s) RESULTS IN Integer // Must implement
 Action GameStart(State startingState) // Must implement
 */
 
+
+
+/*** Supposed to be inbuilt ***/
+
+Action draw(Deck deckSource, Deck deckTarget, Integer valueOfCardsTodraw) {
+    Card card IS deckSource.cards[deckSource.size];
+    deckSource.size IS deckSource.size - 1;
+
+    deckTarget.size IS deckTarget.size + 1;
+    deckTarget.cards[deckTarget.size] IS card;
+}
+
+
+Action storeBoard(Board board) RESULTS IN Board {
+    RESULT IN board;
+}
+
+
+
+
+/*** Other actions ***/
+
+Action playCard(Card card) RESULTS IN Card {
+    RESULT IN card;
+}
+
+Action removeCard(Card cardToRemove, Deck targetDeck) {
+    Deck newDeck IS NEW Deck{};
+    Integer newDeckSize IS 0;
+
+    FOR(Integer i IS 0; i GREATER OR EQUALS targetDeck.size; i IS i+1){
+        Card targetCard IS targetDeck.cards[i];
+
+        // Add card to new deck if it should be kept
+        IF(targetCard NOT EQUALS cardToRemove){
+            newDeck.cards[newDeckSize] IS targetCard;
+            newDeck.size IS newDeckSize;
+            newDeckSize IS newDeckSize + 1;
+        }
+    }
+    // Templates are pass-by-reference (well, this is actually a bug. But whatever)
+    targetDeck IS newDeck;
+}
+
+
 Action addCard(Deck deck, Card card) RESULTS IN Deck {
     deck.cards[deck.size] IS card;
     RESULT IN deck;
 }
 
 Action makeCards() RESULTS IN Deck {
-    Deck resultDeck IS NEW Deck{
-        [NEW Card{"pink"; 99;}];
-        0;
-    };
+    Deck resultDeck IS NEW Deck{};
     String[] colors IS ["red", "green", "yellow", "blue"];
     Integer[] values IS [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
@@ -84,7 +125,7 @@ Action declareWinner(Player winner) {
 // X
 Action showBoard(Board board) {
     String s IS board.activePlayer.name + "'s turn. Hand: \n";
-    /*
+    /* TODO: String cast issues
     FOR(Integer i IS 0; i LESS THAN board.activePlayer.handSize; i IS i+1) {
         s IS s + "card " + i + "[" + board.activePlayer.hand.cards[i].value + ", " + board.activePlayer.hand.cards[i].color + "]\n";
     }
@@ -123,46 +164,54 @@ Rules are evaluated in the order they are written
 // Rule X: WHEN [Action] IF (Condition) THEN {Action} ELSE {Action}
 
 // x
+
+/*  Implement shuffle
 Rule mustShuffle WHEN [draw] IF (storeBoard.RESULT.decks[1].size LESS THAN 1){
     Board board IS storeBoard.RESULT;
     shuffle(board.decks[0]);
     drawAll(board.decks[0], board.decks[1]);
     storeBoard(board);
 }
+*/
 
 // x
-Rule drawUntilValid WHEN [draw, ChangeState] IF ("Play" EQUALS getState() AND NOT containsValidCard(storeBoard.RESULT.activePlayer.hand, storeBoard.RESULT.decks[0].top)){
+
+Rule drawUntilValid WHEN [draw, setState] IF ("Play" EQUALS setState.RESULT AND NOT containsValidCard(storeBoard.RESULT.activePlayer.hand, storeBoard.RESULT.decks[0].cards[0])){
     Board board IS storeBoard.RESULT;
     draw(board.decks[1], board.activePlayer.hand);
     storeBoard(board);
 }
 
 // X
-Rule playsValidCard WHEN [PlayCard] IF(PlayCard.RESULT.color EQUALS storeBoard.RESULT.decks[0].Top.color OR PlayCard.RESULT.value EQUALS storeBoard.RESULT.decks[0].Top.value){
+Rule playsValidCard WHEN [playCard] IF(playCard.RESULT.color EQUALS storeBoard.RESULT.decks[0].cards[storeBoard.RESULT.decks[0].size].color OR playCard.RESULT.value EQUALS storeBoard.RESULT.decks[0].cards[storeBoard.RESULT.decks[0].size].value){
     Board board IS storeBoard.RESULT;
-    RemoveCard(board.activePlayer.hand);
-    updateActivePlayer();
+    removeCard(playCard.RESULT, board.activePlayer.hand);
+    updateActivePlayer(board);
     storeBoard(board);
 }
 
 // X
-Rule winner WHEN [PlayCard] IF (storeBoard.RESULT.activePlayer.hand.size LESS THAN 1) {
-    ChangeState("End");
+Rule winner WHEN [playCard] IF (storeBoard.RESULT.activePlayer.handSize LESS THAN 1) {
+    setState("End");
 }
 
 //may not be needed
-Rule startTurn WHEN [ChangeState] IF (GetState() EQUALS Play ){
+
+Rule startTurn WHEN [setState] IF ("Play" EQUALS setState.RESULT){
     Board board IS storeBoard.RESULT;
     ShowBoard(board);
-    PlayCard(board.activePlayer.hand[StringToInt(ReadAction())]);
+    playCard(board.activePlayer.hand[StringToInt(ReadAction())]);
 }
+
 
 /*** STATES ***/
 // Global variable keeps track of current state
-State Start ALLOWS [draw, shuffle]
+State Start ALLOWS [draw]//, shuffle]
 // Allowable actions are declared - error if wrong actions performed
-State Play ALLOWS [ALL]
-State End ALLOWS [shuffle]
+
+// Implement "ALL" which means all actions are allowed
+State Play ALLOWS [playCard]// [ALL]
+//State End ALLOWS [shuffle]
 
 /*** MAIN GAME ***/
 // X
@@ -178,7 +227,7 @@ Board b1 IS NEW Board {
 storeBoard(b1);
 
 // X
-shuffle(storeBoard.RESULT.decks[1]);
+//shuffle(storeBoard.RESULT.decks[1]);
 
 // X
 draw(storeBoard.RESULT.decks[1], storeBoard.RESULT.players[0].hand, 7);

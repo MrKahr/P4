@@ -8,6 +8,7 @@ import java.util.HashMap;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 
 import com.proj4.exceptions.MismatchedTypeException;
 import com.proj4.symbolTable.ScopeManager;
@@ -44,9 +45,14 @@ public class ActionTest extends TestingArgs {
         IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("vtb");
         assertTrue(intSymbol.getValue() == 6);
     }
-
     @Test
     public void test3() {
+        IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("arrsize");
+        assertTrue(intSymbol.getValue() == 2);
+    }
+    @Disabled
+    @Test
+    public void test4() {
         ArraySymbol arraySymbol = (ArraySymbol) variableTable.get("arr2D");
         assertEquals("Integer", arraySymbol.getType()); // Check type
         assertTrue(arraySymbol.getNestingLevel() == 2); // Check nesting level

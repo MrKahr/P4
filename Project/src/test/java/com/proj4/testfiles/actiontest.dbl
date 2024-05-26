@@ -27,5 +27,8 @@ Action tad1(Integer[][] arrA, Integer[][] arrB) RESULTS IN Integer[][][] {
 // Test 2
 Integer vtb IS tb(1, 2, 3);
 
+Integer[] arr IS [1,2];
+Integer arrsize IS sizeInt(arr);
+
 // Test 3
 Integer[][][] arr2D IS tad1([[1], [2]], [[3], [4]]);

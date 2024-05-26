@@ -72,8 +72,8 @@ boolExpr
     |   expr GTOE expr                      # exprGTOEBool
     |   expr LT expr                        # exprLTBool
     |   expr LTOE expr                      # exprLTOEBool
-    |   expr (NOTEQUALS | EQUALS) expr      # exprEqualBool // TODO: Merge this with stringexpr EQUALS below - fix in parsetreevisitor
     |   stringExpr (NOTEQUALS | EQUALS) stringExpr  # stringEqualBool
+    |   expr (NOTEQUALS | EQUALS) expr      # exprEqualBool
     |   NOT boolExpr                        # negateBool
     |   boolExpr EQUALS boolExpr            # equalBool
     |   boolExpr AND boolExpr               # andBool
@@ -85,9 +85,10 @@ boolExpr
 
 stringExpr
     :   stringExpr ADD stringExpr  # addString
-    |   stringExpr ADD expr        #addStringexpr1
-    |   expr ADD stringExpr        #addStringexpr2
+    |   stringExpr ADD expr        # addStringexpr1
+    |   expr ADD stringExpr        # addStringexpr2
     |   string                     # litteralString
+    |   actionResult               # actionResultString
     |   actionCall                 # actionCallString
     |   IDENTIFIER                 # idString
     ;
