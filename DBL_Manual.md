@@ -6,8 +6,8 @@
 </p>
 
 ## Things that need fixing
-    Templates are pass-by-reference (both left and right side of assignments)
-    They should only be that on the left side
+- [ ] The EQUALS and NOT EQUALS operator currently only supports comparison with Primitives (Integer, String, Boolean)
+
 
 ## The structure of a DBL program
 A valid DBL-program is structured in a specific manner as seen below. While any of the numbered elements may be omitted, if present, they must appear in the order described here.
@@ -124,17 +124,13 @@ The format is as follows:
 
 Examples:
 ```
-name IS name + 1;
-name IS name2;
-name IS name2 + "World";
-name[0] IS name2.health;
-name2.cost IS name[0*54][1+5];
+name IS name + 1;                // Increment the variable by 1
+name IS name2;                   // Assign a variable to another variable
+name IS name2 + "Hello";         // String concatenation
+name IS name2 + "World" + 99;    // Integers can be casted to strings as well
+name[0] IS name2.health;         // Assign value of a template to an array
+name2.cost IS names[1+5].price;  // Templates in arrays can be accessed too
 ```
-
-###
-
-
-
 
 ### Arrays
 Arrays can be declared as following:
@@ -150,5 +146,12 @@ Arrays can NOT be declared as:
 
 ### Actions
 
-
 ### Rules
+
+### Arrays
+Elements can be appended to an existing array by indexing the array out of bounds.
+Example:
+```
+Integer[] intArray; // Declaration
+intArray[0] IS 3;   // Assignment out of bounds
+```
