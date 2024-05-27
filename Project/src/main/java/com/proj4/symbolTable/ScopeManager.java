@@ -136,8 +136,8 @@ public class ScopeManager {
         return verbose;
     }
 
-    public void printBindings() {
-        if (verbose) {
+    public void printBindings(Boolean showFinal) {
+        if (verbose || showFinal) {
             System.out.println("----------Bindings----------");
             for (String identifier : getScopeStack().peek().getVariableTable().keySet()) {
                 SymbolTableEntry variable = getScopeStack().peek().getVariableTable().get(identifier);

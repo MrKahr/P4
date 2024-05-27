@@ -7,7 +7,8 @@ public class Main {
             args = new String[]{"String sc IS \"fish\" + 1; String sd IS 1 + \"fish\";"};
         }
         DBL interpreter = new DBL();
-        interpreter.setVerbosity(true);
+        interpreter.setShowFinalScope(true);
+        interpreter.setVerbosity(false);
         interpreter.setDebugMode(false);
         interpreter.interpret(args[0]);
     }

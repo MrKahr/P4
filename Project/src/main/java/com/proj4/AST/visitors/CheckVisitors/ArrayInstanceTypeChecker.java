@@ -24,7 +24,6 @@ public class ArrayInstanceTypeChecker implements NodeVisitor{
         String expectedComplexType = TypeCheckVisitor.getInstance().getFoundComplexType();
         Integer expectedNestingLevel = TypeCheckVisitor.getInstance().getNestingLevel();
 
-        //System.out.println(this.getClass().getSimpleName() + ": DEBUG ARRAY TYPE = " + expectedType);
         // Typecheck every child
         for (int i = 1; i < arrayInstance.getChildren().size(); i++) {
             arrayInstance.visitChild(new CheckDecider(), arrayInstance.getChildren().get(i));

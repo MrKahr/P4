@@ -19,14 +19,13 @@ import com.proj4.symbolTable.ScopeManager;
 public class DBL {
     private Boolean debugMode = false;
     private Boolean verbose = false;
+    private Boolean showFinalScope = false;
     private LocalTime startTime;
 
     // Constructor
     public DBL(){}
 
-    public void setStateTestInput(){
-
-    }
+    public void setStateTestInput(){}
 
     // Methods
     public void setDebugMode(Boolean debugMode){
@@ -35,6 +34,10 @@ public class DBL {
 
     public void setVerbosity(Boolean verbosity){
         this.verbose = verbosity;
+    }
+
+    public void setShowFinalScope(Boolean showFinalScope){
+        this.showFinalScope = showFinalScope;
     }
 
     public Boolean getDebugMode(){
@@ -127,7 +130,7 @@ public class DBL {
             checkDecider.decideVisitor(abstractSyntaxTree);
 
             // Interpret AST
-            InterpreterDecider interpreterDecider = new InterpreterDecider(this.verbose);
+            InterpreterDecider interpreterDecider = new InterpreterDecider(this.verbose, showFinalScope);
             interpreterDecider.decideVisitor(abstractSyntaxTree);
 
             // Input was sucessfully interpreted

@@ -9,7 +9,6 @@ import org.junit.jupiter.api.BeforeAll;
 
 import com.proj4.symbolTable.ScopeManager;
 import com.proj4.symbolTable.ScopeObserver;
-import com.proj4.symbolTable.symbols.ArraySymbol;
 import com.proj4.symbolTable.symbols.BooleanSymbol;
 import com.proj4.symbolTable.symbols.IntegerSymbol;
 import com.proj4.symbolTable.symbols.StringSymbol;
@@ -26,6 +25,7 @@ public class AssignTest extends TestingArgs {
         DBL interpreter = new DBL();
         interpreter.setDebugMode(debugMode);
         interpreter.setVerbosity(verbose);
+        interpreter.setShowFinalScope(showFinalScope);
         interpreter.interpret(getPath() + "assigntest.dbl");
 
         variableTable = scopeObserver.getCurrentScope().peek().getVariableTable();

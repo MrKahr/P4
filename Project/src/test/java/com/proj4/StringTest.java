@@ -23,6 +23,7 @@ public class StringTest extends TestingArgs {
         DBL interpreter = new DBL();
         interpreter.setDebugMode(debugMode);
         interpreter.setVerbosity(verbose);
+        interpreter.setShowFinalScope(showFinalScope);
         interpreter.interpret(getPath() + "stringtest.dbl");
 
         variableTable = scopeObserver.getCurrentScope().peek().getVariableTable();

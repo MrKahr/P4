@@ -22,6 +22,7 @@ public class RuleTest extends TestingArgs{
         DBL interpreter = new DBL();
         interpreter.setDebugMode(debugMode);
         interpreter.setVerbosity(verbose);
+        interpreter.setShowFinalScope(showFinalScope);
         interpreter.interpret(getPath() + "ruletest.dbl");
 
         variableTable = scopeObserver.getCurrentScope().peek().getVariableTable();

@@ -152,7 +152,7 @@ public class ExpressionInterpreter implements NodeVisitor {
                 expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
 
                 SymbolTableEntry returnSymbol = InterpreterVisitor.getInstance().getReturnSymbol();
-                System.out.println(returnSymbol);
+
                 if(returnSymbol instanceof PrimitiveSymbol){
                     NeqfirstElement = ((PrimitiveSymbol) InterpreterVisitor.getInstance().getReturnSymbol());
                 } else if(returnSymbol instanceof ComplexSymbol) {
@@ -185,7 +185,7 @@ public class ExpressionInterpreter implements NodeVisitor {
             case AND:
                 expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
                 Boolean andOne = ((BooleanSymbol)InterpreterVisitor.getInstance().getReturnSymbol()).getValue();
-                Boolean andTwo  = false;;
+                Boolean andTwo = false;
                 if(andOne){     //only evaluating the second expression if this one is true to implement short-circuiting!
                     expression.visitChild(new InterpreterDecider(), expression.getSecondOperand());
                     andTwo = ((BooleanSymbol)InterpreterVisitor.getInstance().getReturnSymbol()).getValue();

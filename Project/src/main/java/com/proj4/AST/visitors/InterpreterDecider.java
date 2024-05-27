@@ -6,11 +6,13 @@ import com.proj4.symbolTable.ScopeManager;
 
 public class InterpreterDecider implements VisitorDecider {
     private static Boolean verbose = false;
+    private static Boolean finalScopeOnly = false;
 
     public InterpreterDecider(){}
 
-    public InterpreterDecider(Boolean isVerbose) {
+    public InterpreterDecider(Boolean isVerbose, Boolean showFinalScope) {
         verbose = isVerbose;
+        finalScopeOnly = showFinalScope;
     }
 
     //decide which visitor class to use for the given node
@@ -18,7 +20,7 @@ public class InterpreterDecider implements VisitorDecider {
         if(verbose){
             System.out.println("\n\nInterpreting " + node.getClass().getSimpleName() + ".");
             if (!ScopeManager.getInstance().getScopeStack().empty()) {
-                ScopeManager.getInstance().printBindings();
+                ScopeManager.getInstance().printBindings(false);
             }
         }
         switch (node.getClass().getSimpleName()) {
@@ -47,7 +49,7 @@ public class InterpreterDecider implements VisitorDecider {
                 node.acceptVisitor(new DeclarationInterpreter());
                 break;
             case "Program":
-                node.acceptVisitor(new ProgramInterpreter());
+                node.acceptVisitor(new ProgramInterpreter(finalScopeOnly));
                 break;
             case "Return":
                 node.acceptVisitor(new ReturnInterpreter(verbose));

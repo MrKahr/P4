@@ -27,6 +27,7 @@ public class ExpressionTest extends TestingArgs {
         DBL interpreter = new DBL();
         interpreter.setDebugMode(debugMode);
         interpreter.setVerbosity(verbose);
+        interpreter.setShowFinalScope(showFinalScope);
         interpreter.interpret(getPath() + "expressiontest.dbl");
 
         variableTable = scopeObserver.getCurrentScope().peek().getVariableTable();

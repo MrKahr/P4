@@ -505,6 +505,12 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         return node;
     }
 
+    @Override
+    public Expression visitActionResultBool(DBLParser.ActionResultBoolContext ctx) {
+        Expression node = (Expression) visit(ctx.actionResult());
+        return node;
+    }
+
 
     /*** For-loops ***/
     @Override
@@ -590,11 +596,11 @@ public class ParseTreeVisitor extends DBLBaseVisitor<Object> {
         return node;
     }
 
-    // @Override
-    // public Expression visitActionResultString(DBLParser.ActionResultStringContext ctx) {
-    //     Expression node = (Expression) visit(ctx.actionResult());
-    //     return node;
-    // }
+    @Override
+    public Expression visitActionResultString(DBLParser.ActionResultStringContext ctx) {
+        Expression node = (Expression) visit(ctx.actionResult());
+        return node;
+    }
 
     @Override
     public ActionCall visitActionCallString(DBLParser.ActionCallStringContext ctx){
