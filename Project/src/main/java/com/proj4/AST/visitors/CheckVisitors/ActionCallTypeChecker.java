@@ -40,18 +40,22 @@ public class ActionCallTypeChecker implements NodeVisitor{
 
             SymbolTableEntry parameter = action.getInitialScope().getVariableTable().get(parameterNames.get(index));
 
-            if (!foundType.equals(parameter.getType())){
-                throw new MismatchedTypeException("Error for argument " + index + " in actionCall \""+ actionCall.getIdentifier() + "\": Expected type \"" + parameter.getType() + "\"" + " but got \"" + foundType + "\"");
-            }
-            if (!foundComplexType.equals(parameter.getComplexType())) {
-                throw new MismatchedTypeException("Error for argument " + index + " in actionCall \"" + actionCall.getIdentifier() + "\": Expected complex type \"" + parameter.getComplexType() + "\" but got \"" + foundComplexType + "\"");
+            // Special case for the inbuilt action "size" to allow Arrays of arbitrary types
+            if(actionCall.getIdentifier().equals("size")){
+                if(!foundComplexType.equals("Array")){
+                    throw new MismatchedTypeException("Error for argument " + index + " in actionCall \""+ actionCall.getIdentifier() + "\": Inbuilt action expected complex type \"" + parameter.getComplexType() +  "\" but got \"" + foundComplexType + "\"");
+                }
+            } else { // Standard type checking
+                if (!foundType.equals(parameter.getType())){
+                    throw new MismatchedTypeException("Error for argument " + index + " in actionCall \""+ actionCall.getIdentifier() + "\": Expected type \"" + parameter.getType() + "\"" + " but got \"" + foundType + "\"");
+                }
+                if (!foundComplexType.equals(parameter.getComplexType())) {
+                    throw new MismatchedTypeException("Error for argument " + index + " in actionCall \"" + actionCall.getIdentifier() + "\": Expected complex type \"" + parameter.getComplexType() + "\" but got \"" + foundComplexType + "\"");
+                }
             }
         }
-
         //arguments are all well typed and we pretend to have gotten a return value
-
         //System.out.println(this.getClass().getSimpleName() + ": DEBUG ACTION RETURN = " + action.getReturnType());
         TypeCheckVisitor.getInstance().setFoundType(action.getReturnType(), action.getComplexReturnType(), action.getNestingLevel());
-
     }
 }

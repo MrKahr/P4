@@ -45,18 +45,18 @@ public class InbuiltActionDefiner {
         //defineAction("remove", "Null", "Null");
         //defineAction("shuffle", "Null", "Null");
         defineAction("write", "Null", "Null", new ArrayList<String>(Arrays.asList("toWrite")), new ArrayList<SymbolTableEntry>(Arrays.asList(new StringSymbol(""))));
-        defineAction("sizeInt", "Integer", "Primitive", new ArrayList<String>(Arrays.asList("array")), new ArrayList<SymbolTableEntry>(Arrays.asList(new ArraySymbol("Integer", 0))));
+        defineAction("size", "Integer", "Primitive", new ArrayList<String>(Arrays.asList("array")), new ArrayList<SymbolTableEntry>(Arrays.asList(new ArraySymbol("Integer", 0))));
     }
 
-    private void defineAction(String actionID, String returnType, String complexReturnType, ArrayList<String> paramNames, ArrayList<SymbolTableEntry> startingParams){
+    private void defineAction(String actionID, String returnType, String complexReturnType, ArrayList<String> paramNames, ArrayList<SymbolTableEntry> paramTypes){
         ActionSymbol actionSymbol = new ActionSymbol(returnType, complexReturnType, null, -1);
         actionSymbol.setParameterNames(paramNames);
 
         // Give actions initial scope
         actionSymbol.setInitialScope(new Scope());
 
-        for (int i = 0; i < startingParams.size(); i++) {
-            actionSymbol.getInitialScope().declareVariable(paramNames.get(i), startingParams.get(i));
+        for (int i = 0; i < paramTypes.size(); i++) {
+            actionSymbol.getInitialScope().declareVariable(paramNames.get(i), paramTypes.get(i));
         }
 
         TemplateSymbol blueprint = new TemplateSymbol();
