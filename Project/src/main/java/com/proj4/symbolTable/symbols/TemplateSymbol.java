@@ -23,7 +23,7 @@ public class TemplateSymbol extends SymbolTableEntry{
             //use the type to figure out which symbol type we're dealing with and create a copy of that type
 
             // We check array here since we cannot discern between Integer and Integer Array as their type in both cases is "Integer"
-            if(entry.getComplexType() == "Array"){
+            if(entry instanceof ArraySymbol){
                 content.add(new ArraySymbol((ArraySymbol) entry));
             } else {
                 switch (entry.getType()) {
@@ -41,10 +41,10 @@ public class TemplateSymbol extends SymbolTableEntry{
                         break;
                     default:        //Not a primitive
                         switch (getComplexType()) {
-                            // case "Array":   //ArraySymbol
-                            //     content.add(new ArraySymbol((ArraySymbol) entry));
-                            //     break;
-                            case "Template":    //TemplateSymbol
+                            case "Array":   //ArraySymbol
+                                content.add(new ArraySymbol((ArraySymbol) entry));
+                                break;
+                            case "Template":    //TemplateSymbol  TODO: This case is the ONLY case that will be executed - regardless wether we call other or this
                                 content.add(new TemplateSymbol((TemplateSymbol) entry));
                                 break;
                             default:

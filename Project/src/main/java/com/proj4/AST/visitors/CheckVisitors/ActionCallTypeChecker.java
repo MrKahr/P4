@@ -35,13 +35,16 @@ public class ActionCallTypeChecker implements NodeVisitor{
         for (int index = 0; index < action.getParameterNames().size(); index++) {
             actionCall.visitChild(new CheckDecider(), index);
 
+            String foundType = TypeCheckVisitor.getInstance().getFoundType();
+            String foundComplexType = TypeCheckVisitor.getInstance().getFoundComplexType();
+
             SymbolTableEntry parameter = action.getInitialScope().getVariableTable().get(parameterNames.get(index));
 
-            if (!TypeCheckVisitor.getInstance().getFoundType().equals(parameter.getType())){
-                throw new MismatchedTypeException("Error for \""+ actionCall.getIdentifier() + "\": Expected type \"" + parameter.getType() + "\"" + " but got \"" + TypeCheckVisitor.getInstance().getFoundType() + "\"");
+            if (!foundType.equals(parameter.getType())){
+                throw new MismatchedTypeException("Error for argument " + index + " in actionCall \""+ actionCall.getIdentifier() + "\": Expected type \"" + parameter.getType() + "\"" + " but got \"" + foundType + "\"");
             }
-            if (!TypeCheckVisitor.getInstance().getFoundComplexType().equals(parameter.getComplexType())) {
-                throw new MismatchedTypeException("Error for \"" + actionCall.getIdentifier() + "\": Expected complex type \"" + parameter.getComplexType() + "\" but got \"" + TypeCheckVisitor.getInstance().getFoundComplexType() + "\"");
+            if (!foundComplexType.equals(parameter.getComplexType())) {
+                throw new MismatchedTypeException("Error for argument " + index + " in actionCall \"" + actionCall.getIdentifier() + "\": Expected complex type \"" + parameter.getComplexType() + "\" but got \"" + foundComplexType + "\"");
             }
         }
 

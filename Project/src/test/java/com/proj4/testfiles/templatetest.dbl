@@ -23,16 +23,16 @@ Template manyArrays CONTAINS {
     Boolean[] boolTwo IS [true, false, true];
     Integer[] IntOne;
     Integer[] IntTwo IS [1,2,3];
-    String[] StringOne; 
+    String[] StringOne;
     String[] StringTwo IS ["hello", "hi", "howdy"];
 }
 
-Card c1 IS NEW Card{1; 2;}
+Card c1 IS NEW Card{1; 2;};
 
 c1.cost IS 3;
 
 Integer tda IS c1.cost;
 
-Hej c2 IS NEW Hej{1; 2; "bob";}
+Hej c2 IS NEW Hej{1; 2; "bob";};
 
-Fisk c4 IS NEW Fisk{1; 2; c1;}
+Fisk c4 IS NEW Fisk{1; 2; c1;};

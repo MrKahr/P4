@@ -1,0 +1,10 @@
+
+Action showBoard() {
+    String variable IS "" + 1;
+}
+
+
+//String variable IS "" + 1;
+
+
+showBoard();

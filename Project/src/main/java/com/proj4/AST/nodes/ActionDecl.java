@@ -5,7 +5,6 @@ public class ActionDecl extends AST implements Identifiable, Typed{
     private String complexReturnType;
     private String returnType;
     private String identifier;
-    private Body body;
     private Integer nestingLevel = -1;
 
     //Constructor
@@ -13,16 +12,16 @@ public class ActionDecl extends AST implements Identifiable, Typed{
         this.identifier = identifier;
         this.returnType = returnType;
         this.complexReturnType = complexReturnType;
-        this.body = body;
         this.nestingLevel = nestingLevel;
+        addChild(body);
     }
 
     public ActionDecl(String identifier, Body body){
         this.identifier = identifier;
-        this.body = body;
         this.returnType = "Null";   //setting these to prevent nullpointerexceptions from calling .equals
         this.complexReturnType = "Null";
         this.nestingLevel = -1;
+        addChild(body);
     }
 
     //Method
@@ -39,7 +38,7 @@ public class ActionDecl extends AST implements Identifiable, Typed{
     }
 
     public Body getBody(){
-        return body;
+        return (Body) getChild(0);
     }
 
     public String getComplexType(){

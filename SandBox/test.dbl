@@ -1,0 +1,18 @@
+/*** TEMPLATES ***/
+
+Template Card CONTAINS {
+  String color;
+  Integer value;
+}
+
+
+Action playCard(Card card) RESULTS IN Card {
+    RESULT IN card;
+}
+
+
+/*** RULES ***/
+
+Rule playsValidCard WHEN [playCard] IF(true){
+    Integer success;
+}

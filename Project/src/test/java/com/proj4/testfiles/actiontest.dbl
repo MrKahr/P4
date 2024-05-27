@@ -1,12 +1,30 @@
-/* TEST 1
-Action decl
-- without parameters
-- without return
-*/
-Action ta() {
-    Integer v1 IS 3;
-    Integer v2 IS 4;
+/************* PREREQUISITES **********************/
+
+Template Card CONTAINS {
+  String color;
 }
+
+Template Deck CONTAINS {
+  Card[] cards;
+}
+
+
+Template Board CONTAINS {
+    Deck[] d1;
+}
+
+
+Action storeBoard(Board board) RESULTS IN Board {
+    RESULT IN board;
+}
+
+/**********************************************/
+
+
+/* TEST 1
+Action without return called and assigned to variable.
+Tested elsewhere
+*/
 
 
 /* TEST 2
@@ -23,22 +41,35 @@ Action tb(Integer a, Integer b, Integer c) RESULTS IN Integer {
 Action Decl - Arrays
 - with parameters
 - without return
-
-Action tad1(Integer[] arrA, Integer[] arrB) RESULTS IN Integer[][] {
-    Integer[][] arrC;// IS [arrA, arrB];
+*/
+Action tad1(Integer[][] arrA, Integer[][] arrB) RESULTS IN Integer[][][] {
+    Integer[][][] arrC IS [arrA, arrB, [[5]]];
     RESULT IN arrC;
 }
-*/
 
-// Test 1
-Integer varNull IS ta(); // This one gets the value of the Action despite it not returning anything
+/* TEST 4
+Complex paramter passing
+*/
+Action containsValidCard(Deck deck) RESULTS IN Boolean {
+    Boolean result IS false;
+    RESULT IN result;
+}
+
+
 
 // Test 2
-Integer vtb IS tb(1, 2, 3); // This works as intended
+Integer vtb IS tb(1, 2, 3);
 
 Integer[] arr IS [1,2];
 Integer arrsize IS sizeInt(arr);
 
 // Test 3
-//Integer[][] arr2D IS tad1([1], [2]);
+Integer[][][] arr2D IS tad1([[1], [2]], [[3], [4]]);
 
+
+// Test 4
+Card card IS NEW Card{"John";};
+Deck deck IS NEW Deck{[card];};
+Board board IS NEW Board{[deck];};
+storeBoard(board);
+Boolean isValid IS containsValidCard(storeBoard.RESULT.d1[0]);

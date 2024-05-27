@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import com.proj4.exceptions.VariableAlreadyDefinedException;
+import com.proj4.symbolTable.symbols.ArraySymbol;
 import com.proj4.symbolTable.symbols.SymbolTableEntry;
 
 //this class represents a scope in the programming language
@@ -64,6 +65,7 @@ public class Scope implements Cloneable {
     @Override
     public Scope clone() {
         Scope clonedScope = new Scope();
+        clonedScope.setVerbosity(this.getVerbosity());
         clonedScope.putAll(this);
         return clonedScope;
     }
@@ -73,8 +75,12 @@ public class Scope implements Cloneable {
             throw new VariableAlreadyDefinedException("The variable name \"" + identifier + "\" is already in use!");
         } else {
             if (verbose) {
+                Integer nestingLevel = -1;
+                if(variable instanceof ArraySymbol){
+                    nestingLevel = ((ArraySymbol) variable).getNestingLevel();
+                }
                 System.out.println(this.getClass().getSimpleName() + ": Declaring variable \"" + identifier + "\" with type \"" + variable.getType()
-                        + "\", complex type \"" + variable.getComplexType() + "\".");
+                        + "\", complex type \"" + variable.getComplexType() + "\", nesting level " + nestingLevel);
             }
             variableTable.put(identifier, variable);
             declaredTable.add(identifier);
@@ -87,5 +93,9 @@ public class Scope implements Cloneable {
 
     public void setVerbosity(Boolean verbosity) {
         this.verbose = verbosity;
+    }
+
+    public Boolean getVerbosity() {
+        return this.verbose;
     }
 }

@@ -8,10 +8,12 @@ import com.proj4.exceptions.MalformedAstException;
 public class RuleDecl extends AST{
     //Field
     private ArrayList<String> actions;
+    private String identifier;
 
     //Constructor
-    public RuleDecl(IfElse ruleBody){
+    public RuleDecl(String identifier, IfElse ruleBody){
         this.actions = new ArrayList<String>();
+        this.identifier = identifier;
         addChild(ruleBody);
     }
 
@@ -26,5 +28,9 @@ public class RuleDecl extends AST{
         } catch (ClassCastException cce) {
             throw new MalformedAstException("Could not find IfElse-node as child of RuleDecl! Found node of type \"" + getChildren().get(0).getClass().getSimpleName() + "\".");
         }
+    }
+
+    public String getIdentifier(){
+        return this.identifier;
     }
 }

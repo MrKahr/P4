@@ -12,7 +12,12 @@ import com.proj4.symbolTable.ScopeManager;
 import com.proj4.symbolTable.symbols.*;
 
 public class TemplateDeclTypeChecker implements NodeVisitor{
-    
+    private Boolean verbose = false;
+
+    public TemplateDeclTypeChecker(Boolean verbose){
+        this.verbose = verbose;
+    }
+
     public void visit(AST node){
         TemplateDecl templateDecl = (TemplateDecl) node;
 
@@ -48,9 +53,12 @@ public class TemplateDeclTypeChecker implements NodeVisitor{
         } else {
             throw new VariableAlreadyDefinedException("Template \"" + identifier + "\" is already defined!");
         }
+
+        if(this.verbose){
+            System.out.println(this.getClass().getSimpleName() + ": Declaring template \"" + identifier + "\"");
+        }
         ScopeManager.getInstance().exit();
     }
-
     //Note: templateDecls do NOT synthesize their scope. They only modify the global BTable and TTable.
     //Thus, all declarations in the the templateDecl's VTable should be fields in that template
 }

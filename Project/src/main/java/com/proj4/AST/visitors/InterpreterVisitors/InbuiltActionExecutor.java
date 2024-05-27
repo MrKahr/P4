@@ -9,8 +9,7 @@ import com.proj4.symbolTable.symbols.*;
 
 public class InbuiltActionExecutor {
 
-    private InbuiltActionExecutor(){
-    }
+    private InbuiltActionExecutor(){}
 
     private static InbuiltActionExecutor instance;
 
@@ -48,5 +47,5 @@ public class InbuiltActionExecutor {
                 throw new UndefinedActionExpection("Action \"" + actionName + "\"is not an inbuilt action!");
         }
     }
-    
+
 }

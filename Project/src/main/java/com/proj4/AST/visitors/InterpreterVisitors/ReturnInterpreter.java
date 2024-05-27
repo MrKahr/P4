@@ -23,10 +23,11 @@ public class ReturnInterpreter implements NodeVisitor {
         //Update return symbol
         returnNode.visitChild(new InterpreterDecider(), returnNode.getReturnValue());
 
-        //update the action template with the new return symbol
         if(this.verbose){
             System.out.println(this.getClass().getSimpleName() + ": Attempting to write to actionTemplate with identifier \"" + InterpreterVisitor.getInstance().getCurrentActionIdentifier() + "\"");
         }
+
+        //update the action template with the new return symbol
         TemplateSymbol actionTemplate = (TemplateSymbol)GlobalScope.getInstance().getResultTable().get(InterpreterVisitor.getInstance().getCurrentActionIdentifier());
 
         //the 0th field is RESULT

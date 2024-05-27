@@ -1,196 +1,242 @@
-//Prolog for rules + COBOL readability
-
-/*** TODO ***/
-/*
-- Find out how actions are consumed/modelled?
-- We would like a stack, so a rule gets evaluated,
-and any side effects of that rule are evaluated immediately afterwards.
-- Find how we handle the active player
-- It should be done with a rule by a developer
-- How do we pass elements between actions?
-- The element is used as an argument for the next action
-- Consider where to put initialize?
-- Right now it happens in the code itself, without a body
-- Consider functionality of playGames?
-- It was turned into an action that decides the starting state state 
-"GameStart"
-*/
-// Example of use of RESULT in rule (TBD)
-Rule example: WHEN [Action1] IF [Action1.RESULT EQUALS 0] THEN [Action2]   
-//when catching two actions with the same rule: just write it twice
-              WHEN [Action2] IF [Action2.RESULT EQUALS 0] THEN [Action3]   
-//RESULT is local to the rule and refers to
-//the return value of the action that triggered it
-
-
 /*** TEMPLATES ***/
 
 Template Card CONTAINS {
-  String color,
-  Integer number
+  String color;
+  Integer value;
 }
 
-Template Deck CONTAINS{
-  Card cards[],
-  Card top, 
-  Card bottom
+Template Deck CONTAINS {
+  Card[] cards;
+  Integer size;
 }
 
-Template Player CONTAINS{
-  String name,
-  Deck hand,
-  Integer handSize
+Template Player CONTAINS {
+  String name;
+  Deck hand;
 }
 
-Template Board CONTAINS{
-    Player players[], // Array of players
-    Deck decks[], // Array of decks
-    Player activePlayer
+Template Board CONTAINS {
+    Player[] players;
+    Deck[] decks;       // Index 0 is draw pile, index 1 is discard pile
+    Player activePlayer;
 }
 
-/*** ACTIONS ***/
-Action Combine(Template template, Any anys[], Any anys[],...) RESULTS IN Template []
-// Fills attributes of a specified template
-//with all combinations of supplied array elements
-Action Draw(Deck deckSource, Deck deckTarget, Integer numberOfCardsToDraw)
-// Removes card from source and adds it to target
-Action Shuffle(Deck deckSource)
+/*
 // Reorders cards in a deck randomly
-Action DrawAll(Deck deckSource, Deck deckTarget)
-// Uses Draw until source is empty
-Action AddCard(Card card, Deck deckTarget)
-Action RemoveCard(Deck deckTarget)
-Action ReadAction() RESULTS IN String
-// Language contains an implicit rule on changing game States
-//that prompts player for actions specified by "State ALLOWS"
-Action WriteAction(Action action) 
-Action FindCardByIndex(Deck deckSource, Integer index) RESULTS IN Card 
-Action FillDeck(Deck[] decks, Deck deckTarget)
-Action PlayCard(Card card) RESULTS IN Card
-Action ChangeActivePlayer(Player playerSource, Player playerTarget)
-Action NextState()
-// Changes State in the order they are declared, looping at last State
-Action ChangeState(State state) RESULTS IN State
-Action ProduceError()
-Action GetState() RESULTS IN State
-Action Print(String s)
-Action Exists(Any[], Action condition)
-// Does not fit current design ideas
-Action StringToInt(String s) RESULTS IN Integer
-Action GameStart(State startingState)
+Action shuffle(Deck deckSource) // Must implement
+
+// Draw till deckSource is empty
+Action drawAll(Deck deckSource, Deck deckTarget) // Must implement
+
+// Do stuff on game start
+Action GameStart(State startingState) // Must implement
+*/
 
 
-// X User-defined
-Action DeclareWinner(Player winner) {
-  write("Winner found");
-}
 
-// X
-Action showBoard(Board board) {
-  String s IS board.activePlayer + "'s turn. Hand: \n";
-  Integer i IS 0;
-  FOR(Integer i IS 0; i LESS THAN board.activePlayer.handSize; i IS i+1) {
-    s IS s + "card " + i + "[" + board.activePlayer.hand.cards[i].value + ", " + board.activePlayer.hand.cards[i].color + "]\n",
-  }
-  Print(s):
-}
+// ------ WORKING --------- //
+Action draw(Deck deckSource, Deck deckTarget, Integer valueOfCardsTodraw) RESULTS IN Deck[] {
+    Deck[] decks;
 
-// X
-Action containsValidCard(Deck hand, Card topCard) RESULTS IN boolean {
-    
-  FOR(Integer i IS 0; i LESS THAN hand.handSize; i IS i+1) {
-    Boolean result IS false;
-    IF(hand.cards[i].color EQUALS topCard.color OR hand.cards[i].number EQUALS topCard.number) {
-      result IS true;
+    FOR(Integer i IS 0; i LESS THAN valueOfCardsTodraw; i IS i + 1){
+        Card card IS deckSource.cards[deckSource.size];
+        deckSource.size IS deckSource.size - 1;
+
+        deckTarget.cards[deckTarget.size] IS card;
+        deckTarget.size IS deckTarget.size + 1;
     }
-  }
-  RESULT IN result
+    decks[0] IS deckSource;
+    decks[1] IS deckTarget;
+    RESULT IN decks;
 }
 
-// X
-Action updateActivePlayer(Board board) {
-  IF(board.activePlayer EQUALS board.players[0]) {
-    board.activePlayer IS board.players[1];
-  } ELSE {
-    board.activePlayer IS board.players[0];
-  }
+
+// ------ WORKING --------- //
+Action storeBoard(Board board) RESULTS IN Board {
+    RESULT IN board;
 }
+
+
+// This is presented to the user. Thus, it should only have primitives as paramenters
+Action playCard(Card card) RESULTS IN Card {
+    RESULT IN card;
+}
+
+
+// ------ WORKING --------- //
+Action removeCard(Card cardToRemove, Deck targetDeck) RESULTS IN Deck {
+    Deck newDeck IS NEW Deck{};
+    Integer newDeckSize IS 0;
+
+    FOR(Integer i IS 0; i GREATER OR EQUALS targetDeck.size; i IS i+1){
+        Card targetCard IS targetDeck.cards[i];
+
+        // Add card to new deck if it should be kept
+        IF(targetCard.color NOT EQUALS cardToRemove.color AND targetCard.value NOT EQUALS cardToRemove.value){
+            newDeck.cards[newDeckSize] IS targetCard;
+            newDeck.size IS newDeckSize;
+            newDeckSize IS newDeckSize + 1;
+        }
+    }
+    RESULT IN newDeck;
+}
+
+
+Action addCard(Deck deck, Card card) RESULTS IN Deck {
+    deck.cards[deck.size] IS card;
+    deck.size IS deck.size + 1;
+    RESULT IN deck;
+}
+
+
+// ------ WORKING --------- //
+Action makeCards() RESULTS IN Deck {
+    Deck resultDeck IS NEW Deck{};
+    String[] colors IS ["red", "green", "yellow", "blue"];
+    Integer[] values IS [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+    FOR(Integer i IS 0; i LESS THAN 4; i IS i+1) {
+        FOR(Integer j IS 0; j LESS THAN 10; j IS j+1) {
+            resultDeck.cards[resultDeck.size] IS NEW Card{colors[i]; values[j];};
+            resultDeck.size IS resultDeck.size + 1;
+        }
+    }
+    RESULT IN resultDeck;
+}
+
+
+Action declareWinner(Player winner) {
+    write("Winner found");
+}
+
+
+// ------ WORKING --------- //
+Action showBoard(Board board) {
+    String s IS "It is " + board.activePlayer.name + "'s turn. Hand: \n";
+    FOR(Integer i IS 0; i LESS THAN board.activePlayer.hand.size; i IS i+1) {
+        s IS s + "[" + i + "]" + " card: " + "{" + "Value: " + board.activePlayer.hand.cards[i].value + ", Color: " + board.activePlayer.hand.cards[i].color + "}\n";
+    }
+    write(s);
+}
+
+
+// ------ WORKING --------- //
+Action containsValidCard(Deck hand, Card topCard) RESULTS IN Boolean {
+    Boolean result IS false;
+    FOR(Integer i IS 0; i LESS THAN hand.size; i IS i+1) {
+        IF(hand.cards[i].color EQUALS topCard.color OR hand.cards[i].value EQUALS topCard.value) {
+            result IS true;
+        }
+    }
+    RESULT IN result;
+}
+
+
+// ------ WORKING --------- //
+Action updateActivePlayer(Board board) {
+    IF(board.activePlayer.name EQUALS board.players[0].name) {
+        board.activePlayer IS board.players[1];
+    } ELSE {
+        board.activePlayer IS board.players[0];
+    }
+    storeBoard(board);
+}
+
+
 
 /*** RULES ***/
-/*
-Potential inspiration here:
-https://swt.informatik.uni-freiburg.de/staff/berstel/rw07.pdf /
-Rules are evaluated in the order they are written 
-- check whether events are consumed
+
+/*  Implement shuffle
+Rule mustShuffle WHEN [draw] IF (storeBoard.RESULT.decks[1].size LESS THAN 1){
+    Board board IS storeBoard.RESULT;
+    shuffle(board.decks[0]);
+    drawAll(board.decks[0], board.decks[1]);
+    storeBoard(board);
+}
 */
-// SKETCH
-// Rule X: WHEN [Action] IF [Condition] THEN [Action] ELSE [Action]
 
-// x
-Rule mustShuffle: WHEN [Draw] IF [storeBoard.RESULT.decks[1].size LESS THAN 1]{
+/*
+Rule drawUntilValid WHEN [draw, setState] IF ("Play" EQUALS setState.RESULT AND NOT containsValidCard(storeBoard.RESULT.activePlayer.hand, storeBoard.RESULT.decks[0].cards[storeBoard.RESULT.decks[0].size])){
     Board board IS storeBoard.RESULT;
-    Shuffle(board.decks[0]);
-    DrawAll(board.decks[0], board.decks[1]);
+    draw(board.decks[1], board.activePlayer.hand, 1);
+    storeBoard(board);
+}
+*/
+
+Rule playsValidCard WHEN [playCard] IF(playCard.RESULT.color EQUALS storeBoard.RESULT.decks[0].cards[storeBoard.RESULT.decks[0].size].color OR playCard.RESULT.value EQUALS storeBoard.RESULT.decks[0].cards[storeBoard.RESULT.decks[0].size].value){
+    Board board IS storeBoard.RESULT;
+    removeCard(playCard.RESULT, board.activePlayer.hand);
+    updateActivePlayer(board);
     storeBoard(board);
 }
 
-// x
-Rule drawUntilValid: WHEN [Draw, ChangeState] IF [getState() EQUALS "Play" AND NOT containsValidCard(storeBoard.RESULT.activePlayer.hand, storeBoard.RESULT.decks[0].top)]{
+
+Rule winner WHEN [playCard] IF (storeBoard.RESULT.activePlayer.hand.size LESS THAN 1) {
+    setState("End");
+}
+
+
+Rule startTurn WHEN [setState] IF ("Play" EQUALS setState.RESULT){
     Board board IS storeBoard.RESULT;
-    Draw(board.decks[1], board.activePlayer.hand);
-    storeBoard(board);
+    showBoard(board);
+    playCard(board.activePlayer.hand.cards[0]); //StringToInt(ReadAction())
 }
 
-// X
-Rule playsValidCard: WHEN [PlayCard] IF[PlayCard.RESULT.color EQUALS storeBoard.RESULT.decks[0].Top.color OR PlayCard.RESULT.number EQUALS storeBoard.RESULT.decks[0].Top.number]{
-    Board board IS storeBoard.RESULT;
-    RemoveCard(board.activePlayer.hand), updateActivePlayer();
-    storeBoard(board);
-}
 
-// X
-Rule winner: WHEN [PlayCard] IF [storeBoard.RESULT.activePlayer.hand.size LESS THAN 1] {
-    ChangeState("End");
-}
+/*** STATES ***/
 
-//may not be needed
-Rule startTurn: WHEN [ChangeState] IF [GetState() EQUALS Play] {
-    Board board IS storeBoard.RESULT;
-    ShowBoard(board);
-    PlayCard(board.activePlayer.hand[StringToInt(ReadAction())])
-}
-
-/*** STATES ***/ 
 // Global variable keeps track of current state
-State Start ALLOWS [Draw, Shuffle]
+
+State Start ALLOWS [draw]//, shuffle]
+
 // Allowable actions are declared - error if wrong actions performed
-State Play ALLOWS [ALL]
-State End ALLOWS [Shuffle]
+// Implement "ALL" which means all actions are allowed
+
+State Play ALLOWS [playCard]// [ALL]
+State End ALLOWS []//shuffle]
+
+
+
 
 /*** MAIN GAME ***/
-// X
-Player playerOne IS NEW Player {"Bob"; NEW Deck;};
-Player playerTwo IS NEW Player {"Bo"; NEW Deck;};
 
-// X
+Player playerOne IS NEW Player {"John"; NEW Deck{};};
+Player playerTwo IS NEW Player {"Userman"; NEW Deck{};};
+
 Board b1 IS NEW Board {
-  [playerOne, playerTwo];
-  Combine(Card, ["red", "green", "yellow", "blue"], [1, 2, 3, 4, 5, 6, 7, 8, 9]);
-  playerOne;
-}
+    [playerOne, playerTwo];
+    [makeCards()];  // Index 0 is draw pile, index 1 is discard pile
+    playerOne;
+};
+
+
+//shuffle(storeBoard.RESULT.decks[1]);
+
+// Player 1
+b1.decks[0] IS draw(b1.decks[0], b1.players[0].hand, 7)[0]; // Index 0 is source deck
+b1.players[0].hand IS draw.RESULT[1];                       // Index 1 is target deck
+
+// Player 2
+b1.decks[1] IS draw(b1.decks[0], b1.players[1].hand, 7)[0]; // Index 0 is source deck
+b1.players[1].hand IS draw.RESULT[1];                       // Index 1 is target deck
+
+
+Card testCard IS NEW Card{"fishg"; 5;};
+
+Deck testdeck IS NEW Deck{[testCard]; 1;};
+
+
+Boolean shouldValid IS containsValidCard(testdeck, testCard);
+
+testdeck IS removeCard(testCard, testdeck);
+
+Boolean invalid IS containsValidCard(testdeck, testCard);
+
 storeBoard(b1);
+showBoard(storeBoard.RESULT);
 
-// X
-Shuffle(storeBoard.RESULT.decks[1]);
+updateActivePlayer(storeBoard.RESULT);
 
-// X
-Draw(storeBoard.RESULT.decks[1], storeBoard.RESULT.players[0].hand, 7);
-Draw(storeBoard.RESULT.decks[1], storeBoard.RESULT.players[1].hand, 7);
+showBoard(storeBoard.RESULT);
 
-// X
-setState(Play);
-
-// Runs the game
-// Start - Game initialization
-// Play  - Gameplay loop
-// End   - End of game
+setState("End");

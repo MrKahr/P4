@@ -11,16 +11,28 @@ import com.proj4.symbolTable.symbols.ActionSymbol;
 import com.proj4.symbolTable.symbols.RuleSymbol;
 
 public class RuleDeclTypeChecker implements NodeVisitor{
-    
+    private Boolean verbose = false;
+
+    public RuleDeclTypeChecker(Boolean verbose){
+        this.verbose = verbose;
+    }
+
     public void visit(AST node){
         RuleDecl ruleDecl = (RuleDecl) node;
         ScopeManager.getInstance().inherit();
         //make sure the triggering actions are defined
         for (String identifier : ruleDecl.getTriggerActions()) {
-            ActionSymbol action = GlobalScope.getInstance().getActionTable().get(identifier);
-            if (action == null) {
-                throw new UndefinedActionExpection("Undeclared action in rule declaration: Could not find \"" + identifier + "\"!");
+            // Check Action in global scope first
+            if(!GlobalScope.getInstance().getInbuiltActions().contains(identifier)) {
+                ActionSymbol action = GlobalScope.getInstance().getActionTable().get(identifier);
+                if (action == null) {
+                    throw new UndefinedActionExpection("Undeclared action in rule declaration: Could not find \"" + identifier + "\"!");
+                }
             }
+        }
+
+        if(verbose){
+            System.out.println("Declaring new rule: " + ruleDecl.getIdentifier());
         }
 
         //make sure everything that happens in the rule is well typed

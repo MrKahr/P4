@@ -1,6 +1,9 @@
 <h1 align="center">
-    P4: DBL (Deck builder language) 
+    P4: DBL (Deck Builder Language) 
 </h1>
+<p align="center">
+    <a href="/DBL_Manual.md">DBL Manual</a>
+</p>
 
 ## Introduction
 
@@ -27,7 +30,7 @@ STILL WORK IN PROGRESS!!
 ## Troubleshooting
 
 If you're having trouble with the installation process, you can try these steps.
-> **Note**  
+> [!NOTE]  
 > This section assumes a Windows enviroment.
 
 ### JAVA_HOME not found
@@ -75,9 +78,8 @@ setx /M JAVA_HOME "JAVA_PATH"
 > Do not include `/bin` in your JAVA_HOME. Things WILL break!
 </details>
 
-## Documentation for using OurLanguageNameGoesHere
-
-To be written...
+## Documentation for DBL
+Please refer to the [DBL Manual](/DBL_Manual.md)
 
 ## Acknowledgements
 

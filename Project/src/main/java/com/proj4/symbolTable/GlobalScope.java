@@ -30,19 +30,17 @@ public class GlobalScope {
 
     //this table keeps track of which states have been declared in the current scope
     private HashMap<String, StateSymbol> stateTable = new HashMap<>();
-  
-    //this table keeps track of which rules have been declared 
+
+    //this table keeps track of which rules have been declared
     private HashMap<String, ArrayList<RuleSymbol>> ruleTable = new HashMap<>();
 
     // Inbuilt actions are hard coded
-    private ArrayList<String> inbuiltActions = new ArrayList<>(Arrays.asList("setState", "draw", "shuffle"));
+    private ArrayList<String> inbuiltActions = new ArrayList<>(Arrays.asList("setState", "write", "sizeInt"));
 
 
-    //Constructor 
-    private GlobalScope(){
+    //Constructor
+    private GlobalScope(){}
 
-    }
-    
     //Method
     //get the instance of this class and create it if it doesn't exist yet
     public static GlobalScope getInstance(){
@@ -50,6 +48,10 @@ public class GlobalScope {
             singleInstance = new GlobalScope();
         }
         return singleInstance;
+    }
+
+    public static void destroyInstance(){
+        singleInstance = null;
     }
 
     public HashMap<String, ActionSymbol> getActionTable(){

@@ -120,7 +120,7 @@ public class ExpressionInterpreter implements NodeVisitor {
                 }
                 InterpreterVisitor.getInstance().setReturnSymbol(new BooleanSymbol(booleanResult));
                 break;
-            case EQUALS:
+            case EQUALS: // TODO: Outdated implementation. Only works with primitives
                 SymbolTableEntry firstElement;
                 SymbolTableEntry secondElement;
 
@@ -144,19 +144,21 @@ public class ExpressionInterpreter implements NodeVisitor {
 
                 //System.out.println("Result of " + firstElement.getValue() + " EQUALS " + secondEq.getValue() + " is " + booleanResult + ".");
                 break;
-            case NOT_EQUALS:
+            case NOT_EQUALS: // TODO: Outdated implementation. Only works with primitives
                 SymbolTableEntry NeqfirstElement;
                 SymbolTableEntry NeqsecondElement;
 
                 // Visit first element
                 expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
 
-                if(InterpreterVisitor.getInstance().getReturnSymbol().getComplexType().equals("Primitive")){
-                    NeqfirstElement =  ((PrimitiveSymbol)InterpreterVisitor.getInstance().getReturnSymbol());
-                } else if(InterpreterVisitor.getInstance().getReturnSymbol().getComplexType().equals("Complex")) {
-                    NeqfirstElement =  ((ComplexSymbol)InterpreterVisitor.getInstance().getReturnSymbol());
+                SymbolTableEntry returnSymbol = InterpreterVisitor.getInstance().getReturnSymbol();
+                System.out.println(returnSymbol);
+                if(returnSymbol instanceof PrimitiveSymbol){
+                    NeqfirstElement = ((PrimitiveSymbol) InterpreterVisitor.getInstance().getReturnSymbol());
+                } else if(returnSymbol instanceof ComplexSymbol) {
+                    NeqfirstElement = ((ComplexSymbol) InterpreterVisitor.getInstance().getReturnSymbol());
                 } else {
-                    throw new UnexpectedTypeException("Recieved unexpected type for equals operation: " + InterpreterVisitor.getInstance().getReturnSymbol().getType() +  "");
+                    throw new UnexpectedTypeException("Recieved unexpected type for equals operation: \"" + returnSymbol.getType() + "\", complex type \"" + returnSymbol.getComplexType() + "\"");
                 }
                 expression.visitChild(new InterpreterDecider(), expression.getSecondOperand());
 
@@ -213,14 +215,14 @@ public class ExpressionInterpreter implements NodeVisitor {
             case CONSTANT:
                 //this operator always returns a primitive!
                 if(this.verbose){
-                    System.out.println(this.getClass().getSimpleName() + ": Fetching constant.");
+                    System.out.println(this.getClass().getSimpleName() + ": Fetching constant \"" + expression.getConstant().getValue() + "\"");
                 }
                 InterpreterVisitor.getInstance().setReturnSymbol(expression.getConstant());
                 break;
-            case ACCESS: 
+            case ACCESS:
                 expression.visitChild(new InterpreterDecider(), expression.getFirstOperand());
                 TemplateSymbol template = (TemplateSymbol)InterpreterVisitor.getInstance().getReturnSymbol();
- 
+
                 //remember the field to find in the template
                 String fieldName = ((TField) expression.getSecondOperand()).getFieldName();
 
@@ -239,25 +241,45 @@ public class ExpressionInterpreter implements NodeVisitor {
                 ArrayList<SymbolTableEntry> content = currentArray.getContent();
                 expression.visitChild(new InterpreterDecider(), expression.getSecondOperand());
                 Integer index = ((IntegerSymbol)InterpreterVisitor.getInstance().getReturnSymbol()).getValue();
-                
+
                 // We must allocate more entries in the array if we access an index out of bounds.
-                Integer elementsToAllocate = index - content.size(); 
+                Integer elementsToAllocate = index - content.size();
                 if(elementsToAllocate >= 0){
                     for (int i = 0; i <= elementsToAllocate; i++) {
+                        /*
+                            This version of allocating elements allows expanding level 0 arrays with or without values assigned to them
+                            (except for empty arrays - those are still illegal)
+                            Example without this version:
+                                Card c1 IS NEW Card{};
+                                Card[] deck IS [c1];
+                            Example with this version:
+                                Card[] deck;
+                        */
+                        String complexType = "Primitive";
+                        if(!(currentArray.getType().equals("Integer") ||
+                             currentArray.getType().equals("Boolean") ||
+                             currentArray.getType().equals("String"))){
+                            // If the type of the array is not any of the primitives, it can only be an array of templates.
+                            complexType = "Template";
+                        }
                         content.add(
                             SymbolTableEntry.instantiateDefault(
-                                currentArray.getContent().getFirst().getType(),
-                                currentArray.getContent().getFirst().getComplexType(),
+                                currentArray.getType(),
+                                complexType,
                                 currentArray.getNestingLevel() - 1
-                            )
-                            );
-                    }
+                            ));
 
+
+                        // content.add(
+                        //     SymbolTableEntry.instantiateDefault(
+                        //         currentArray.getContent().getFirst().getType(),
+                        //         currentArray.getContent().getFirst().getComplexType(),
+                        //         currentArray.getNestingLevel() - 1
+                        //     ));
+                    }
+                }
                 // We should only index after we have expanded the array.
                 InterpreterVisitor.getInstance().setReturnSymbol(content.get(index));
-   
-           
-                }
 
                 if(this.verbose){
                     System.out.println(this.getClass().getSimpleName() + ": Indexing array with \"" + index + "\".");

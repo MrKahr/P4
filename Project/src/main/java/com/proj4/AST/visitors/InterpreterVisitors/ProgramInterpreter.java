@@ -17,11 +17,7 @@ import com.proj4.symbolTable.symbols.*;
 
 
 public class ProgramInterpreter implements NodeVisitor {
-    private Boolean verbose = false;
-
-
-    public ProgramInterpreter(){
-    }
+    public ProgramInterpreter(){}
 
     public void visit(AST node) {
         //a scope to put action-templates into
@@ -34,11 +30,11 @@ public class ProgramInterpreter implements NodeVisitor {
             }
             //Create an instance of the action's corresponding template and bind it to the identifier so we can use .RESULT
             ScopeManager.getInstance().getCurrent().declareVariable(
-                identifier, 
+                identifier,
                 SymbolTableEntry.instantiateDefault(
                     identifier,
                     "Template",
-                    0
+                    -1
                 )
             );
         }
@@ -47,8 +43,8 @@ public class ProgramInterpreter implements NodeVisitor {
         Program program = (Program) node;
         node.visitChildren(new InterpreterDecider());
         //when we're done interpreting the body of the program, begin evaluating states
-        
-    
+
+
         Scanner scanner = new Scanner(System.in);
         while (InterpreterVisitor.getInstance().getCurrentState() != null) {
             StateSymbol stateSymbol = GlobalScope.getInstance().getStateTable().get(InterpreterVisitor.getInstance().getCurrentState());
@@ -62,17 +58,17 @@ public class ProgramInterpreter implements NodeVisitor {
                     System.out.println("[" + i + "] " + stateSymbol.getActionList().get(i));
                 }
                 //get input
-                
+
                 int selection = -1;
                 try {
                     String input = scanner.nextLine();
-                    selection = Integer.valueOf(input);                    
+                    selection = Integer.valueOf(input);
                 } catch (Exception e) {
                     scanner.close();
                     throw new UnsupportedInputException("Error with input, did not read integer:+ " + e.getMessage() );
                 }
                 String actionName = stateSymbol.getActionList().get(selection);
-                
+
                 //start selected action
                 ActionSymbol action = GlobalScope.getInstance().getActionTable().get(stateSymbol.getActionList().get(selection));
                 ArrayList<String> parameters = action.getParameterNames();
@@ -87,7 +83,7 @@ public class ProgramInterpreter implements NodeVisitor {
                     input = scanner.nextLine();
                     switch (action.getInitialScope().getVariableTable().get(parameters.get(index)).getType()) {
                         case "Integer":
-                            action.getInitialScope().getVariableTable().put(parameters.get(index), new IntegerSymbol(Integer.valueOf(input)));;
+                            action.getInitialScope().getVariableTable().put(parameters.get(index), new IntegerSymbol(Integer.valueOf(input)));
                             break;
                         case "Boolean":
                             action.getInitialScope().getVariableTable().put(parameters.get(index), new BooleanSymbol(Boolean.valueOf(input)));
@@ -106,8 +102,8 @@ public class ProgramInterpreter implements NodeVisitor {
                 } else {
                     program.visitChild(new InterpreterDecider(), action.getBody());
                 }
-                
-                
+
+
             } else {
                 InterpreterVisitor.getInstance().setCurrentState(null);
                 System.out.println("Reached final state: No available actions! Stopping program.");
@@ -120,9 +116,10 @@ public class ProgramInterpreter implements NodeVisitor {
             } else {
                 System.out.println("\nInterpreting done. Final scope is empty!");
             }
+            ScopeManager.getInstance().printGlobalScope(GlobalScope.getInstance().getResultTable());
         }
         scanner.close();
-        ScopeManager.getInstance().printGlobalScope(GlobalScope.getInstance().getResultTable());
         ScopeManager.getInstance().exit();
+        GlobalScope.destroyInstance();
     }
 }

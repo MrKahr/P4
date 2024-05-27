@@ -1,0 +1,36 @@
+Template Card CONTAINS {
+    Integer health;
+    Integer cost;
+    Integer power;
+}
+
+Card c1 IS NEW Card{};
+Card[] deck;
+FOR(Integer i IS 0; i LESS OR EQUALS 3; i IS i+1){
+    deck[i] IS NEW Card{i; i+1; i+2;};
+}
+
+Card[][] multiDeck IS [[c1], [c1], [c1]];
+FOR(Integer i IS 0; i LESS THAN 3; i IS i+1){
+    FOR(Integer j IS 0; j LESS OR EQUALS 5; j IS j+1){
+        multiDeck[i][j] IS NEW Card{j; j+1; j+2;};
+    }
+}
+
+Card ct1 IS deck[0];
+Card ct2 IS deck[1];
+
+ct2.cost IS 67;
+
+deck[0].cost IS 45;
+
+multiDeck[0][0].power IS 999999;
+
+Integer[][] iv IS [[57], [23]];
+FOR(Integer i IS 0; i LESS THAN 1; i IS i+1){
+    FOR(Integer j IS 0; j LESS THAN 8; j IS j+1){
+        iv[i][j] IS j;
+    }
+}
+
+

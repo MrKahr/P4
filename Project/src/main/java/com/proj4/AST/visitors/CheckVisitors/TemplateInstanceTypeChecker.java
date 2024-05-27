@@ -19,7 +19,6 @@ public class TemplateInstanceTypeChecker implements NodeVisitor{
         TemplateInstance templateInstance = (TemplateInstance) node;
 
         String templateType = templateInstance.getType();
-
         //we make assignments to the fields in the order the fields are declared
         if (templateInstance.getChildren().size() > 0) {
             //get the blueprint for comparing types
@@ -30,21 +29,31 @@ public class TemplateInstanceTypeChecker implements NodeVisitor{
                 templateInstance.visitChild(new CheckDecider(), index);
                 SymbolTableEntry entry = content.get(index);
 
-                if (!TypeCheckVisitor.getInstance().getFoundType().equals(entry.getType())) {
-                    throw new MismatchedTypeException("Mismatched type in template instatiation! Expected \"" + entry.getType() + "\"" + "but got \"" + TypeCheckVisitor.getInstance().getFoundType() + "\".");
+                String entryType = entry.getType();
+                String entryComplexType = entry.getComplexType();
+
+                String foundType = TypeCheckVisitor.getInstance().getFoundType();
+                String foundComplexType = TypeCheckVisitor.getInstance().getFoundComplexType();
+                Integer foundNestingLevel = TypeCheckVisitor.getInstance().getNestingLevel();
+
+                if (!foundType.equals(entry.getType())) {
+                    throw new MismatchedTypeException("Mismatched type in template instantiation! Expected \"" + entryType + "\" " + "but got \"" + foundType + "\".");
                 }
 
-                if (!TypeCheckVisitor.getInstance().getFoundComplexType().equals(entry.getComplexType())) {
-                    throw new MismatchedTypeException("Mismatched complex type in template instatiation! Expected \"" + entry.getComplexType() + "\"" + "but got \"" + TypeCheckVisitor.getInstance().getFoundComplexType() + "\".");
+                // This type should also account for the case where we use array index.
+                // In such case foundType is e.g. String (matching entryType) but complex type is Array (EXPLOSION!!!)
+                // Thus, we will allow a complex type of array ONLY if foundNestingLevel <= 0
+                if (!foundComplexType.equals(entry.getComplexType()) && foundNestingLevel > 0) {
+                    throw new MismatchedTypeException("Mismatched complex type in template instantiation! Expected \"" + entryComplexType + "\"" + " but got \"" + foundComplexType + "\" with nesting level " + foundNestingLevel);
                 }
 
                 if (entry instanceof ArraySymbol) {
                     try {
-                        if(!TypeCheckVisitor.getInstance().getNestingLevel().equals(((ArraySymbol) entry).getNestingLevel())){
-                            throw new MismatchedTypeException("Mismatched nesting level in template instatiation! Expected \"" + ((ArraySymbol) entry).getNestingLevel() + "\"" + "but got \"" + TypeCheckVisitor.getInstance().getNestingLevel() + "\".");
+                        if(!foundNestingLevel.equals(((ArraySymbol) entry).getNestingLevel())){
+                            throw new MismatchedTypeException("Mismatched nesting level in template instantiation! Expected \"" + ((ArraySymbol) entry).getNestingLevel() + "\"" + " but got \"" + foundNestingLevel + "\".");
                         };
                     } catch (ClassCastException e) {
-                        throw new MismatchedTypeException("Mismatched complex type in template instatiation! Expected \"Array\"" + "but got \"" + TypeCheckVisitor.getInstance().getFoundComplexType() + "\".");
+                        throw new MismatchedTypeException("Mismatched complex type in template instantiation! Expected \"Array\"" + " but got \"" + foundComplexType + "\".");
                     }
                 }
             }

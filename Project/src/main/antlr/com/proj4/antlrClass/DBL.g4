@@ -72,21 +72,24 @@ boolExpr
     |   expr GTOE expr                      # exprGTOEBool
     |   expr LT expr                        # exprLTBool
     |   expr LTOE expr                      # exprLTOEBool
-    |   expr (NOTEQUALS | EQUALS) expr      # exprEqualBool
     |   stringExpr (NOTEQUALS | EQUALS) stringExpr  # stringEqualBool
+    |   expr (NOTEQUALS | EQUALS) expr      # exprEqualBool
     |   NOT boolExpr                        # negateBool
     |   boolExpr EQUALS boolExpr            # equalBool
     |   boolExpr AND boolExpr               # andBool
     |   boolExpr OR  boolExpr               # orBool
+    |   actionCall                          # actionCallBool
     |   BOOLEAN                             # litteralBool
     |   IDENTIFIER                          # idBool
     ;
 
 stringExpr
     :   stringExpr ADD stringExpr  # addString
-    |   stringExpr ADD expr        #addStringexpr1
-    |   expr ADD stringExpr        #addStringexpr2
+    |   stringExpr ADD expr        # addStringexpr1
+    |   expr ADD stringExpr        # addStringexpr2
     |   string                     # litteralString
+    |   actionResult               # actionResultString
+    |   actionCall                 # actionCallString
     |   IDENTIFIER                 # idString
     ;
 
@@ -94,11 +97,6 @@ assignment // Remember to add semicolon if relevant
     :   expr ASSIGN expr          # exprAssign
     |   expr ASSIGN boolExpr      # boolExprAssign
     |   expr ASSIGN stringExpr    # stringExprAssign
-    |   expr ASSIGN IDENTIFIER    # idAssign
-    ;
-
-templateAssignment // TemplateInitAssign
-    :   typedefUser IDENTIFIER ASSIGN templateInit
     ;
 
 typePrimitive
@@ -110,13 +108,12 @@ typedefUser
     ;
 
 declaration
-    :   typePrimitive IDENTIFIER SEMICOLON     # idDeclPrim
-    |   typePrimitive assignment SEMICOLON     # assignDeclPrim
-    |   typedefUser IDENTIFIER SEMICOLON       # idDeclUser
-    |   typedefUser assignment SEMICOLON       # assignDeclUser
-    |   templateAssignment                     # templateInitDecl
-    |   arrayType IDENTIFIER SEMICOLON         # declArrayDecl
-    |   arrayType assignment SEMICOLON         # declArrayInit
+    :   typePrimitive IDENTIFIER SEMICOLON  # idDeclPrim
+    |   typePrimitive assignment SEMICOLON  # assignDeclPrim
+    |   typedefUser IDENTIFIER SEMICOLON    # idDeclUser
+    |   typedefUser assignment SEMICOLON    # assignIdUserDecl
+    |   arrayType IDENTIFIER SEMICOLON      # declArrayDecl
+    |   arrayType assignment SEMICOLON      # declArrayInit
     ;
 
 declarationList
@@ -140,7 +137,7 @@ templateDecl
     ;
 
 templateInit
-    :   NEW typedefUser BODY_START ((expr SEMICOLON | stringExpr SEMICOLON | boolExpr SEMICOLON| templateInit))* BODY_END
+    :   NEW typedefUser BODY_START ((expr SEMICOLON | stringExpr SEMICOLON | boolExpr SEMICOLON | templateInit))* BODY_END
     ;
 
 ruleDecl
@@ -179,7 +176,7 @@ arrayType
     ;
 
 arrayInit
-    :   SQB_START ((boolExpr |stringExpr | expr | arrayInit) (COMMA (boolExpr| stringExpr | expr | arrayInit))*)? SQB_END
+    :   SQB_START ((stringExpr | expr | boolExpr | arrayInit) (COMMA (stringExpr | expr | boolExpr | arrayInit))*)? SQB_END
     ;
 
 return
@@ -232,7 +229,6 @@ RESULTS_IN  : 'RESULTS IN'; // Declare return type for action
 TEMPLATE    : 'Template';
 ALLOWS      : 'ALLOWS';
 WITH_LOOP   : 'WITH LOOP';
-DOT         : '.';
 NEW         : 'NEW';
 
 /*** Operators ***/
@@ -251,6 +247,7 @@ MULT        : '*';
 DIV         : '/';
 ADD         : '+';
 SUB         : '-';
+DOT         : '.';
 
 /***  Types ***/
 TYPEDEF_PRIMITIVE

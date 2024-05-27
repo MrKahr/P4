@@ -29,8 +29,10 @@ public class ExpressionTypeChecker implements NodeVisitor {
             case ADD:
                 expression.visitChild(new CheckDecider(), expression.getFirstOperand());
                 firstType = TypeCheckVisitor.getInstance().getFoundType();
+                String firstComplexType = TypeCheckVisitor.getInstance().getFoundComplexType();
                 expression.visitChild(new CheckDecider(), expression.getSecondOperand());
                 secondType = TypeCheckVisitor.getInstance().getFoundType();
+                String secondComplexType = TypeCheckVisitor.getInstance().getFoundComplexType();
 
                 if(firstType.equals("Integer") && secondType.equals("Integer")){
                     //both operands are integers. The output is an integer
@@ -47,7 +49,7 @@ public class ExpressionTypeChecker implements NodeVisitor {
                     new StringCast(expression.getFirstOperand());
                     TypeCheckVisitor.getInstance().setFoundType("String", "Primitive", -1);
                     expression.setOperator(ExpressionOperator.CONCAT);
-                    
+
                 } else if (firstType.equals("String") && secondType.equals("String")){
                     //both operands are strings. Output is a string
                     TypeCheckVisitor.getInstance().setFoundType("String", "Primitive", -1);
@@ -55,7 +57,8 @@ public class ExpressionTypeChecker implements NodeVisitor {
                     expression.setOperator(ExpressionOperator.CONCAT);
                 } else {
                     //Something that's not a string or integer has been found. Throw
-                    throw new MismatchedTypeException();
+                    throw new MismatchedTypeException("Both operands are not a String or an Integer! First operand has type \"" + firstType + "\", complex type \"" + firstComplexType + "\""
+                                                      + " second operand has type \"" + secondType + "\", complex type " + secondComplexType + "\"");
                 }
 
                 break;
@@ -90,11 +93,15 @@ public class ExpressionTypeChecker implements NodeVisitor {
             case GREATER_OR_EQUALS: // all above are binary and return booleans and consume integers
                 expression.visitChild(new CheckDecider(), expression.getFirstOperand());
                 if (!TypeCheckVisitor.getInstance().getFoundType().equals("Integer")) {
-                    throw new MismatchedTypeException();
+                    throw new MismatchedTypeException("First operand is not an integer! Type \"" + TypeCheckVisitor.getInstance().getFoundType()
+                    + "\", complex type \"" + TypeCheckVisitor.getInstance().getFoundComplexType()
+                    + "\", nesting level " + TypeCheckVisitor.getInstance().getNestingLevel());
                 }
                 expression.visitChild(new CheckDecider(), expression.getSecondOperand());
                 if (!TypeCheckVisitor.getInstance().getFoundType().equals("Integer")) {
-                    throw new MismatchedTypeException();
+                    throw new MismatchedTypeException("Second operand is not an integer! Type \"" + TypeCheckVisitor.getInstance().getFoundType()
+                    + "\", complex type \"" + TypeCheckVisitor.getInstance().getFoundComplexType()
+                    + "\", nesting level " + TypeCheckVisitor.getInstance().getNestingLevel());
                 }
                 TypeCheckVisitor.getInstance().setFoundType("Boolean", "Primitive", -1);
                 break;
@@ -106,7 +113,7 @@ public class ExpressionTypeChecker implements NodeVisitor {
                 firstType = TypeCheckVisitor.getInstance().getFoundType();
                 expression.visitChild(new CheckDecider(), expression.getSecondOperand());
                 if (!firstType.equals(TypeCheckVisitor.getInstance().getFoundType())) {
-                    throw new MismatchedTypeException();
+                    throw new MismatchedTypeException("First operand has type \"" + firstType + "\", second operand has type \"" + TypeCheckVisitor.getInstance().getFoundType() + "\"");
                 }
                 TypeCheckVisitor.getInstance().setFoundType("Boolean", "Primitive", -1);
                 break;
@@ -131,7 +138,7 @@ public class ExpressionTypeChecker implements NodeVisitor {
                 TypeCheckVisitor.getInstance().setFoundType("Boolean", "Primitive", -1);
                 break;
             case VARIABLE:
-                //TODO: this case is unused, as its functionality is partially implemented by cCONCAT
+                //TODO: this case is unused, as its functionality is partially implemented by CONCAT
                 TypeCheckVisitor.getInstance().setFoundType("String", "Primitive", -1);
                 break;
             case CONSTANT:
@@ -140,8 +147,11 @@ public class ExpressionTypeChecker implements NodeVisitor {
             case ACCESS:
                 //make sure the first operand is actually a template
                 expression.visitChild(new CheckDecider(), expression.getFirstOperand());
-                if (!TypeCheckVisitor.getInstance().getFoundComplexType().equals("Template")) {
-                    throw new MismatchedTypeException();
+                String foundComplexType = TypeCheckVisitor.getInstance().getFoundComplexType();
+                Integer foundNestingLevel = TypeCheckVisitor.getInstance().getNestingLevel();
+                // We check nesting level to allow templates to be accessed in arrays, e.g. "deck[0].cost"
+                if (!(foundComplexType.equals("Template") || foundComplexType.equals("Array") && foundNestingLevel == -1)) {
+                    throw new MismatchedTypeException("First operand has complex type \"" + foundComplexType + "\" with nesting level " + foundNestingLevel + " which is not a Template");
                 }
                 //remember the type of the template we found
                 String templateType = TypeCheckVisitor.getInstance().getFoundType();
@@ -149,7 +159,7 @@ public class ExpressionTypeChecker implements NodeVisitor {
                 //make sure the second operand specifies a field to index
                 TField templateField = null;
                 try {
-                    templateField  = (TField) expression.getSecondOperand();
+                    templateField = (TField) expression.getSecondOperand();
                 } catch (ClassCastException cce) {
                     throw new MalformedAstException("Invalid template field provided.");
                 }
@@ -157,10 +167,15 @@ public class ExpressionTypeChecker implements NodeVisitor {
                 //remember the field to find in the template
                 String fieldName = templateField.getFieldName();
 
-                ArrayList<String> map = GlobalScope.getInstance().getTemplateMapTable().get(templateType);    //get the arraylist with the chosen template's fields
+                ArrayList<String> map = GlobalScope.getInstance().getTemplateMapTable().get(templateType);  //get the arraylist with the chosen template's fields
                 TemplateSymbol blueprint = GlobalScope.getInstance().getBlueprintTable().get(templateType); //get the blueprint for the chosen template
 
-                SymbolTableEntry fieldContent = blueprint.getContent().get(map.indexOf(fieldName));  //find the field we need with the map and get the content of the field
+                SymbolTableEntry fieldContent;
+                try {
+                    fieldContent = blueprint.getContent().get(map.indexOf(fieldName));  //find the field we need with the map and get the content of the field
+                } catch (IndexOutOfBoundsException iofe) {
+                    throw new UndefinedVariableException("Field name \"" + fieldName + "\" does not exist in template \"" + templateType + "\"");
+                }
 
                 if (fieldContent.getComplexType().equals("Array")) {
                     ArraySymbol fieldArray = (ArraySymbol) fieldContent;
@@ -176,9 +191,11 @@ public class ExpressionTypeChecker implements NodeVisitor {
                 // Case 1: Check whether first operand is an array that is declared in scope
                 expression.visitChild(new CheckDecider(), expression.getFirstOperand());
                 // Check whether operand is an array
-                if (!TypeCheckVisitor.getInstance().getFoundComplexType().equals("Array")) {
+                String foundComplexType_INDEX = TypeCheckVisitor.getInstance().getFoundComplexType();
+
+                if (!(foundComplexType_INDEX.equals("Array"))) {
                     throw new MismatchedTypeException(
-                        "Error on indexing: Cannot index element that is not an array!");
+                        "Error on indexing: Cannot index element \"" + foundComplexType_INDEX + "\": it is not an array!");
                     }
                 //remember array's type and nestinglevel
                 String arrayType = TypeCheckVisitor.getInstance().getFoundType();
@@ -190,7 +207,7 @@ public class ExpressionTypeChecker implements NodeVisitor {
                     throw new MismatchedTypeException("Index for array (or template) is not integer! Received type: '" + TypeCheckVisitor.getInstance().getFoundType() + "'' with complex type: '" + TypeCheckVisitor.getInstance().getFoundComplexType() + "'");
                 }
 
-                if (TypeCheckVisitor.getInstance().getNestingLevel() >= 0) {   //if nestingLevel is -1, indexing will give us something that is not an array
+                if (nestingLevel > 0) {   //if nestingLevel is -1, indexing will give us something that is not an array
                     TypeCheckVisitor.getInstance().setFoundType(arrayType, "Array", nestingLevel - 1);
                 } else {
                     switch (arrayType) {

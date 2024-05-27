@@ -50,19 +50,19 @@ public class ExpressionTest extends TestingArgs {
         assertTrue(intSymbol.getValue() == 2);
     }
 
-    @Test
-    @Disabled
-    public void test4() {
-        IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("md");
-        assertTrue(intSymbol.getValue() == -4);
-    }
+    // @Test
+    // @Disabled
+    // public void test4() {
+    //     IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("md");
+    //     assertTrue(intSymbol.getValue() == -4);
+    // }
 
-    @Test
-    @Disabled
-    public void test5() {
-        IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("me");
-        assertTrue(intSymbol.getValue() == 4);
-    }
+    // @Test
+    // @Disabled
+    // public void test5() {
+    //     IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("me");
+    //     assertTrue(intSymbol.getValue() == 4);
+    // }
 
     @Test
     public void test6() {
@@ -70,19 +70,19 @@ public class ExpressionTest extends TestingArgs {
         assertTrue(intSymbol.getValue() == 3);
     }
 
-    @Test
-    @Disabled
-    public void test7() {
-        IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("db");
-        assertTrue(intSymbol.getValue() == -3);
-    }
+    // @Test
+    // @Disabled
+    // public void test7() {
+    //     IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("db");
+    //     assertTrue(intSymbol.getValue() == -3);
+    // }
 
-    @Test
-    @Disabled
-    public void test8() {
-        IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("dc");
-        assertTrue(intSymbol.getValue() == 3);
-    }
+    // @Test
+    // @Disabled
+    // public void test8() {
+    //     IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("dc");
+    //     assertTrue(intSymbol.getValue() == 3);
+    // }
 
     @Test
     @DisplayName("Divide by zero")
@@ -104,19 +104,19 @@ public class ExpressionTest extends TestingArgs {
         assertTrue(intSymbol.getValue() == 4);
     }
 
-    @Test
-    @Disabled
-    public void test12() {
-        IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("ab");
-        assertTrue(intSymbol.getValue() == 0);
-    }
+    // @Test
+    // @Disabled
+    // public void test12() {
+    //     IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("ab");
+    //     assertTrue(intSymbol.getValue() == 0);
+    // }
 
-    @Test
-    @Disabled
-    public void test13() {
-        IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("ac");
-        assertTrue(intSymbol.getValue() == -4);
-    }
+    // @Test
+    // @Disabled
+    // public void test13() {
+    //     IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("ac");
+    //     assertTrue(intSymbol.getValue() == -4);
+    // }
 
     @Test
     public void test14() {
@@ -125,18 +125,24 @@ public class ExpressionTest extends TestingArgs {
     }
 
     @Test
-    @Disabled
-    public void test15() {
-        IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("sb");
-        assertTrue(intSymbol.getValue() == -4);
+    public void test14_5() {
+        IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("sa2");
+        assertTrue(intSymbol.getValue() == -1);
     }
 
-    @Test
-    @Disabled
-    public void test16() {
-        IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("sb");
-        assertTrue(intSymbol.getValue() == 0);
-    }
+    // @Test
+    // @Disabled
+    // public void test15() {
+    //     IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("sb");
+    //     assertTrue(intSymbol.getValue() == -4);
+    // }
+
+    // @Test
+    // @Disabled
+    // public void test16() {
+    //     IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("sb");
+    //     assertTrue(intSymbol.getValue() == 0);
+    // }
 
     @Test
     public void test17() {
@@ -160,6 +166,6 @@ public class ExpressionTest extends TestingArgs {
     @Test
     public void test20() {
         IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("pa");
-        assertTrue(intSymbol.getValue() == 4);
+        assertTrue(intSymbol.getValue() == 9);
     }
 }

@@ -29,7 +29,7 @@ public abstract class AST {
     public Scope getScope(){
         return ScopeManager.getInstance().getScopeStack().peek();
     }
- 
+
     //put a new child on the list of children
     public void addChild(AST newChild){
         children.add(newChild);
@@ -59,8 +59,11 @@ public abstract class AST {
                 System.out.print(ast.getClass().getSimpleName() + " | ");
             }
             currentLevel++;
+            if(list.size() > 0){
+                System.out.println("");
+            }
         }
-        System.out.println("\n\n===============================");
+        System.out.println("\n===============================");
     }
 
     private void getLevel(AST root, Integer level, List<List<AST>> result){

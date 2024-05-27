@@ -1,3 +1,13 @@
+/* PRECONDITIONS
+Templates
+*/
+Template Card CONTAINS {
+    Integer health;
+    Integer cost;
+    Integer power;
+}
+
+
 /* TEST 1
 Flat Integer array
 */
@@ -7,7 +17,7 @@ Integer[] a IS [1, 2, 3];
 /* TEST 2
 Flat String Array
 */
-String[] b IS ["John", "Userman", "is", "a", "user"];
+String[] b IS ["1", "2", "3", "4", "5"];
 
 
 /* TEST 3
@@ -16,13 +26,64 @@ Flat Boolean array
 Boolean[] c IS [true, true, true];
 
 
-/* TEST 3
+/* TEST 4
 3-level nested Integer array - correct type
 */
-Integer[] d IS [[1], [2, [3]], 4];
+Integer[][][] d IS [[[0+1], [2]], [[2+1], [2*8-12]]];
 
 
-/* TEST 4
+/* TEST 5
 3-level nested Integer array - incorrect type
+Tested elsewhere
 */
-Integer[] e IS [[1], ["fish", [3]], 4];
+
+
+/* TEST 6
+Assign array to array
+*/
+Integer[] e1 IS [3, 4];
+Integer[] e2 IS [0];
+e2[0] IS e1[0];
+
+
+/* TEST 7
+Assign 2D-array to 2D-array - left
+*/
+Integer[][] f1 IS [[0, 1]];
+Integer[][] f2 IS [[45], [2]];
+f2[0] IS f1[0];
+
+
+/* TEST 8
+Assign array to array - right
+*/
+Integer[] g1 IS [1, 2, 3];
+Integer[] g2 IS [78];
+g2[0] IS g1[3];
+
+
+/* TEST 9
+Append to array
+*/
+Integer[] h1 IS [1, 2, 3];
+Integer[] h2 IS [4, 5, 6];
+h1[3] IS h2[0];
+
+
+/* TEST 10
+Add Card template to array
+*/
+/*
+Template Card CONTAINS {
+    Integer health;
+    Integer cost;
+    Integer power;
+}
+
+Card c1 IS NEW Card{; 2; 3;};
+
+Card[] deck IS [c1];
+FOR(Integer i IS 0; i LESS OR EQUALS 2; i IS i+1){
+    deck[i] IS NEW Card{1; 2; 3;};
+}
+*/

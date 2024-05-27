@@ -25,7 +25,7 @@ public class CheckDecider implements VisitorDecider {
                 node.acceptVisitor(new ActionCallTypeChecker());
                 break;
             case "ActionDecl":
-                node.acceptVisitor(new ActionDeclTypeChecker());
+                node.acceptVisitor(new ActionDeclTypeChecker(verbose));
                 break;
             case "ArrayInstance":
                 node.acceptVisitor(new ArrayInstanceTypeChecker());
@@ -52,13 +52,13 @@ public class CheckDecider implements VisitorDecider {
                 node.acceptVisitor(new ReturnTypeChecker(verbose));
                 break;
             case "RuleDecl":
-                node.acceptVisitor(new RuleDeclTypeChecker());
+                node.acceptVisitor(new RuleDeclTypeChecker(verbose));
                 break;
             case "StateDecl":
                 node.acceptVisitor(new StateDeclTypeChecker());
                 break;
             case "TemplateDecl":
-                node.acceptVisitor(new TemplateDeclTypeChecker());
+                node.acceptVisitor(new TemplateDeclTypeChecker(verbose));
                 break;
             case "TemplateInstance":
                 node.acceptVisitor(new TemplateInstanceTypeChecker());

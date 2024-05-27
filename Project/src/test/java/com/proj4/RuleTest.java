@@ -12,7 +12,7 @@ import com.proj4.symbolTable.ScopeObserver;
 import com.proj4.symbolTable.symbols.IntegerSymbol;
 import com.proj4.symbolTable.symbols.SymbolTableEntry;
 
-public class RuleDeclTest extends TestingArgs{
+public class RuleTest extends TestingArgs{
     private static HashMap<String, SymbolTableEntry> variableTable;
     @BeforeAll
     public static void setup() {
@@ -29,8 +29,13 @@ public class RuleDeclTest extends TestingArgs{
 
     @Test
     public void test1() {
-        IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("ada");
-        System.out.println(intSymbol.getValue());
-        assertTrue(intSymbol.getValue() == 5);
+        IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("v1");
+        assertTrue(intSymbol.getValue() == 3);
+    }
+
+    @Test
+    public void test2() {
+        IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("rad");
+        assertTrue(intSymbol.getValue() == 8);
     }
 }

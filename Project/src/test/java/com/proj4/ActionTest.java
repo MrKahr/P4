@@ -1,16 +1,20 @@
 package com.proj4;
 
 import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.HashMap;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 
+import com.proj4.exceptions.MismatchedTypeException;
 import com.proj4.symbolTable.ScopeManager;
 import com.proj4.symbolTable.ScopeObserver;
 import com.proj4.symbolTable.symbols.ArraySymbol;
+import com.proj4.symbolTable.symbols.BooleanSymbol;
 import com.proj4.symbolTable.symbols.IntegerSymbol;
 import com.proj4.symbolTable.symbols.SymbolTableEntry;
 
@@ -32,8 +36,9 @@ public class ActionTest extends TestingArgs {
 
     @Test
     public void test1() {
-        IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("undefined");
-        //assertTrue(intSymbol.getValue() != 3);
+            DBL interpreter = new DBL();
+            Executable e = () -> {interpreter.interpret("Action ta() {Integer v1 IS 3; Integer v2 IS 4;} Integer varNull IS ta();");};
+            assertThrows(MismatchedTypeException.class, e);
     }
 
     @Test
@@ -46,18 +51,10 @@ public class ActionTest extends TestingArgs {
         IntegerSymbol intSymbol = (IntegerSymbol) variableTable.get("arrsize");
         assertTrue(intSymbol.getValue() == 2);
     }
-    @Disabled
+
     @Test
     public void test4() {
-        ArraySymbol arraySymbol = (ArraySymbol) variableTable.get("arr2D");
-        assertEquals("Integer", arraySymbol.getType()); // Check type
-        assertTrue(arraySymbol.getNestingLevel() == 0); // Check nesting level
-        for (Integer i = 0; i < arraySymbol.getContent().size(); i++) {
-            ArraySymbol subArr = (ArraySymbol) arraySymbol.getContent().get(i);
-            for (Integer j = 0; j < subArr.getContent().size(); j++) {
-                IntegerSymbol intSymbol = (IntegerSymbol) arraySymbol.getContent().get(i);
-                assertTrue(j + 1 == intSymbol.getValue()); // Check values of array
-            }
-        }
+        BooleanSymbol booleanSymbol = (BooleanSymbol) variableTable.get("isValid");
+        assertFalse(booleanSymbol.getValue());
     }
 }

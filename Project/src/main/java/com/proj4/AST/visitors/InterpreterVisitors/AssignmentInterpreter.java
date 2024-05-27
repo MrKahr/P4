@@ -56,7 +56,6 @@ public class AssignmentInterpreter implements NodeVisitor {
                 TemplateSymbol templateValue = (TemplateSymbol) value;
                 ((TemplateSymbol) symbol).setContent(templateValue.getContent());
                 break;
-
             case "Array":
                 ArraySymbol arrayValue = (ArraySymbol) value;
                 ((ArraySymbol) symbol).setContent(arrayValue.getContent());

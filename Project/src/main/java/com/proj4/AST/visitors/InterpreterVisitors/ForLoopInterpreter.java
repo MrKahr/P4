@@ -19,9 +19,12 @@ public class ForLoopInterpreter implements NodeVisitor {
         forLoop.visitChild(new InterpreterDecider(), forLoop.getCondition());
         //interpret the body if the condition is true
         //interpret the iteratorAction if the condition is true
+
+        // Only interpret for-loop if it has any statements to execute
         while (((BooleanSymbol)InterpreterVisitor.getInstance().getReturnSymbol()).getValue()) {
             ScopeManager.getInstance().inherit();
             forLoop.visitChildren(new InterpreterDecider());
+            forLoop.visitChild(new InterpreterDecider(), forLoop.getIteratorAction()); // Prevent infinite loop if body is empty
             forLoop.visitChild(new InterpreterDecider(), forLoop.getCondition());
             ScopeManager.getInstance().synthesize();
         }

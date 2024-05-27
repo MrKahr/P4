@@ -65,6 +65,6 @@ public class DeclarationTest extends TestingArgs {
       public void test5(){
         ArraySymbol arraySymbol = (ArraySymbol) variableTable.get("e"); // Check variable name
         assertEquals("Integer", arraySymbol.getType()); // Check type
-        assertTrue(arraySymbol.getNestingLevel() == 0); // Check nesting level
+        assertTrue(arraySymbol.getNestingLevel() == 1); // Check nesting level
       }
 }

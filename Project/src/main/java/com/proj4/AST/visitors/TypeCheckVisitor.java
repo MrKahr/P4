@@ -12,9 +12,7 @@ public class TypeCheckVisitor {
     private Integer nestingLevel = -1;
 
     //Constructor
-    private TypeCheckVisitor(){
-
-    }
+    private TypeCheckVisitor(){}
 
     //Method
     public static TypeCheckVisitor getInstance(){

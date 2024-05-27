@@ -54,7 +54,7 @@ public class DBL {
     public void interpret(String input){
         this.startTime = LocalTime.now();
 
-        String printString = "Reading input: " + input;
+        String printString = "Reading input: " + "\"" + input + "\"";
         String lines = "";
         for (int i = 0; i < printString.length(); i++) {
             lines += "=";
@@ -133,7 +133,7 @@ public class DBL {
             // Input was sucessfully interpreted
             this.printDone(input);
         } catch (Exception e) {
-            System.out.println("Failed to interpret input '" + input + "'\n");
+            System.out.println("\nFailed to interpret input: '" + input + "'\n");
             e.printStackTrace();
             throw e;
         }
