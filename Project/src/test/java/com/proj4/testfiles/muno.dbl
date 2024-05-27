@@ -232,6 +232,9 @@ testdeck IS removeCard(testCard, testdeck);
 
 Boolean invalid IS containsValidCard(testdeck, testCard);
 
+
+Integer size IS size(b1.decks[0].cards);
+write("Array size for Card[] = " + size);
 storeBoard(b1);
 showBoard(storeBoard.RESULT);
 

@@ -42,7 +42,7 @@ public class InbuiltActionInterpreter implements NodeVisitor {
                     System.out.println(this.getClass().getSimpleName() + ": Setting state to \"" + setState_ParamSymbol.getValue() + "\"");
                 }
                 break;
-            case "sizeInt":
+            case "size":
                 ActionSymbol size_ActionSymbol = GlobalScope.getInstance().getActionTable().get(actionCall.getIdentifier());
                 ArraySymbol size_ParamSymbol = (ArraySymbol) size_ActionSymbol.getInitialScope().getVariableTable().get("array");
                 ArrayList<SymbolTableEntry> paramContent = size_ParamSymbol.getContent();

@@ -35,7 +35,7 @@ public class GlobalScope {
     private HashMap<String, ArrayList<RuleSymbol>> ruleTable = new HashMap<>();
 
     // Inbuilt actions are hard coded
-    private ArrayList<String> inbuiltActions = new ArrayList<>(Arrays.asList("setState", "write", "sizeInt"));
+    private ArrayList<String> inbuiltActions = new ArrayList<>(Arrays.asList("setState", "write", "size"));
 
 
     //Constructor

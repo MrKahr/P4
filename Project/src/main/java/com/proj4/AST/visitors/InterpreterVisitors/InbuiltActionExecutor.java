@@ -27,7 +27,7 @@ public class InbuiltActionExecutor {
                 StringSymbol paramOneState = (StringSymbol) setState.getInitialScope().getVariableTable().get("state");
                 InterpreterVisitor.getInstance().setCurrentState(paramOneState.getValue());
                 break;
-            case "sizeInt":
+            case "size":
                 ActionSymbol size = GlobalScope.getInstance().getActionTable().get(actionName);
                 ArraySymbol paramOneArraySymbol = (ArraySymbol) size.getInitialScope().getVariableTable().get("array");
                 ArrayList<SymbolTableEntry> array = paramOneArraySymbol.getContent();
