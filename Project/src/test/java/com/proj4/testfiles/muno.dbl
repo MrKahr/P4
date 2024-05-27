@@ -7,7 +7,6 @@ Template Card CONTAINS {
 
 Template Deck CONTAINS {
   Card[] cards;
-  Integer size;
 }
 
 Template Player CONTAINS {
@@ -23,15 +22,37 @@ Template Board CONTAINS {
 
 /*
 // Reorders cards in a deck randomly
-Action shuffle(Deck deckSource) // Must implement
-
-// Draw till deckSource is empty
-Action drawAll(Deck deckSource, Deck deckTarget) // Must implement
+Action shuffle(Deck deckSource) RESULTS IN Deck {
+    RESULT IN
+}
 
 // Do stuff on game start
 Action GameStart(State startingState) // Must implement
 */
 
+
+// Should work
+// Add card to deck
+Action addCard(Deck deck, Card card) RESULTS IN Deck {
+    deck.cards[size(deck.cards)] IS card;
+    RESULT IN deck;
+}
+
+
+// ------ WORKING --------- //
+Action removeCard(Card cardToRemove, Deck targetDeck) RESULTS IN Deck {
+    Deck newDeck IS NEW Deck{};
+
+    FOR(Integer i IS 0; i LESS THAN size(targetDeck.cards); i IS i+1){
+        Card targetCard IS targetDeck.cards[i];
+
+        // Add card to new deck if it should be kept
+        IF(targetCard.color NOT EQUALS cardToRemove.color AND targetCard.value NOT EQUALS cardToRemove.value){
+            newDeck IS addCard(newDeck, targetCard);
+        }
+    }
+    RESULT IN newDeck;
+}
 
 
 // ------ WORKING --------- //
@@ -39,11 +60,9 @@ Action draw(Deck deckSource, Deck deckTarget, Integer valueOfCardsTodraw) RESULT
     Deck[] decks;
 
     FOR(Integer i IS 0; i LESS THAN valueOfCardsTodraw; i IS i + 1){
-        Card card IS deckSource.cards[deckSource.size];
-        deckSource.size IS deckSource.size - 1;
-
-        deckTarget.cards[deckTarget.size] IS card;
-        deckTarget.size IS deckTarget.size + 1;
+        Card card IS deckSource.cards[size(deckSource.cards) - 1]; // Get reference to card
+        deckSource IS removeCard(card, deckSource); // Remove card from source
+        deckTarget IS addCard(deckTarget, card);    // Add card to target
     }
     decks[0] IS deckSource;
     decks[1] IS deckTarget;
@@ -57,35 +76,17 @@ Action storeBoard(Board board) RESULTS IN Board {
 }
 
 
-// This is presented to the user. Thus, it should only have primitives as paramenters
-Action playCard(Card card) RESULTS IN Card {
-    RESULT IN card;
-}
-
-
-// ------ WORKING --------- //
-Action removeCard(Card cardToRemove, Deck targetDeck) RESULTS IN Deck {
-    Deck newDeck IS NEW Deck{};
-    Integer newDeckSize IS 0;
-
-    FOR(Integer i IS 0; i GREATER OR EQUALS targetDeck.size; i IS i+1){
-        Card targetCard IS targetDeck.cards[i];
-
-        // Add card to new deck if it should be kept
-        IF(targetCard.color NOT EQUALS cardToRemove.color AND targetCard.value NOT EQUALS cardToRemove.value){
-            newDeck.cards[newDeckSize] IS targetCard;
-            newDeck.size IS newDeckSize;
-            newDeckSize IS newDeckSize + 1;
-        }
+// klar til testing
+Action playCard(Integer choice) RESULTS IN Card {
+    Board board IS storeBoard.RESULT;
+    Card card;
+    Integer handSize IS size(board.activePlayer.hand.cards) - 1;
+    IF(choice GREATER THAN handSize){
+        card IS board.activePlayer.hand.cards[choice];
+    } ELSE {
+        write("Invalid input. Expected input in range " + 0 + "-" + handSize);
     }
-    RESULT IN newDeck;
-}
-
-
-Action addCard(Deck deck, Card card) RESULTS IN Deck {
-    deck.cards[deck.size] IS card;
-    deck.size IS deck.size + 1;
-    RESULT IN deck;
+    RESULT IN card;
 }
 
 
@@ -97,23 +98,23 @@ Action makeCards() RESULTS IN Deck {
 
     FOR(Integer i IS 0; i LESS THAN 4; i IS i+1) {
         FOR(Integer j IS 0; j LESS THAN 10; j IS j+1) {
-            resultDeck.cards[resultDeck.size] IS NEW Card{colors[i]; values[j];};
-            resultDeck.size IS resultDeck.size + 1;
+            resultDeck IS addCard(resultDeck, NEW Card{colors[i]; values[j];});
         }
     }
     RESULT IN resultDeck;
 }
 
 
-Action declareWinner(Player winner) {
-    write("Winner found");
+// ------ WORKING --------- //
+Action declareWinner(Player player) {
+    write("Winner found: " + player.name + ". Congratulations!");
 }
 
 
 // ------ WORKING --------- //
 Action showBoard(Board board) {
     String s IS "It is " + board.activePlayer.name + "'s turn. Hand: \n";
-    FOR(Integer i IS 0; i LESS THAN board.activePlayer.hand.size; i IS i+1) {
+    FOR(Integer i IS 0; i LESS THAN size(board.activePlayer.hand.cards); i IS i+1) {
         s IS s + "[" + i + "]" + " card: " + "{" + "Value: " + board.activePlayer.hand.cards[i].value + ", Color: " + board.activePlayer.hand.cards[i].color + "}\n";
     }
     write(s);
@@ -123,7 +124,7 @@ Action showBoard(Board board) {
 // ------ WORKING --------- //
 Action containsValidCard(Deck hand, Card topCard) RESULTS IN Boolean {
     Boolean result IS false;
-    FOR(Integer i IS 0; i LESS THAN hand.size; i IS i+1) {
+    FOR(Integer i IS 0; i LESS THAN size(hand.cards); i IS i+1) {
         IF(hand.cards[i].color EQUALS topCard.color OR hand.cards[i].value EQUALS topCard.value) {
             result IS true;
         }
@@ -147,23 +148,32 @@ Action updateActivePlayer(Board board) {
 /*** RULES ***/
 
 /*  Implement shuffle
-Rule mustShuffle WHEN [draw] IF (storeBoard.RESULT.decks[1].size LESS THAN 1){
+Rule mustShuffle WHEN [draw] IF (size(storeBoard.RESULT.decks[0].cards) LESS THAN 1){
     Board board IS storeBoard.RESULT;
-    shuffle(board.decks[0]);
-    drawAll(board.decks[0], board.decks[1]);
+    shuffle(board.decks[1]);
+    drawAll(board.decks[1], board.decks[0], size(board.decks[1]));
     storeBoard(board);
 }
 */
 
-/*
-Rule drawUntilValid WHEN [draw, setState] IF ("Play" EQUALS setState.RESULT AND NOT containsValidCard(storeBoard.RESULT.activePlayer.hand, storeBoard.RESULT.decks[0].cards[storeBoard.RESULT.decks[0].size])){
+
+Rule drawUntilValid WHEN [draw, setState] IF (
+    "Play" EQUALS setState.RESULT AND
+    NOT containsValidCard(
+        storeBoard.RESULT.activePlayer.hand,
+        storeBoard.RESULT.decks[0].cards[size(storeBoard.RESULT.decks[0].cards) - 1]
+        )
+    ){
     Board board IS storeBoard.RESULT;
     draw(board.decks[1], board.activePlayer.hand, 1);
     storeBoard(board);
 }
-*/
 
-Rule playsValidCard WHEN [playCard] IF(playCard.RESULT.color EQUALS storeBoard.RESULT.decks[0].cards[storeBoard.RESULT.decks[0].size].color OR playCard.RESULT.value EQUALS storeBoard.RESULT.decks[0].cards[storeBoard.RESULT.decks[0].size].value){
+
+Rule playsValidCard WHEN [playCard] IF (
+    playCard.RESULT.color EQUALS storeBoard.RESULT.decks[0].cards[size(storeBoard.RESULT.decks[0].cards) - 1].color
+    OR playCard.RESULT.value EQUALS storeBoard.RESULT.decks[0].cards[size(storeBoard.RESULT.decks[0].cards) - 1].value
+    ){
     Board board IS storeBoard.RESULT;
     removeCard(playCard.RESULT, board.activePlayer.hand);
     updateActivePlayer(board);
@@ -171,7 +181,8 @@ Rule playsValidCard WHEN [playCard] IF(playCard.RESULT.color EQUALS storeBoard.R
 }
 
 
-Rule winner WHEN [playCard] IF (storeBoard.RESULT.activePlayer.hand.size LESS THAN 1) {
+Rule winner WHEN [playCard] IF (size(storeBoard.RESULT.activePlayer.hand.cards) LESS THAN 1) {
+    declareWinner(storeBoard.RESULT.activePlayer);
     setState("End");
 }
 
@@ -179,7 +190,6 @@ Rule winner WHEN [playCard] IF (storeBoard.RESULT.activePlayer.hand.size LESS TH
 Rule startTurn WHEN [setState] IF ("Play" EQUALS setState.RESULT){
     Board board IS storeBoard.RESULT;
     showBoard(board);
-    playCard(board.activePlayer.hand.cards[0]); //StringToInt(ReadAction())
 }
 
 
@@ -187,13 +197,13 @@ Rule startTurn WHEN [setState] IF ("Play" EQUALS setState.RESULT){
 
 // Global variable keeps track of current state
 
-State Start ALLOWS [draw]//, shuffle]
+State Start ALLOWS [draw]
 
 // Allowable actions are declared - error if wrong actions performed
 // Implement "ALL" which means all actions are allowed
 
-State Play ALLOWS [playCard]// [ALL]
-State End ALLOWS []//shuffle]
+State Play ALLOWS [playCard]
+State End ALLOWS []
 
 
 
@@ -212,18 +222,23 @@ Board b1 IS NEW Board {
 
 //shuffle(storeBoard.RESULT.decks[1]);
 
-// Player 1
-b1.decks[0] IS draw(b1.decks[0], b1.players[0].hand, 7)[0]; // Index 0 is source deck
-b1.players[0].hand IS draw.RESULT[1];                       // Index 1 is target deck
+// Player 1 - draw cards from board's draw deck and update draw deck to reflect drawn cards
+b1.decks[0] IS draw(b1.decks[0], b1.players[0].hand, 4)[0]; // Index 0 in actionCall is source deck
 
-// Player 2
-b1.decks[1] IS draw(b1.decks[0], b1.players[1].hand, 7)[0]; // Index 0 is source deck
-b1.players[1].hand IS draw.RESULT[1];                       // Index 1 is target deck
+// Player 1 - assign drawn cards to the player's hand
+b1.players[0].hand IS draw.RESULT[1];                       // Index 1 in actionCall is target deck
+
+// Player 2 - draw cards from board's draw deck and update draw deck to reflect drawn cards
+b1.decks[0] IS draw(b1.decks[0], b1.players[1].hand, 4)[0]; // Index 0 in actionCall is source deck
+
+// Player 2 - assign drawn cards to the player's hand
+b1.players[1].hand IS draw.RESULT[1];                       // Index 1 in actionCall is target deck
+
 
 
 Card testCard IS NEW Card{"fishg"; 5;};
 
-Deck testdeck IS NEW Deck{[testCard]; 1;};
+Deck testdeck IS NEW Deck{[testCard];};
 
 
 Boolean shouldValid IS containsValidCard(testdeck, testCard);
@@ -233,13 +248,5 @@ testdeck IS removeCard(testCard, testdeck);
 Boolean invalid IS containsValidCard(testdeck, testCard);
 
 
-Integer size IS size(b1.decks[0].cards);
-write("Array size for Card[] = " + size);
 storeBoard(b1);
-showBoard(storeBoard.RESULT);
-
-updateActivePlayer(storeBoard.RESULT);
-
-showBoard(storeBoard.RESULT);
-
 setState("End");
