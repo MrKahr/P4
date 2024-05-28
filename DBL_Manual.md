@@ -144,6 +144,15 @@ Arrays can NOT be declared as:
 ## Semantics
 
 ### Templates
+Template are collections of values. 
+They can be declared with the following syntax: 
+* `Template Name CONTAINS{
+   Integer i;
+   Boolean j IS true;
+   Integer[] integerArray;
+   YourCustomTemplate[] templateArray;  
+}`
+Note that unitialized fields are assigned a default value that a developer can overwrite. 
 
 ### Actions
 
