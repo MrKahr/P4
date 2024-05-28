@@ -126,9 +126,6 @@ Action drawToPlayer(Integer valueOfCardsTodraw) {
 
     FOR(Integer i IS 0; i LESS THAN valueOfCardsTodraw; i IS i + 1){
         Integer drawDeckSize IS size(board.decks[0].cards) - 1;
-        write("-1 decksize = " + drawDeckSize);
-        write("full size = " + size(board.decks[0].cards));
-
         IF(NOT drawDeckSize LESS THAN 0) {
             Card card IS board.decks[0].cards[drawDeckSize]; // Get reference to card
             board.decks[0] IS removeCard(card, board.decks[0]); // Remove card from draw deck
@@ -303,9 +300,10 @@ Rule playsValidCard WHEN [playCard] IF (
     storeBoard(board);
 
     // DEBUG
+    /*
     showDeck(board.decks[1], "discard pile");
     showDeck(board.decks[0], "draw pile");
-
+    */
     checkWinner();
     updateActivePlayer(false);
 } ELSE {
@@ -331,10 +329,8 @@ Rule startTurn WHEN [autoPlay, setState, updateActivePlayer] IF (autoPlay.RESULT
 
     // Draw cards until we have a valid card to play
     Boolean continue IS autoPlay.RESULT;
-    FOR(Integer i; autoPlay.RESULT; i IS i) {
+    FOR(Integer i; continue; i IS i) {
         Integer validCardIndex IS findValidCard();
-        write("Index = " + validCardIndex);
-
         // Play card if valid
         IF(validCardIndex GREATER OR EQUALS 0) {
             continue IS false;
@@ -376,7 +372,7 @@ updateActivePlayer(false); // Game starts first activePlayer;
 addTopCard(); // Add topcard to discard pile
 setupGame(false); // End setup phase. Activates certain write actions
 
-// Automatic playing - please do not call setState()!
+// Automatic playing - please do not call setState()! (also know that it WILL cause a StackOverflow due to the way DBL is, i.e. Actions-Rules dynamic)
 //autoPlay(true);
 
 // Manual play.
