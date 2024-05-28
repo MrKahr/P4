@@ -60,26 +60,25 @@ public class ActionCallInterpreter implements NodeVisitor {
             }
         }
 
+        //remember thisAction for later in case we're calling an action from another action
+        String thisAction = InterpreterVisitor.getInstance().getCurrentActionIdentifier();
+        //set the action we're going to call now
+        InterpreterVisitor.getInstance().setCurrentAction(actionCall.getIdentifier());
+        //prepare the action's scope
+        ScopeManager.getInstance().getScopeStack().push(action.getInitialScope());
+        
         //check if the action is built-in or not
         if (InbuiltActionDefiner.getDefinerInstance().getIdentifiers().contains(actionCall.getIdentifier())) {
             //hand control to an InbuiltFunctionInterpreter and let it do its thing
-            InbuiltActionInterpreter inbuiltFunctionInterpreter = new InbuiltActionInterpreter(this.verbose);
-            //TODO: document the reason for thisAction
-            String thisAction = InterpreterVisitor.getInstance().getCurrentActionIdentifier();
-            InterpreterVisitor.getInstance().setCurrentAction(actionCall.getIdentifier());
-            ScopeManager.getInstance().getScopeStack().push(action.getInitialScope());
-            inbuiltFunctionInterpreter.visit(actionCall);
-            ScopeManager.getInstance().exit();
-            InterpreterVisitor.getInstance().setCurrentAction(thisAction);
+            InbuiltActionInterpreter inbuiltActionInterpreter = new InbuiltActionInterpreter(this.verbose);
+            inbuiltActionInterpreter.visit(actionCall);
         } else {
-            //set the scope and interpret the action. Also set the current action so return nodes target the right places
-            String thisAction = InterpreterVisitor.getInstance().getCurrentActionIdentifier();
-            InterpreterVisitor.getInstance().setCurrentAction(actionCall.getIdentifier());
-            ScopeManager.getInstance().getScopeStack().push(action.getInitialScope());
             actionCall.visitChild(new InterpreterDecider(), action.getBody());
-            ScopeManager.getInstance().exit();
-            InterpreterVisitor.getInstance().setCurrentAction(thisAction);
         }
+        //pop the action's scope and return to the previous action
+        ScopeManager.getInstance().exit();
+        InterpreterVisitor.getInstance().setCurrentAction(thisAction);
+
         //finally, trigger any rules bound to his action
         ArrayList<RuleSymbol> rules = GlobalScope.getInstance().getRuleTable().get(actionCall.getIdentifier());
         if (rules != null) {
