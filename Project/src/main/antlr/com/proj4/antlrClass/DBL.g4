@@ -78,6 +78,7 @@ boolExpr
     |   boolExpr EQUALS boolExpr            # equalBool
     |   boolExpr AND boolExpr               # andBool
     |   boolExpr OR  boolExpr               # orBool
+    |   actionResult                        # actionResultBool
     |   actionCall                          # actionCallBool
     |   BOOLEAN                             # litteralBool
     |   IDENTIFIER                          # idBool

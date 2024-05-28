@@ -8,12 +8,10 @@ import java.util.HashMap;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 
 import com.proj4.exceptions.MismatchedTypeException;
 import com.proj4.symbolTable.ScopeManager;
 import com.proj4.symbolTable.ScopeObserver;
-import com.proj4.symbolTable.symbols.ArraySymbol;
 import com.proj4.symbolTable.symbols.BooleanSymbol;
 import com.proj4.symbolTable.symbols.IntegerSymbol;
 import com.proj4.symbolTable.symbols.SymbolTableEntry;
@@ -29,6 +27,7 @@ public class ActionTest extends TestingArgs {
         DBL interpreter = new DBL();
         interpreter.setDebugMode(debugMode);
         interpreter.setVerbosity(verbose);
+        interpreter.setShowFinalScope(showFinalScope);
         interpreter.interpret(getPath() + "actiontest.dbl");
 
         variableTable = scopeObserver.getCurrentScope().peek().getVariableTable();

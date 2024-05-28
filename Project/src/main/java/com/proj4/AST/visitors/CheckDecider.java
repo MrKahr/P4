@@ -17,7 +17,7 @@ public class CheckDecider implements VisitorDecider {
         if(verbose){
             System.out.println("\n\nType checking " + node.getClass().getSimpleName() + ".");
             if (!ScopeManager.getInstance().getScopeStack().empty()) {
-                ScopeManager.getInstance().printBindings();
+                ScopeManager.getInstance().printBindings(false);
             }
         }
         switch (node.getClass().getSimpleName()) {

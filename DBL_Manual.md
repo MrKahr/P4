@@ -6,7 +6,8 @@
 </p>
 
 ## Things that need fixing
-- [ ] The EQUALS and NOT EQUALS operator currently only supports comparison with Primitives (Integer, String, Boolean)
+- [ ] The EQUALS and NOT EQUALS operator currently only supports comparison with Primitives (Integer, String, Boolean).
+- [ ] Comparing Strings with the EQUALS operator, where one operand is the RESULT of an Action Call, only works if the String is on the left side, e.g. `"Play" EQUALS setState.RESULT`.
 
 
 ## The structure of a DBL program
@@ -143,6 +144,17 @@ Arrays can NOT be declared as:
 ## Semantics
 
 ### Templates
+Template are collections of values. 
+They can be declared with the following syntax: 
+```
+Template Name CONTAINS{
+  Integer i;
+  Boolean j IS true;
+  Inteteger[] integerArray;
+  YourCustomTemplate[] templateArray;  
+}
+```
+Note that unitialized fields are assigned a default value that a developer can overwrite. 
 
 ### Actions
 

@@ -69,18 +69,27 @@ public class ExpressionTypeChecker implements NodeVisitor {
             case MULTIPLY: // all above are binary and return and consume integers
                 expression.visitChild(new CheckDecider(), expression.getFirstOperand());
                 if (!TypeCheckVisitor.getInstance().getFoundType().equals("Integer")) {
-                    throw new MismatchedTypeException();
+                    throw new MismatchedTypeException("Invalid type! Cannot perform arithmetic on operands."
+                                                      + " Operand 1 has type \"" + TypeCheckVisitor.getInstance().getFoundType()
+                                                      + "\", complex type \"" + TypeCheckVisitor.getInstance().getFoundComplexType()
+                                                      + "\"");
                 }
                 expression.visitChild(new CheckDecider(), expression.getSecondOperand());
                 if (!TypeCheckVisitor.getInstance().getFoundType().equals("Integer")) {
-                    throw new MismatchedTypeException();
+                    throw new MismatchedTypeException("Invalid type! Cannot perform arithmetic on operands."
+                    + " Operand 2 has type \"" + TypeCheckVisitor.getInstance().getFoundType()
+                    + "\", complex type \"" + TypeCheckVisitor.getInstance().getFoundComplexType()
+                    + "\"");
                 }
                 TypeCheckVisitor.getInstance().setFoundType("Integer", "Primitive", -1);
                 break;
             case NEGATE:
                 expression.visitChild(new CheckDecider(), expression.getFirstOperand());
                 if (!TypeCheckVisitor.getInstance().getFoundType().equals("Integer")) {
-                    throw new MismatchedTypeException();
+                    throw new MismatchedTypeException("Invalid type! Cannot negate operand."
+                                                      + " Operand 1 has type \"" + TypeCheckVisitor.getInstance().getFoundType()
+                                                      + "\", complex type \"" + TypeCheckVisitor.getInstance().getFoundComplexType()
+                                                      + "\"");
                 }
                 TypeCheckVisitor.getInstance().setFoundType("Integer", "Primitive", -1);
                 break;
