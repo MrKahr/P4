@@ -72,6 +72,8 @@ public class ActionCallInterpreter implements NodeVisitor {
             //hand control to an InbuiltFunctionInterpreter and let it do its thing
             InbuiltActionInterpreter inbuiltActionInterpreter = new InbuiltActionInterpreter(this.verbose);
             inbuiltActionInterpreter.visit(actionCall);
+        } else {
+            actionCall.visitChild(new InterpreterDecider(), action.getBody());
         }
         //pop the action's scope and return to the previous action
         ScopeManager.getInstance().exit();
