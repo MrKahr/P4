@@ -9,10 +9,6 @@
 
 A student project that describes a language for creating high-fidelity deck builder protoypes.  
 
-## Installation
-
-To be written... (when we have a product to use)
-
 ## Running from source
 
 > [!IMPORTANT]
@@ -23,6 +19,7 @@ To be written... (when we have a product to use)
 1. Clone this repository.
 2. Open a terminal in the project directory (`<root-folder>/P4/project`).
 3. Type `mvn clean install` to generate Java files and compile the entire project.
+4. Provide the absolute path to the DBL source file as an argument when running main. 
 
 ## Troubleshooting
 
