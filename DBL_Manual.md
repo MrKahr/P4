@@ -158,14 +158,14 @@ Note that unitialized fields are assigned a default value that a developer can o
 ### Actions
 Actions are procedured which can take a list of parameters, and can return a value of a specified type.
 Both parameters, as well as return values are optional. However, if an action has a result it should be returned in the last line of the action body.
-They can be declare with the following syntax:
+They can be declared with the following syntax:
 ```
 Action AddNumber(Interger a, Integer b) RESULTS IN Integer {
     RESULT IN a+b;
 }
 ```
 
-An action can be called anywhere a statement is allowed, and are handles as expressions.
+An action can be called anywhere a statement is allowed, and are handled as expressions.
 They can be called using the following syntax: 
 ```
 AddNumber(1,2);
@@ -178,9 +178,9 @@ AddNumber.RESULT
 This is also handled as an expression.
 
 Lastly, DBL has Inbuilt actions. These are:
-setState(String state); which sets the program state to the state matching the string parameter name.
-size(Any[] array); w ich returns the amount of elements in an array.
-write(String message); which writes the provided message to the output terminal.
+ - setState(String state); which sets the program state to the state matching the string parameter name.
+ - size(Any[] array); which returns the amount of elements in an array.
+ - write(String message); which writes the provided message to the output terminal.
 
 ### Rules
 Rules wait for action calls and execute their body if their conditions are met. 
@@ -197,7 +197,7 @@ Rule drawUntilValid WHEN [drawToPlayer, setState, updateActivePlayer] IF (
 }
 ```
 Rules can only access variables through the result field of actions.
-This behaviour is intended, but 
+This behaviour is intended, but is planned to change in a future update.
 ### Arrays
 Elements can be appended to an existing array by indexing the array out of bounds.
 Example:
