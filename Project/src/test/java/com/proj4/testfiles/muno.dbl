@@ -59,7 +59,7 @@ Action RNG() RESULTS IN Integer {
 }
 
 
-// The modern version of the Fisher–Yates shuffle
+// The modern version of the Fisher-Yates shuffle
 // Runtime: O(n)
 Action shuffle(Deck deckSource) RESULTS IN Deck {
     Integer deckSize IS size(deckSource.cards)-1;
@@ -249,22 +249,6 @@ Action updateActivePlayer(Boolean noSwitch) {
 }
 
 
-/*
-Action autoPlay() {
-    // Draw cards until we have a valid card to play
-    FOR(Integer i; NOT "End" EQUALS setState.RESULT; i IS i) {
-        Integer validCardIndex IS findValidCard();
-        // Play card if valid
-        IF(validCardIndex GREATER OR EQUALS 0) {
-            playCard(validCardIndex);
-        } ELSE {
-            write("No valid card in hand! Oh well");
-        }
-
-    }
-}
-*/
-
 /*** RULES ***/
 Rule mustShuffle WHEN [drawToPlayer] IF (("AutoPlay" EQUALS setState.RESULT OR "Play" EQUALS setState.RESULT) AND size(storeBoard.RESULT.decks[0].cards) EQUALS 0){
     Board board IS storeBoard.RESULT;
@@ -326,7 +310,6 @@ Rule playsValidCard WHEN [playCard] IF (
           + "{" + "Value: " + playCard.RESULT.value + ", Color: " + playCard.RESULT.color + "}\n"
           + "\nThe top card of the discard pile is card: "
           + "{" + "Value: " + value + ", Color: " + color + "}\n");
-    //updateActivePlayer(true);
 }
 
 
