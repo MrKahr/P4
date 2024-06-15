@@ -186,7 +186,7 @@ Template Board CONTAINS {
     Player activePlayer;
 }
 ```
-Note that unitialized fields are assigned a default value that a developer can overwrite.
+Note that uninitialized fields are assigned a default value that a developer can overwrite.
 
 Type | Default Value
 :---: | :---
