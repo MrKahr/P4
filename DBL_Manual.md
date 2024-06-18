@@ -98,7 +98,7 @@ DBL | Explanation
 `Integer` | A number that can be written without a fractional component
 `Boolean` | Truth values. Can be either `true` or `false`
 `String`  | A sequence of characters encased in citation marks<br> For instance, `"Hello World"` is a string
-***Identifier*** | A user-defined type<br> For instance, `Card` could be a user-defined type for a card Template
+***Template*** | A user-defined type<br> For instance, `Card` could be a user-defined type for a card Template
 
 </div>
 
