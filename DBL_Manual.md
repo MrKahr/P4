@@ -10,7 +10,8 @@
 ## Things that need fixing
 - [ ] The EQUALS and NOT EQUALS operator currently only supports comparison with Primitives (Integer, String, Boolean).
 - [ ] Comparing Strings with the EQUALS operator, where one operand is the RESULT of an Action Call, only works if the String is on the left side, e.g. `"Play" EQUALS setState.RESULT`.
-- [ ] If the last line of a DBL program is a comment, the interpreter will fail with a parse error. A quick work-around is to ensure that an empty line is always the last line in the program. 
+- [ ] If the last line of a DBL program is a comment, the interpreter will fail with a parse error. A quick work-around is to ensure that an empty line is always the last line in the program.
+- [ ] Currently, variable synthesis does not account for shadowed variables. If a variable is re-declared in an inner scope (e.g. with a different type), the outer scope's instance of the variable is updated with this re-declaration.
 
 
 ## The Structure of a DBL Program
