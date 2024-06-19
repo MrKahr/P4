@@ -59,7 +59,7 @@ Action RNG() RESULTS IN Integer {
 }
 
 
-// The modern version of the Fisher–Yates shuffle
+// The modern version of the Fisher-Yates shuffle
 // Runtime: O(n)
 Action shuffle(Deck deckSource) RESULTS IN Deck {
     Integer deckSize IS size(deckSource.cards)-1;
@@ -80,10 +80,6 @@ Action shuffle(Deck deckSource) RESULTS IN Deck {
 * │    Muno-related    │
 * └────────────────────┘
 */
-Action autoPlay(Boolean enable) RESULTS IN Boolean {
-    RESULT IN enable;
-}
-
 Action setupGame(Boolean isSetup) RESULTS IN Boolean {
     RESULT IN isSetup;
 }
@@ -252,8 +248,9 @@ Action updateActivePlayer(Boolean noSwitch) {
     }
 }
 
+
 /*** RULES ***/
-Rule mustShuffle WHEN [drawToPlayer] IF ((autoPlay.RESULT OR "Play" EQUALS setState.RESULT) AND size(storeBoard.RESULT.decks[0].cards) EQUALS 0){
+Rule mustShuffle WHEN [drawToPlayer] IF (("AutoPlay" EQUALS setState.RESULT OR "Play" EQUALS setState.RESULT) AND size(storeBoard.RESULT.decks[0].cards) EQUALS 0){
     Board board IS storeBoard.RESULT;
 
     // Ensure index is correct
@@ -279,7 +276,7 @@ Rule mustShuffle WHEN [drawToPlayer] IF ((autoPlay.RESULT OR "Play" EQUALS setSt
 
 
 Rule drawUntilValid WHEN [drawToPlayer, setState, updateActivePlayer] IF (
-    ("Play" EQUALS setState.RESULT) AND
+    ("AutoPlay" EQUALS setState.RESULT OR "Play" EQUALS setState.RESULT) AND
     NOT containsValidCard(
         storeBoard.RESULT.activePlayer.hand,
         storeBoard.RESULT.decks[1].cards[size(storeBoard.RESULT.decks[1].cards) - 1]
@@ -313,7 +310,6 @@ Rule playsValidCard WHEN [playCard] IF (
           + "{" + "Value: " + playCard.RESULT.value + ", Color: " + playCard.RESULT.color + "}\n"
           + "\nThe top card of the discard pile is card: "
           + "{" + "Value: " + value + ", Color: " + color + "}\n");
-    //updateActivePlayer(true);
 }
 
 
@@ -323,27 +319,22 @@ Rule winner WHEN [checkWinner] IF (size(storeBoard.RESULT.activePlayer.hand.card
 }
 
 
-Rule startTurn WHEN [autoPlay, setState, updateActivePlayer] IF (autoPlay.RESULT OR "Play" EQUALS setState.RESULT){
+Rule startTurn WHEN [setState, updateActivePlayer] IF ("AutoPlay" EQUALS setState.RESULT OR "Play" EQUALS setState.RESULT){
     Board board IS storeBoard.RESULT;
     showBoard(board);
-
-    // Draw cards until we have a valid card to play
-    Boolean continue IS autoPlay.RESULT;
-    FOR(Integer i; continue; i IS i) {
-        Integer validCardIndex IS findValidCard();
-        // Play card if valid
-        IF(validCardIndex GREATER OR EQUALS 0) {
-            continue IS false;
-            playCard(validCardIndex);
-        } ELSE { // Draw a card
-            drawToPlayer(1);
-        }
-    }
 }
 
 
 /*** STATES ***/
 State Play ALLOWS [playCard]
+
+State AutoPlay ALLOWS [] WITH LOOP {
+    FOR(Integer i; "End" NOT EQUALS setState.RESULT; i IS i) {
+        Integer validCardIndex IS findValidCard();
+        playCard(validCardIndex);
+    }
+}
+
 State End ALLOWS []
 
 
@@ -372,8 +363,8 @@ updateActivePlayer(false); // Game starts first activePlayer;
 addTopCard(); // Add topcard to discard pile
 setupGame(false); // End setup phase. Activates certain write actions
 
-// Automatic playing - please do not call setState()! (also know that it WILL cause a StackOverflow due to the way DBL is, i.e. Actions-Rules dynamic)
-//autoPlay(true);
+// Automatic playing - please do not setState() to "Play"!
+//setState("AutoPlay");
 
 // Manual play.
 setState("Play");
