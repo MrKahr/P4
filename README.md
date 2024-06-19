@@ -7,7 +7,7 @@
 
 ## Introduction
 
-A student project that describes a language for creating high-fidelity deck builder protoypes.  
+A student project at Aalborg University that describes a domain-specific programming language, called DBL, for creating high-fidelity deck builder protoypes.
 
 ## Running from source
 
@@ -24,8 +24,10 @@ A student project that describes a language for creating high-fidelity deck buil
 ## Troubleshooting
 
 If you're having trouble with the installation process, you can try these steps.
-> [!NOTE]  
+> [!NOTE]
 > This section assumes a Windows enviroment.
+> 
+> Remember to close any open terminals after making changes<br> to the enviroment variables as your changes are not saved in open terminals.
 
 ### JAVA_HOME not found
 
