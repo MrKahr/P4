@@ -82,8 +82,8 @@ Domain-specific Keywords
 DBL | Explanation
 :---: | :---
 `Template` | Declare a Template<br> A Template is akin to a struct in C
-`Action` | Declare an Action<br> An Action behaves somewhat similar to that of functions in many imperative languages. However, they interact with Rules and their execution can be limited by States
-`Rule` | Declare a Rule<br> A Rule is essentially an event listener that listens to select Actions. When an Action is called, any Rules listening to it will be invoked, in the order they are declared, just before the called Action returns
+`Action` | Declare an Action<br> An Action behaves like functions in many imperative languages. However, they interact with Rules and their execution can be limited by States
+`Rule` | Declare a Rule<br> Rules are conditions that cause code execution and are triggered by Actions specified in a Rule's declaration. When an Action is called, any Rules triggered by that Action will be invoked, in the order they are declared, just before the called Action returns
 `State` | Declare a State<br> A State is a special place in the program execution flow in which only select Actions can be called. This is used to control the duration of a game
 
 </div>
@@ -223,7 +223,7 @@ Board b1 IS NEW Board {
 ```
 
 ### Actions
-As mentioned earlier, an action behaves somewhat similar to that of functions in many imperative languages.
+As mentioned in [Domain-specific Keywords](#domain-specific-keywords), an action behaves like functions in many imperative languages with the exception that they interact with Rules and their execution can be limited by States.
 They are intended as the primary method for a developer to modify the program state (we do not mean the State keyword). 
 An action can take a list of parameters and return a value of a specified type.
 Both parameters and a return value are optional.
@@ -253,7 +253,7 @@ Action addNumber(Integer a, Integer b) RESULTS IN Integer {
 }
 ```
 
-Actions are treated as expressions and can be called anywhere a statement is allowed.  
+Action can be called anywhere a statement is allowed. Action calls are treated as expressions.  
 They can be called using the following syntax: 
 ```
 <ActionIdentifier> (<arguments>) ;
@@ -280,8 +280,7 @@ Inbuilt action | Explanation
 
 
 ### Rules
-As mentioned earlier, a rule is essentially an eventlistener which triggers when select actions are called.
-Rules also have a condition which must be satisfied in order for the rule body to be executed. 
+As mentioned in [Domain-specific Keywords](#domain-specific-keywords), rules are conditions that cause code execution and are triggered by actions specified in a rule's declaration.
 Since a rule can call actions, and thus invoke other rules (or itself!), they have a specific execution order.
 When a rule's action calls activate other rules, the newest activated rule is handled first. This means Rules are evaluated according to the LIFO principle (last in first out). 
 
