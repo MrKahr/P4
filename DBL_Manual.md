@@ -194,7 +194,7 @@ Type | Default Value
 `Integer` | 0
 `Boolean` | false
 `String`  | ""
-***Identifier*** | User-defined types will, eventually, point to one of<br> the primitives which then becomes its default value.
+***Template*** | User-defined types will, eventually, point to one of<br> the primitives which then becomes its default value.
 
 An instance of a template can be created with the following syntax:
 ```
